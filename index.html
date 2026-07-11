@@ -590,6 +590,7 @@
   .sstock { font-size: .9rem; color: var(--muted); }
   .sstock b { color: var(--ink); }
   .sinstock { color: #c0564c; font-weight: 800; }
+  .sademand { color: var(--accent); font-weight: 700; }
   .sbuy { margin-top: auto; }
   .stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .sbtn { border: none; background: var(--bg); color: var(--ink); width: 40px; height: 38px; font-size: 1.2rem; cursor: pointer; line-height: 1; }
@@ -1762,21 +1763,16 @@
         renderList();
       }
 
-      // US-5: storefront público con contadores y carrito
+      // US-5: storefront — mercado (stock, "quedan X de Y") vs compra (subselección, demanda)
       var store = detailInner.querySelector('#store-offers');
       if (store) {
         var sfmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
-        // Productos del mercado desde el DB (pagados = pago reportado, reservan stock; confirmados = verificados)
-        var prods = DB.storeProducts.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
-        var qtys = prods.map(function () { return 0; });
-        var role = 'user';
+        var role = 'user', link = 'mercado';
         var cartInfo = detailInner.querySelector('#cart-info');
         var contBtn = detailInner.querySelector('#cart-continue');
         var storeFlash = detailInner.querySelector('#store-flash');
         var roleBtns = detailInner.querySelectorAll('.srb');
         var roleHint = detailInner.querySelector('#srole-hint');
-
-        // Dos links a la misma tienda: el del mercado (fijo) y el de LA COMPRA PUBLICADA
         var stMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
         var stDate = function (iso) { if (!iso) return '—'; var p = iso.split('-'); return (+p[2]) + ' ' + stMES[(+p[1]) - 1]; };
         var si = function (k, v) { return '<div class="si"><span class="si-k">' + k + '</span><span class="si-v">' + v + '</span></div>'; };
@@ -1789,38 +1785,41 @@
         var storeInfo = detailInner.querySelector('#store-info');
         var pub = DB.compras.filter(function (c) { return c.estado === 'Publicada'; });
         var pc = pub[0] || null;   // compra publicada a mostrar (la primera, si hay)
+
+        var clone = function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; };
+        var byName = {}; DB.storeProducts.forEach(function (p) { byName[p.n] = p; });
+        // Demanda acumulada de un producto en la compra (de los pedidos con ese destino)
+        var demandFor = function (name) {
+          var d = 0; if (!pc) return 0;
+          DB.pedidos.forEach(function (p) { if (p.destino === pc.id) p.items.forEach(function (it) { if (it.prod === name) d += it.cant; }); });
+          return d;
+        };
+        // Mercado = todo el catálogo con stock. Compra = su subselección (sin stock; se pide a demanda).
+        var marketProds = DB.storeProducts.map(clone);
+        var compraProds = pc ? (pc.productos || []).map(function (n) {
+          var sp = byName[n] || { n: n, price: 0 };
+          return { n: n, price: sp.price, demand: demandFor(n) };
+        }) : [];
+        var prods = marketProds;
+        var qtys = prods.map(function () { return 0; });
+
         var LINKS = {
           mercado: {
             addr: DB.links.mercado, id: 'El mercado — en stock ahora',
             sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. La entrega del mercado se coordina aparte, sin fecha fija.',
-            hint: 'El link del mercado es fijo y público: siempre muestra el stock disponible.',
+            hint: 'El link del mercado es fijo y público: muestra todo el catálogo con stock.',
             status: 'Mercado abierto',
             info: '<div class="si si-wide"><span class="si-k">Entrega</span><span class="si-v">Asincrónica: se coordina aparte, el mercado no arma una entrega grupal ni fija fecha.</span></div>'
           },
           compra: pc ? {
             addr: DB.links.compraBase + pc.id, id: 'Compra — entrega ' + stDate(pc.entrega),
-            sub: 'Link de la compra publicada: se comparte con ciertas personas (US-3) para limitar quién participa.',
-            hint: 'El link de la compra apunta a una entrega puntual; muestra el mismo stock, con sus fechas y retiro.',
+            sub: 'Link de la compra publicada: se comparte con ciertas personas (US-3). Muestra solo los productos elegidos para esta compra; se pide a demanda (sin stock previo).',
+            hint: 'La compra muestra su subselección; los pedidos se agrupan y se compran al cerrar (no hay "quedan X de Y").',
             status: 'Publicada · cierra ' + stDate(pc.fin),
             info: si('Comienza', stDate(pc.inicio)) + si('Cierra', stDate(pc.fin)) +
               si('Lugar de retiro', pc.retiro || 'a definir') + si('Entrega', stDate(pc.entrega))
           } : null
         };
-        var applyLink = function (key) {
-          var L = LINKS[key]; if (!L) return;
-          slbs.forEach(function (x) { x.classList.toggle('active', x.dataset.link === key); });
-          storeAddr.textContent = L.addr; storeId.textContent = L.id;
-          storeSub.textContent = L.sub; slinkHint.textContent = L.hint;
-          storeStatus.textContent = L.status; storeInfo.innerHTML = L.info;
-          // El link define el modo de la compradora → tiñe la pantalla con el color del modo
-          if (typeof setMode === 'function') setMode(key);
-        };
-        // Si no hay compra publicada, el botón de la compra queda deshabilitado
-        slbs.forEach(function (b) {
-          if (b.dataset.link === 'compra' && !pc) { b.disabled = true; b.title = 'No hay compra publicada'; }
-          b.addEventListener('click', function () { if (!b.disabled) applyLink(b.dataset.link); });
-        });
-        applyLink('mercado');
 
         var quedanOf = function (o) { return Math.max(0, o.stock - o.pagados); };
 
@@ -1834,9 +1833,25 @@
 
         var drawStore = function () {
           store.innerHTML = prods.map(function (o, i) {
+            if (link === 'compra') {
+              // Compra: sin stock. Precio; la organizadora ve la demanda acumulada; stepper sin tope.
+              var adm = role === 'admin'
+                ? '<div class="sadmin"><span><b>' + o.demand + '</b> ' + (o.demand === 1 ? 'unidad pedida' : 'unidades pedidas') + '</span>' +
+                  '<span class="sadmin-tag">solo organizadora ❤️</span></div>'
+                : '';
+              return '<div class="soffer">' +
+                '<div class="soffer-top"><span class="sname">' + o.n + '</span><span class="sprice">' + sfmt(o.price) + '</span></div>' +
+                adm +
+                '<div class="sstock"><span class="sademand">A pedido · se agrupa al cerrar la compra</span></div>' +
+                '<div class="sbuy"><div class="stepper">' +
+                '<button class="sbtn" data-act="minus" data-i="' + i + '" ' + (qtys[i] <= 0 ? 'disabled' : '') + '>−</button>' +
+                '<span class="qty">' + qtys[i] + '</span>' +
+                '<button class="sbtn" data-act="plus" data-i="' + i + '">+</button></div></div>' +
+                '</div>';
+            }
+            // Mercado: stock vivo
             var quedan = quedanOf(o), sold = quedan <= 0;
             var pct = Math.min(100, Math.round(o.pagados / o.stock * 100));
-            // Solo la organizadora ❤️ ve pagados y confirmados por producto
             var adminLine = role === 'admin'
               ? '<div class="sadmin"><span><b>' + o.pagados + '</b> pagados · <b>' + o.confirmados + '</b> confirmados</span>' +
                 '<span class="sadmin-tag">solo organizadora ❤️</span></div>'
@@ -1858,26 +1873,54 @@
           updateCart();
         };
 
+        var setRoleHint = function () {
+          if (link === 'compra') {
+            roleHint.textContent = role === 'admin'
+              ? 'En una compra no hay stock: solo la organizadora ❤️ ve cuántas unidades se pidieron (demanda).'
+              : 'En una compra pedís lo que quieras: no hay "quedan X"; los pedidos se agrupan y se compran al cerrar.';
+          } else {
+            roleHint.textContent = role === 'admin'
+              ? 'Solo la organizadora ❤️ ve pagados y confirmados por producto; el resto ve solo el stock.'
+              : 'Las compradoras ven solo el stock disponible (quedan X de Y).';
+          }
+        };
+
+        var applyLink = function (key) {
+          var L = LINKS[key]; if (!L) return;
+          link = key;
+          slbs.forEach(function (x) { x.classList.toggle('active', x.dataset.link === key); });
+          storeAddr.textContent = L.addr; storeId.textContent = L.id;
+          storeSub.textContent = L.sub; slinkHint.textContent = L.hint;
+          storeStatus.textContent = L.status; storeInfo.innerHTML = L.info;
+          prods = (key === 'compra') ? compraProds : marketProds;
+          qtys = prods.map(function () { return 0; });
+          if (typeof setMode === 'function') setMode(key);
+          setRoleHint();
+          drawStore();
+        };
+
+        // Si no hay compra publicada, el botón de la compra queda deshabilitado
+        slbs.forEach(function (b) {
+          if (b.dataset.link === 'compra' && !pc) { b.disabled = true; b.title = 'No hay compra publicada'; }
+          b.addEventListener('click', function () { if (!b.disabled) applyLink(b.dataset.link); });
+        });
         roleBtns.forEach(function (b) {
           b.addEventListener('click', function () {
             role = b.dataset.role;
             roleBtns.forEach(function (x) { x.classList.toggle('active', x === b); });
-            roleHint.textContent = role === 'admin'
-              ? 'Solo la organizadora ❤️ ve pagados y confirmados por producto; el resto ve solo el stock.'
-              : 'Las compradoras ven solo el stock disponible (quedan X de Y).';
-            drawStore();
+            setRoleHint(); drawStore();
           });
         });
-
         store.addEventListener('click', function (e) {
           var btn = e.target.closest('.sbtn'); if (!btn) return;
-          var i = +btn.dataset.i, quedan = quedanOf(prods[i]);
-          if (btn.dataset.act === 'plus' && qtys[i] < quedan) qtys[i]++;
+          var i = +btn.dataset.i;
+          if (btn.dataset.act === 'plus') { if (link === 'compra' || qtys[i] < quedanOf(prods[i])) qtys[i]++; }
           else if (btn.dataset.act === 'minus' && qtys[i] > 0) qtys[i]--;
           drawStore();
         });
         contBtn.addEventListener('click', function () { storeFlash.classList.add('show'); });
-        drawStore();
+
+        applyLink('mercado');
       }
 
       // US-10: procesar pedidos (ver / confirmar / cancelar / exportar) — organizadora
