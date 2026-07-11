@@ -393,6 +393,30 @@
   .ar-x:hover { color: #c0564c; }
   .added-empty { color: var(--muted); font-size: .9rem; padding: 8px 2px; }
 
+  /* Mazo: foco invertido + navegación + modal de catálogo */
+  .deck-card { cursor: default; }
+  .deck-card:focus { background: var(--admin); color: #fff; border-color: var(--admin); box-shadow: 0 12px 28px rgba(0,0,0,.2); }
+  .deck-card:focus .deck-progress, .deck-card:focus .dc-meta, .deck-card:focus .dc-hint { color: rgba(255,255,255,.85); }
+  .deck-card:focus .badge-added { background: rgba(255,255,255,.22); color: #fff; }
+  .dc-nav { display: flex; gap: 10px; }
+  .dc-navbtn { flex: 1; padding: 9px; border: 1.5px solid currentColor; background: transparent; color: inherit; border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; opacity: .8; }
+  .dc-navbtn:hover { opacity: 1; }
+  .dc-cat { flex: 1; padding: 13px; border: 1.5px solid currentColor; background: transparent; color: inherit; border-radius: 10px; font: inherit; font-weight: 800; cursor: pointer; }
+  .deck-card:focus .dc-add { background: #fff; color: var(--admin); }
+
+  .cat-modal { position: fixed; inset: 0; z-index: 50; background: rgba(10,14,12,.55); display: flex; align-items: center; justify-content: center; padding: 5vh 16px; }
+  .cat-modal[hidden] { display: none; }
+  .cat-box { background: var(--bg); color: var(--ink); width: 100%; max-width: 460px; border-radius: 16px; padding: 20px 22px; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+  .cat-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .cat-head h3 { margin: 0; font-size: 1.2rem; flex: 1; }
+  .cat-x { border: none; background: var(--chip); color: var(--ink); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; }
+  .cat-meta { margin: 0 0 16px; color: var(--muted); }
+  .cat-box .field select { width: 100%; font: inherit; font-size: 1rem; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+  .cat-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .cat-cancel { border: 1px solid var(--line); background: transparent; color: var(--ink); padding: 11px 16px; border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; }
+  .cat-ok { flex: 1; border: none; background: var(--admin); color: #fff; padding: 11px 18px; border-radius: 10px; font: inherit; font-weight: 800; cursor: pointer; }
+  .cat-hint { margin-top: 12px; text-align: center; font-size: .78rem; color: var(--muted); }
+
   /* Storefront público (US-5) */
   .store-mock .store-topbar { padding: 13px 18px; background: var(--user); color: #fff; font-weight: 700; }
   .store-body { padding: 28px 24px; }
@@ -495,7 +519,7 @@
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
         <p class="story">Como <b>organizador</b>, quiero crear una compra empezando por las ofertas y completar las fechas cuando las tenga, para poder armarla aunque todavía no tenga el cronograma cerrado.</p>
-        <p class="accept">El wizard va: ofertas (se eligen del catálogo con un mazo — ←/→ o arrastrar, espacio para cargar la cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
+        <p class="accept">El wizard va: ofertas (se eligen del catálogo con un mazo: ←/→ navegan, Enter agrega, Espacio abre el catálogo para elegir unidad de medida y cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -626,7 +650,7 @@
   <div class="detail-lead">
     <h2 class="detail-title">Crear una compra</h2>
     <p class="detail-story">Como <b>organizador</b>, quiero crear una compra empezando por las ofertas y completar las fechas cuando las tenga, para poder armarla aunque todavía no tenga el cronograma cerrado.</p>
-    <p class="detail-accept">El wizard va: ofertas (se eligen del catálogo con un mazo — ←/→ o arrastrar, espacio para cargar la cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
+    <p class="detail-accept">El wizard va: ofertas (se eligen del catálogo con un mazo: ←/→ navegan, Enter agrega, Espacio abre el catálogo para elegir unidad de medida y cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
@@ -649,7 +673,7 @@
         <!-- Paso 1: Ofertas -->
         <div class="wiz-panel" data-panel="1">
           <h3>¿Qué vas a vender?</h3>
-          <p class="sub">Recorré el catálogo y elegí lo que entra en esta compra. <b>←</b> descartar · <b>→</b> agregar con la cantidad sugerida · <b>espacio</b> para elegir otra cantidad. También podés arrastrar la tarjeta.</p>
+          <p class="sub">Enfocá la tarjeta (se marca con paleta invertida) y recorré el catálogo. <b>←/→</b> navegar · <b>Enter</b> agregar · <b>Espacio</b> abre el catálogo (elegís unidad y cantidad) · <b>Esc</b> cierra.</p>
           <div class="deck-layout">
             <div class="deck-col"><div id="deck"></div></div>
             <aside class="added-panel">
@@ -957,13 +981,19 @@
           'Mermelada de sauco', 'Tomates secos', 'Nueces 250g', 'Café molido',
           'Té de montaña', 'Manteca artesanal', 'Escabeche de trucha', 'Cerveza artesanal',
           'Vino patagónico', 'Chocolate 70%', 'Almendras 250g', 'Miel de ulmo'];
+        var UNITS = [
+          { v: 'u', label: 'Unidad' }, { v: 'kg', label: 'Kilogramo' }, { v: 'g', label: 'Gramo' },
+          { v: 'doc', label: 'Docena' }, { v: 'lt', label: 'Litro' }, { v: 'atado', label: 'Atado' },
+          { v: 'band', label: 'Bandeja' }, { v: 'bolsa', label: 'Bolsa' }
+        ];
         var catalog = [];
         for (var i = 0; i < 52; i++) {
           var base = names[i % names.length];
           var nm = i >= names.length ? base + ' (' + (Math.floor(i / names.length) + 1) + ')' : base;
-          catalog.push({ n: nm, price: 2000 + ((i * 337) % 6000), stock: 8 + ((i * 7) % 40), max: 1 + (i % 4) });
+          catalog.push({ n: nm, price: 2000 + ((i * 337) % 6000), stock: 8 + ((i * 7) % 40), max: 1 + (i % 4), unit: UNITS[i % UNITS.length].v });
         }
         var fmt = function (p) { return '$' + (p || 0).toLocaleString('es-AR'); };
+        var unitLabel = function (v) { for (var k = 0; k < UNITS.length; k++) { if (UNITS[k].v === v) return UNITS[k].label; } return v; };
         var pos = 0, added = [];
         var addedList = detailInner.querySelector('#added-list');
         var addedCount = detailInner.querySelector('#added-count');
@@ -973,99 +1003,98 @@
         var renderAdded = function () {
           addedList.innerHTML = added.length ? added.map(function (a) {
             return '<div class="added-row"><span class="ar-n">' + a.n + '</span>' +
-              '<span class="ar-q">' + a.qty + ' u</span>' +
+              '<span class="ar-q">' + a.qty + ' ' + a.unit + '</span>' +
               '<button class="ar-x" data-ci="' + a.ci + '" title="Quitar">✕</button></div>';
           }).join('') : '<div class="added-empty">Todavía no agregaste nada.</div>';
           addedCount.textContent = added.length;
           if (revOffers) revOffers.textContent = added.length;
         };
 
-        var skip = function () { pos++; renderCard(); };
-        var add = function (qty) {
+        var prev = function () { if (pos > 0) { pos--; renderCard(); } };
+        var next = function () { if (pos < catalog.length - 1) { pos++; renderCard(); } };
+        var add = function (qty, unit) {
           var p = catalog[pos];
           qty = Math.max(1, qty || 1);
+          if (unit) p.unit = unit;
           var ex = added.filter(function (a) { return a.ci === pos; })[0];
-          if (ex) ex.qty = qty; else added.push({ ci: pos, n: p.n, price: p.price, max: p.max, qty: qty });
-          pos++; renderAdded(); renderCard();
+          if (ex) { ex.qty = qty; ex.unit = p.unit; }
+          else added.push({ ci: pos, n: p.n, price: p.price, max: p.max, qty: qty, unit: p.unit });
+          renderAdded();
+          if (pos < catalog.length - 1) pos++;
+          renderCard();
         };
 
+        // Modal "vista del catálogo" (se crea una vez)
+        var modal = document.createElement('div');
+        modal.className = 'cat-modal';
+        modal.hidden = true;
+        modal.innerHTML =
+          '<div class="cat-box" role="dialog" aria-modal="true">' +
+            '<div class="cat-head"><h3 id="cat-title"></h3><button class="cat-x" type="button" aria-label="Cerrar">✕</button></div>' +
+            '<p class="cat-meta" id="cat-meta"></p>' +
+            '<div class="field"><label>¿En qué se mide el producto?</label>' +
+              '<select id="cat-unit">' + UNITS.map(function (u) { return '<option value="' + u.v + '">' + u.label + '</option>'; }).join('') + '</select></div>' +
+            '<div class="field"><label>Cantidad (stock) para esta compra</label>' +
+              '<div class="stepper"><button class="qbtn" data-q="-1" type="button">−</button>' +
+              '<input id="cat-qty" class="qinput" type="number" min="1">' +
+              '<button class="qbtn" data-q="1" type="button">+</button></div></div>' +
+            '<div class="cat-actions"><button class="cat-cancel" type="button">Cerrar</button>' +
+              '<button class="cat-ok" type="button">Agregar a la compra</button></div>' +
+            '<div class="cat-hint">Esc para cerrar</div>' +
+          '</div>';
+        detailInner.appendChild(modal);
+        var catTitle = modal.querySelector('#cat-title');
+        var catMeta = modal.querySelector('#cat-meta');
+        var catUnit = modal.querySelector('#cat-unit');
+        var catQty = modal.querySelector('#cat-qty');
+
+        var openCatalog = function () {
+          var p = catalog[pos];
+          catTitle.textContent = 'Catálogo · ' + p.n;
+          catMeta.textContent = fmt(p.price) + ' · máx ' + p.max + ' por comprador';
+          catUnit.value = p.unit; catQty.value = p.stock;
+          modal.hidden = false; catQty.focus(); catQty.select();
+        };
+        var closeCatalog = function () { modal.hidden = true; var c = deck.querySelector('.deck-card'); if (c) c.focus(); };
+        modal.querySelectorAll('.qbtn').forEach(function (b) {
+          b.addEventListener('click', function () { catQty.value = Math.max(1, (+catQty.value || 1) + (+b.dataset.q)); });
+        });
+        modal.querySelector('.cat-x').addEventListener('click', closeCatalog);
+        modal.querySelector('.cat-cancel').addEventListener('click', closeCatalog);
+        modal.querySelector('.cat-ok').addEventListener('click', function () { add(+catQty.value || 1, catUnit.value); closeCatalog(); });
+        modal.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); closeCatalog(); }
+          else if (e.key === 'Enter') { e.preventDefault(); add(+catQty.value || 1, catUnit.value); closeCatalog(); }
+        });
+        modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeCatalog(); });
+
         function renderCard() {
-          if (pos >= catalog.length) {
-            deck.innerHTML = '<div class="deck-done">Recorriste todo el catálogo (' + catalog.length + ' productos).<br>' +
-              '<button class="btn-ghost" id="deck-restart" type="button">Volver a empezar</button></div>';
-            var rb = deck.querySelector('#deck-restart');
-            if (rb) rb.addEventListener('click', function () { pos = 0; renderCard(); });
-            return;
-          }
+          if (pos >= catalog.length) pos = catalog.length - 1;
           var p = catalog[pos];
           deck.innerHTML =
             '<div class="deck-card" tabindex="0">' +
               '<div class="deck-progress">Producto <b>' + (pos + 1) + '</b> de ' + catalog.length +
                 (isAdded(pos) ? ' · <span class="badge-added">ya agregada</span>' : '') + '</div>' +
               '<div class="dc-name">' + p.n + '</div>' +
-              '<div class="dc-meta">' + fmt(p.price) + ' · máx ' + p.max + ' por comprador · sugerido ' + p.stock + ' u</div>' +
-              '<div class="dc-actions"><button class="dc-skip" type="button">← Descartar</button>' +
-                '<button class="dc-add" type="button">Agregar ' + p.stock + ' →</button></div>' +
-              '<div class="dc-hint">← descartar · → agregar (' + p.stock + ' u) · espacio: elegir cantidad</div>' +
-              '<div class="qty-overlay" hidden>' +
-                '<div class="qo-box">' +
-                  '<div class="qo-title">¿Cuántas unidades de <b>' + p.n + '</b>?</div>' +
-                  '<div class="stepper big"><button class="qbtn" data-q="-1" type="button">−</button>' +
-                  '<input class="qinput" type="number" min="1" value="' + p.stock + '">' +
-                  '<button class="qbtn" data-q="1" type="button">+</button></div>' +
-                  '<div class="qo-actions"><button class="qo-cancel" type="button">Cancelar</button>' +
-                  '<button class="qo-ok" type="button">Agregar</button></div>' +
-                  '<div class="qo-hint">Enter para agregar · Esc para cancelar</div>' +
-                '</div></div>' +
+              '<div class="dc-meta">' + fmt(p.price) + ' · máx ' + p.max + ' · se mide en ' + unitLabel(p.unit).toLowerCase() + '</div>' +
+              '<div class="dc-nav"><button class="dc-navbtn" data-nav="-1" type="button">‹ Anterior</button>' +
+                '<button class="dc-navbtn" data-nav="1" type="button">Siguiente ›</button></div>' +
+              '<div class="dc-actions"><button class="dc-cat" type="button">Ver catálogo (espacio)</button>' +
+                '<button class="dc-add" type="button">' + (isAdded(pos) ? 'Actualizar' : 'Agregar') + ' (Enter)</button></div>' +
+              '<div class="dc-hint">← → navegar · Enter agregar · Espacio: catálogo · Esc cierra</div>' +
             '</div>';
           var cardEl = deck.querySelector('.deck-card');
-          var overlay = deck.querySelector('.qty-overlay');
-          var qin = deck.querySelector('.qinput');
           cardEl.focus();
-
-          var openQty = function () { overlay.hidden = false; qin.value = p.stock; qin.focus(); qin.select(); };
-          var closeQty = function () { overlay.hidden = true; cardEl.focus(); };
-          var confirmQty = function () { add(+qin.value || 1); };
-
-          deck.querySelectorAll('.qbtn').forEach(function (b) {
-            b.addEventListener('click', function () { qin.value = Math.max(1, (+qin.value || 1) + (+b.dataset.q)); });
-          });
-          deck.querySelector('.dc-skip').addEventListener('click', skip);
-          deck.querySelector('.dc-add').addEventListener('click', function () { add(p.stock); });
-          deck.querySelector('.qo-cancel').addEventListener('click', closeQty);
-          deck.querySelector('.qo-ok').addEventListener('click', confirmQty);
-
+          deck.querySelector('[data-nav="-1"]').addEventListener('click', prev);
+          deck.querySelector('[data-nav="1"]').addEventListener('click', next);
+          deck.querySelector('.dc-cat').addEventListener('click', openCatalog);
+          deck.querySelector('.dc-add').addEventListener('click', function () { add(p.stock, p.unit); });
           cardEl.addEventListener('keydown', function (e) {
-            if (!overlay.hidden) return;
-            if (e.key === 'ArrowLeft') { e.preventDefault(); skip(); }
-            else if (e.key === 'ArrowRight') { e.preventDefault(); add(p.stock); }
-            else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openQty(); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+            else if (e.key === 'Enter') { e.preventDefault(); add(p.stock, p.unit); }
+            else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openCatalog(); }
           });
-          qin.addEventListener('keydown', function (e) {
-            e.stopPropagation();
-            if (e.key === 'Enter') { e.preventDefault(); confirmQty(); }
-            else if (e.key === 'Escape') { e.preventDefault(); closeQty(); }
-          });
-
-          // arrastre (touch / mouse)
-          var startX = 0, dx = 0, dragging = false;
-          cardEl.addEventListener('pointerdown', function (e) {
-            if (!overlay.hidden || e.target.closest('button') || e.target.closest('.stepper')) return;
-            dragging = true; startX = e.clientX; cardEl.setPointerCapture(e.pointerId);
-          });
-          cardEl.addEventListener('pointermove', function (e) {
-            if (!dragging) return; dx = e.clientX - startX;
-            cardEl.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 30) + 'deg)';
-            cardEl.style.opacity = String(1 - Math.min(Math.abs(dx) / 500, 0.35));
-          });
-          var endDrag = function () {
-            if (!dragging) return; dragging = false;
-            if (dx > 110) add(p.stock); else if (dx < -110) skip();
-            else { cardEl.style.transform = ''; cardEl.style.opacity = ''; }
-            dx = 0;
-          };
-          cardEl.addEventListener('pointerup', endDrag);
-          cardEl.addEventListener('pointercancel', endDrag);
         }
 
         addedList.addEventListener('click', function (e) {
