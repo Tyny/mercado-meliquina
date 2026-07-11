@@ -473,6 +473,12 @@
   .cr-s { color: var(--admin); font-weight: 800; font-size: .9rem; white-space: nowrap; }
   .cr-s.zero { color: #c0564c; }
   .qinput.wide { width: 100%; border: 1px solid var(--line); text-align: left; padding: 10px 12px; border-radius: 10px; }
+  /* Modal de catálogo: stepper unificado + foco con el acento (no el outline del browser) */
+  .cat-box .stepper { background: var(--bg); }
+  .cat-box .stepper .qinput { border: none; background: transparent; }
+  .cat-box .stepper .qinput:focus { outline: none; }
+  .cat-box .stepper:focus-within { border-color: var(--admin); box-shadow: 0 0 0 3px var(--admin-soft); }
+  .cat-box .qinput.wide:focus, .cat-box .field select:focus { outline: none; border-color: var(--admin); box-shadow: 0 0 0 3px var(--admin-soft); }
 
   .cat-modal { position: fixed; inset: 0; z-index: 50; background: rgba(10,14,12,.55); display: flex; align-items: center; justify-content: center; padding: 5vh 16px; }
   .cat-modal[hidden] { display: none; }
@@ -1457,18 +1463,16 @@
         modal.innerHTML =
           '<div class="cat-box" role="dialog" aria-modal="true">' +
             '<div class="cat-head"><h3 id="ed-title"></h3><button class="cat-x" type="button" aria-label="Cerrar">✕</button></div>' +
-            '<div class="field-row">' +
-              '<div class="field"><label>Stock actual</label>' +
-                '<div class="stepper"><button class="qbtn" data-q="-1" type="button">−</button>' +
-                '<input id="ed-stock" class="qinput" type="number" min="0">' +
-                '<button class="qbtn" data-q="1" type="button">+</button></div></div>' +
-              '<div class="field"><label>Precio</label><input id="ed-price" class="qinput wide" type="number" min="0"></div>' +
-            '</div>' +
+            '<div class="field"><label>Stock actual</label>' +
+              '<div class="stepper"><button class="qbtn" data-q="-1" type="button" tabindex="-1">−</button>' +
+              '<input id="ed-stock" class="qinput" type="number" min="0">' +
+              '<button class="qbtn" data-q="1" type="button" tabindex="-1">+</button></div></div>' +
+            '<div class="field"><label>Precio</label><input id="ed-price" class="qinput wide" type="number" min="0"></div>' +
             '<div class="field"><label>¿En qué se mide?</label>' +
               '<select id="ed-unit">' + UNITS.map(function (u) { return '<option value="' + u.v + '">' + u.label + '</option>'; }).join('') + '</select></div>' +
             '<div class="cat-actions"><button class="cat-cancel" type="button">Cerrar</button>' +
               '<button class="cat-ok" type="button">Guardar</button></div>' +
-            '<div class="cat-hint">Esc para cerrar</div>' +
+            '<div class="cat-hint">Esc para cerrar · Enter para guardar</div>' +
           '</div>';
         detailInner.appendChild(modal);
         var edTitle = modal.querySelector('#ed-title');
