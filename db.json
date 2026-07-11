@@ -4,12 +4,14 @@
     "compraBase": "meliquina.app/compra/"
   },
   "compras": [
-    { "id": "entrega-26-jul", "entrega": "2026-07-26", "estado": "No publicada", "mercado": 5, "transporte": null, "retiro": "" },
-    { "id": "entrega-19-jul", "entrega": "2026-07-19", "estado": "No publicada", "mercado": 5, "transporte": null, "retiro": "Almacén de Ana" },
-    { "id": "entrega-12-jul", "entrega": "2026-07-12", "estado": "Publicada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario" },
-    { "id": "entrega-5-jul", "entrega": "2026-07-05", "estado": "Finalizada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario" },
-    { "id": "entrega-28-jun", "entrega": "2026-06-28", "estado": "Liquidada", "mercado": 5, "transporte": 6000, "retiro": "Almacén de Ana", "ventas": { "unidades": 63, "total": 418500 } },
-    { "id": "entrega-21-jun", "entrega": "2026-06-21", "estado": "Liquidada", "mercado": 8, "transporte": 5000, "retiro": "Salón comunitario", "ventas": { "unidades": 41, "total": 274300 } }
+    { "id": "entrega-26-jul", "entrega": "2026-07-26", "estado": "No publicada", "mercado": 5, "transporte": null, "retiro": "", "inicio": "", "fin": "" },
+    { "id": "entrega-19-jul", "entrega": "2026-07-19", "estado": "Publicada", "mercado": 5, "transporte": null, "retiro": "Almacén de Ana", "inicio": "2026-07-08", "fin": "2026-07-15" },
+    { "id": "entrega-12-jul", "entrega": "2026-07-12", "estado": "Publicada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-07-01", "fin": "2026-07-08" },
+    { "id": "entrega-9-ago", "entrega": "2026-08-09", "estado": "Publicada", "mercado": 5, "transporte": 5500, "retiro": "Escuela N°12", "inicio": "2026-07-29", "fin": "2026-08-05" },
+    { "id": "entrega-2-ago", "entrega": "2026-08-02", "estado": "Publicada", "mercado": 6, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-07-22", "fin": "2026-07-29" },
+    { "id": "entrega-5-jul", "entrega": "2026-07-05", "estado": "Finalizada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-06-24", "fin": "2026-07-01" },
+    { "id": "entrega-28-jun", "entrega": "2026-06-28", "estado": "Liquidada", "mercado": 5, "transporte": 6000, "retiro": "Almacén de Ana", "inicio": "2026-06-17", "fin": "2026-06-24", "ventas": { "unidades": 63, "total": 418500 } },
+    { "id": "entrega-21-jun", "entrega": "2026-06-21", "estado": "Liquidada", "mercado": 8, "transporte": 5000, "retiro": "Salón comunitario", "inicio": "2026-06-10", "fin": "2026-06-17", "ventas": { "unidades": 41, "total": 274300 } }
   ],
   "storeProducts": [
     { "n": "Miel 500g", "price": 4500, "stock": 30, "pagados": 8, "confirmados": 7 },
@@ -23,13 +25,17 @@
     { "n": "Yerba orgánica", "price": 3900, "stock": 35, "pagados": 14, "confirmados": 12 }
   ],
   "pedidos": [
-    { "n": "María López", "tel": "2972-451188", "mail": "maria.lopez@mail.com", "items": "Miel 500g ×2 · Pan de campo ×1", "total": 11500, "estado": "pendiente" },
-    { "n": "Jorge Sosa", "tel": "2972-462031", "mail": "jsosa@mail.com", "items": "Queso de cabra ×1 · Nueces 250g ×2", "total": 14400, "estado": "confirmado" },
-    { "n": "Ana Ferreyra", "tel": "2972-448820", "mail": "aferreyra@mail.com", "items": "Café molido ×1 · Yerba orgánica ×1", "total": 9500, "estado": "pendiente" },
-    { "n": "Luis Paredes", "tel": "2972-470155", "mail": "lparedes@mail.com", "items": "Aceite de oliva ×1", "total": 8900, "estado": "confirmado" },
-    { "n": "Carla Giménez", "tel": "2972-455677", "mail": "cgimenez@mail.com", "items": "Huevos x12 ×2 · Miel 500g ×1", "total": 10900, "estado": "pendiente" },
-    { "n": "Diego Ruiz", "tel": "2972-461290", "mail": "druiz@mail.com", "items": "Pan de campo ×3", "total": 7500, "estado": "confirmado" },
-    { "n": "Sofía Medina", "tel": "2972-449034", "mail": "smedina@mail.com", "items": "Dulce de frambuesa ×2", "total": 7600, "estado": "cancelado" },
-    { "n": "Pablo Herrera", "tel": "2972-472651", "mail": "pherrera@mail.com", "items": "Nueces 250g ×1 · Café molido ×1", "total": 9700, "estado": "pendiente" }
+    { "n": "María López", "tel": "2972-451188", "mail": "maria.lopez@mail.com", "destino": "mercado", "items": [{ "prod": "Miel 500g", "cant": 2 }, { "prod": "Pan de campo", "cant": 1 }], "total": 11500, "estado": "pendiente" },
+    { "n": "Jorge Sosa", "tel": "2972-462031", "mail": "jsosa@mail.com", "destino": "entrega-12-jul", "items": [{ "prod": "Queso de cabra", "cant": 1 }, { "prod": "Nueces 250g", "cant": 2 }], "total": 14400, "estado": "confirmado" },
+    { "n": "Ana Ferreyra", "tel": "2972-448820", "mail": "aferreyra@mail.com", "destino": "mercado", "items": [{ "prod": "Café molido", "cant": 1 }, { "prod": "Yerba orgánica", "cant": 1 }], "total": 9500, "estado": "pendiente" },
+    { "n": "Luis Paredes", "tel": "2972-470155", "mail": "lparedes@mail.com", "destino": "entrega-19-jul", "items": [{ "prod": "Aceite de oliva", "cant": 1 }], "total": 8900, "estado": "confirmado" },
+    { "n": "Carla Giménez", "tel": "2972-455677", "mail": "cgimenez@mail.com", "destino": "entrega-12-jul", "items": [{ "prod": "Huevos x12", "cant": 2 }, { "prod": "Miel 500g", "cant": 1 }], "total": 10900, "estado": "pendiente" },
+    { "n": "Diego Ruiz", "tel": "2972-461290", "mail": "druiz@mail.com", "destino": "mercado", "items": [{ "prod": "Pan de campo", "cant": 3 }], "total": 7500, "estado": "confirmado" },
+    { "n": "Sofía Medina", "tel": "2972-449034", "mail": "smedina@mail.com", "destino": "entrega-12-jul", "items": [{ "prod": "Dulce de frambuesa", "cant": 2 }], "total": 7600, "estado": "cancelado" },
+    { "n": "Pablo Herrera", "tel": "2972-472651", "mail": "pherrera@mail.com", "destino": "mercado", "items": [{ "prod": "Nueces 250g", "cant": 1 }, { "prod": "Café molido", "cant": 1 }], "total": 9700, "estado": "pendiente" },
+    { "n": "Lucía Vega", "tel": "2972-453390", "mail": "lvega@mail.com", "destino": "entrega-19-jul", "items": [{ "prod": "Yerba orgánica", "cant": 2 }], "total": 7800, "estado": "confirmado" },
+    { "n": "Martín Ríos", "tel": "2972-467742", "mail": "mrios@mail.com", "destino": "entrega-9-ago", "items": [{ "prod": "Miel 500g", "cant": 1 }, { "prod": "Queso de cabra", "cant": 1 }, { "prod": "Pan de campo", "cant": 2 }], "total": 15700, "estado": "pendiente" },
+    { "n": "Elena Costa", "tel": "2972-458811", "mail": "ecosta@mail.com", "destino": "mercado", "items": [{ "prod": "Huevos x12", "cant": 1 }, { "prod": "Café molido", "cant": 1 }], "total": 8800, "estado": "confirmado" },
+    { "n": "Raúl Ibáñez", "tel": "2972-464905", "mail": "ribanez@mail.com", "destino": "entrega-2-ago", "items": [{ "prod": "Aceite de oliva", "cant": 1 }, { "prod": "Nueces 250g", "cant": 1 }], "total": 13000, "estado": "pendiente" }
   ]
 }

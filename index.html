@@ -66,6 +66,18 @@
   .tab-btn:hover { color: var(--ink); }
   .tab-btn[aria-selected="true"][data-role="admin"] { color: #fff; background: var(--admin); border-color: var(--admin); }
   .tab-btn[aria-selected="true"][data-role="user"]  { color: #fff; background: var(--user);  border-color: var(--user); }
+  .tab-btn[aria-selected="true"][data-role="db"]    { color: #fff; background: #5b6570; border-color: #5b6570; }
+  .db-view { max-width: 1000px; margin: 0 auto; }
+  .db-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
+  .db-chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 15px; font-size: .85rem; font-weight: 700; }
+  .db-chip b { color: var(--admin); }
+  .db-json { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow: auto; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86rem; line-height: 1.55; white-space: pre; max-height: 72vh; }
+  .db-json .j-key { color: var(--admin); font-weight: 700; }
+  .db-json .j-str { color: #b0692c; }
+  .db-json .j-num { color: var(--user); }
+  .db-json .j-bool { color: #a4508b; }
+  .db-json .j-null { color: var(--muted); }
+  @media (prefers-color-scheme: dark) { .db-json .j-str { color: #e0a45e; } .db-json .j-bool { color: #d08bc0; } }
 
   main { max-width: 1200px; margin: 0 auto; padding: 22px 3% 80px; }
   .panel { display: none; }
@@ -523,7 +535,13 @@
   .slink { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
   .slb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .9rem; padding: 7px 16px; cursor: pointer; }
   .slb.active { background: var(--user); color: #fff; }
+  .slb:disabled { opacity: .4; cursor: default; }
+  .si-wide { flex-basis: 100%; }
   /* US-10 procesar pedidos */
+  .ord-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .otb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .9rem; padding: 8px 16px; border-radius: 10px; cursor: pointer; white-space: nowrap; flex: none; }
+  .otb.active { background: var(--admin); color: #fff; }
+  .otb .otb-n { opacity: .7; font-weight: 700; margin-left: 6px; }
   .ord-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .ord-filter { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
   .ofb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .88rem; padding: 7px 14px; cursor: pointer; }
@@ -531,11 +549,15 @@
   .ord-csv { padding: 7px 14px; }
   .ord-counts { font-size: .85rem; color: var(--muted); margin-bottom: 14px; }
   .ord-list { display: flex; flex-direction: column; gap: 10px; }
-  .ord-item { display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .ord-item { display: flex; align-items: flex-start; gap: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
   .ord-main { flex: 1; min-width: 0; }
-  .ord-name { font-weight: 700; }
-  .ord-sub { color: var(--muted); font-size: .82rem; margin-top: 2px; }
-  .ord-total { font-weight: 800; white-space: nowrap; }
+  .ord-name { font-weight: 700; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ord-contact { color: var(--muted); font-size: .82rem; margin-top: 2px; }
+  .ord-items { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 0 0; padding: 0; }
+  .ord-items li { background: var(--chip); border-radius: 8px; padding: 3px 10px; font-size: .84rem; }
+  .ord-items .oi-q { font-weight: 800; color: var(--admin); }
+  .ord-side { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; white-space: nowrap; }
+  .ord-total { font-weight: 800; font-size: 1.05rem; }
   .ord-estado { font-size: .72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
   .ord-estado.pendiente { background: #fbeecd; color: #8a5a00; }
   .ord-estado.confirmado { background: var(--admin-soft); color: var(--admin); }
@@ -544,7 +566,9 @@
   .ord-acts { display: flex; gap: 8px; }
   .ord-acts .oa { padding: 6px 12px; white-space: nowrap; }
   .oa-confirm { background: var(--admin); border-color: var(--admin); color: #fff; }
-  @media (max-width: 620px) { .ord-item { flex-wrap: wrap; } .ord-acts { width: 100%; } }
+  .ord-pager { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 14px; font-size: .85rem; color: var(--muted); }
+  .ord-empty { color: var(--muted); text-align: center; padding: 24px; border: 1px dashed var(--line); border-radius: 12px; }
+  @media (max-width: 620px) { .ord-item { flex-wrap: wrap; } .ord-side { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; } }
   /* US-3 compartir links */
   .share-row { display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
   .share-info { flex: 1; min-width: 0; }
@@ -552,6 +576,10 @@
   .share-url { font-weight: 700; font-size: 1.05rem; margin: 4px 0; word-break: break-all; }
   .share-note { color: var(--muted); font-size: .85rem; }
   .share-copy { padding: 10px 18px; white-space: nowrap; }
+  .share-sub-h { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 800; margin: 20px 0 10px; }
+  .share-compras { max-height: 230px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
+  .share-compras .share-row { margin-bottom: 0; }
+  .share-empty { color: var(--muted); padding: 16px; border: 1px dashed var(--line); border-radius: 12px; }
   @media (max-width: 560px) { .share-row { flex-wrap: wrap; } .share-copy { width: 100%; } }
   .sadmin { font-size: .85rem; font-weight: 700; color: var(--admin); background: var(--admin-soft); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .sadmin b { color: var(--admin); }
@@ -611,6 +639,9 @@
   <button class="tab-btn" data-role="user" role="tab" aria-selected="false" aria-controls="panel-user" id="tab-user">
     <span class="dot"></span>Compradora
   </button>
+  <button class="tab-btn" data-role="db" role="tab" aria-selected="false" aria-controls="panel-db" id="tab-db">
+    <span class="dot"></span>DB
+  </button>
 </nav>
 
 <main>
@@ -622,14 +653,14 @@
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda sin publicar (no visible al público). Solo puede haber una compra publicada a la vez.</p>
+        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda sin publicar (no visible al público). Puede haber varias compras publicadas a la vez (cada una con su link).</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
         <h3>Compartir links al mercado</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero copiar y compartir el link del mercado o el de una compra puntual, para difundir el mercado o limitar quién participa en una compra.</p>
-        <p class="accept">Dos links, cada uno con <b>botón de copiar</b>: el <b>link del mercado</b> (fijo y público, siempre disponible) y el <b>link de una compra puntual</b> (se copia desde el <b>listado de compras</b> y se comparte solo con ciertas personas — ej. por WhatsApp). No hay cupo numérico: se limita compartiendo el link de la compra con quienes uno quiera.</p>
+        <p class="accept">Con <b>botón de copiar</b>: el <b>link del mercado</b> (fijo y público, siempre disponible) y el <b>link de cada compra publicada</b> (uno por compra; si hay varias se listan con scroll; si no hay ninguna publicada, no hay link de compra). El link de la compra se comparte solo con ciertas personas (ej. por WhatsApp) para limitar quién participa.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -641,9 +672,9 @@
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Procesar los pedidos de una compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos de una compra, para procesarlos de punta a punta.</p>
-        <p class="accept"><b>Ver</b>: todos los pedidos con datos de contacto de la compradora y estado. <b>Confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado, dispara el email de confirmación. <b>Cancelar</b> un pendiente que nunca se pagó: libera el stock, queda "cancelado" (sin expiración automática). <b>Exportar</b> a CSV para organizar el retiro y la entrega.</p>
+        <h3>Revisar pedidos</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos —los del <b>mercado</b> y los de cada <b>compra publicada</b> en pestañas separadas—, para procesarlos de punta a punta.</p>
+        <p class="accept">Los pedidos se agrupan en <b>pestañas por destino</b>: uno para el <b>mercado</b> y uno por cada <b>compra publicada</b>. Dentro de cada pestaña: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado libera el stock (queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -664,14 +695,14 @@
         <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
         <h3>Explorar el mercado (en stock)</h3>
         <p class="story">Como <b>compradora</b>, quiero ver lo que hay en stock en el mercado con precio y cuánto queda, para decidir qué pedir.</p>
-        <p class="accept">Se llega por <b>dos links</b>: el <b>link del mercado</b> (fijo y público, siempre muestra lo que hay en stock) o el <b>link de una compra puntual</b> (se comparte con ciertas personas — US-3 — para limitar quién participa). Los dos muestran el mismo <b>stock vivo del catálogo</b>; el de la compra lo enmarca en una entrega puntual. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos. Los contadores <b>pagados y confirmados</b> por producto (ej. "8 pagados · 7 confirmados") los ve <b>solo la organizadora ❤️</b>. Lugar de retiro + fecha de entrega cuando están definidos.</p>
+        <p class="accept">Se llega por <b>dos links</b> (se togglean en el mock): el <b>link del mercado</b> (fijo y público, siempre muestra el stock) o el <b>link de la compra publicada</b> (se comparte con ciertas personas — US-3). Los dos muestran el mismo <b>stock vivo del catálogo</b>; el de la compra además muestra sus <b>fechas (comienza / cierra), lugar de retiro y fecha de entrega</b>. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos; los contadores <b>pagados y confirmados</b> por producto los ve <b>solo la organizadora ❤️</b>.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-6</span><span class="epic">Comprar</span></div>
         <h3>Hacer un pedido con carrito</h3>
-        <p class="story">Como <b>compradora</b>, quiero agregar varios productos a un carrito y finalizar la compra una sola vez con mi nombre, apellido, email y teléfono, para pedir todo en un solo paso.</p>
-        <p class="accept">Solo mientras la compra está publicada; el pedido se crea como pendiente.</p>
+        <p class="story">Como <b>compradora</b>, quiero agregar varios productos a un carrito y finalizar el pedido con mi nombre, apellido, email y teléfono, tanto en el mercado como en una compra publicada, para pedir todo en un solo paso.</p>
+        <p class="accept">El carrito y el checkout son <b>iguales</b> para el mercado y para una compra — <b>depende del link</b> por el que entró la compradora. La versión de la <b>compra</b> muestra además <b>cuándo comienza, cuándo cierra y el lugar de entrega/retiro</b>; la del mercado no fija fecha. Solo se puede pedir mientras la compra está publicada; el pedido se crea como pendiente.</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-8</span><span class="epic">Comprar</span></div>
@@ -682,21 +713,14 @@
     </div>
   </section>
 
-  <div class="scope-box">
-    <h2>Fuera de alcance (por ahora)</h2>
-    <div class="tags">
-      <span class="tag">Múltiples vendedores</span>
-      <span class="tag">Fotos de producto</span>
-      <span class="tag">Cupo de participantes</span>
-      <span class="tag">Máx por compradora</span>
-      <span class="tag">Pago online</span>
-      <span class="tag">Subida de comprobante en la app</span>
-      <span class="tag">Cuentas de compradora</span>
-      <span class="tag">Cancelación por la compradora</span>
-      <span class="tag">Expiración automática de pendientes</span>
+  <!-- DB -->
+  <section class="panel" id="panel-db" role="tabpanel" aria-labelledby="tab-db">
+    <p class="panel-head">El modelo de datos que alimenta todos los mocks — <code>db.json</code>.</p>
+    <div class="db-view">
+      <div class="db-chips" id="db-chips"></div>
+      <pre class="db-json" id="db-json">cargando…</pre>
     </div>
-    <p class="assumption"><b>Supuesto a confirmar:</b> las compradoras no pueden editar ni cancelar sus propios pedidos — solo la organizadora ❤️.</p>
-  </div>
+  </section>
 </main>
 
 <footer>Borrador · Mercado Meliquina</footer>
@@ -738,7 +762,7 @@
             <span><kbd class="mini-kbd">Espacio</kbd>editar valor</span>
             <span><kbd class="mini-kbd">Enter</kbd>crear compra</span>
           </div>
-          <p class="side-note">Se crea <b>sin publicar</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Solo puede haber <b>una compra publicada a la vez</b>. Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
+          <p class="side-note">Se crea <b>sin publicar</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Puede haber <b>varias compras publicadas</b> a la vez (cada una con su link). Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
         </div>
 
         <!-- Vista: Listado de compras -->
@@ -773,7 +797,7 @@
         <span class="srole-lbl">Estás viendo</span>
         <div class="srole-seg">
           <button type="button" class="slb active" data-link="mercado">Link del mercado</button>
-          <button type="button" class="slb" data-link="compra">Link de una compra</button>
+          <button type="button" class="slb" data-link="compra">Link de la compra publicada</button>
         </div>
         <span class="srole-hint" id="slink-hint">El link del mercado es fijo y público: siempre muestra el stock disponible.</span>
       </div>
@@ -783,7 +807,7 @@
           <div class="store-id" id="store-id">El mercado — en stock ahora</div>
           <div class="store-sub" id="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
         </div>
-        <span class="store-status">Publicada · cierra en 3 días</span>
+        <span class="store-status" id="store-status">Mercado abierto</span>
       </header>
 
       <div class="srole">
@@ -795,11 +819,7 @@
         <span class="srole-hint" id="srole-hint">Las compradoras ven solo el stock disponible (quedan X de Y).</span>
       </div>
 
-      <div class="store-info">
-        <div class="si"><span class="si-k">Entrega</span><span class="si-v">sáb 26 jul</span></div>
-        <div class="si"><span class="si-k">Lugar de retiro</span><span class="si-v">Salón comunitario de Meliquina</span></div>
-        <div class="si"><span class="si-k">Ventana</span><span class="si-v">15 → 22 jul</span></div>
-      </div>
+      <div class="store-info" id="store-info"></div>
 
       <div class="cart-bar">
         <span class="cart-info" id="cart-info">Tu pedido está vacío</span>
@@ -828,7 +848,7 @@
     <div class="mock-desktop-body">
       <div class="mock-form">
         <h3>Compartir links</h3>
-        <p class="sub">Compartí el link del mercado (siempre disponible) o el de una compra puntual para limitar quién participa.</p>
+        <p class="sub">El <b>link del mercado</b> siempre está disponible. Cada <b>compra publicada</b> tiene su propio link para compartir con ciertas personas.</p>
         <div class="share-row">
           <div class="share-info">
             <div class="share-k">Link del mercado</div>
@@ -837,14 +857,8 @@
           </div>
           <button class="btn-primary share-copy" data-copy="mercado" type="button">Copiar</button>
         </div>
-        <div class="share-row">
-          <div class="share-info">
-            <div class="share-k">Link de una compra</div>
-            <div class="share-url" id="sh-compra">meliquina.app/compra/entrega-26-jul</div>
-            <div class="share-note">Cada compra tiene su link — también se copia desde el listado de compras (US-1).</div>
-          </div>
-          <button class="btn-primary share-copy" data-copy="compra" type="button">Copiar</button>
-        </div>
+        <div class="share-sub-h">Links de las compras publicadas</div>
+        <div class="share-compras" id="share-compras"></div>
         <div class="mock-flash" id="share-flash"></div>
       </div>
     </div>
@@ -854,19 +868,21 @@
 <!-- Mock for US-10: pantalla "Procesar pedidos" (organizadora) -->
 <template id="mock-US-10">
   <div class="detail-lead">
-    <h2 class="detail-title">Procesar los pedidos de una compra</h2>
+    <h2 class="detail-title">Revisar pedidos</h2>
   </div>
 
   <div class="mock mock-desktop">
     <div class="browser-bar">
       <span class="dots"><i></i><i></i><i></i></span>
-      <span class="addr">meliquina.app/admin/compras/entrega-26-jul/pedidos</span>
+      <span class="addr">meliquina.app/admin/pedidos</span>
     </div>
-    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Compras / Pedidos</span></div>
+    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Pedidos</span></div>
     <div class="mock-desktop-body">
       <div class="mock-form">
-        <h3>Compra — entrega 26 jul · pedidos</h3>
-        <p class="sub">Confirmá los pagos (comprobante por WhatsApp) y gestioná los pedidos. Cancelar un pendiente libera su stock.</p>
+        <h3>Revisar pedidos</h3>
+        <p class="sub">Los pedidos al <b>mercado</b> y a cada <b>compra publicada</b> van en pestañas separadas. Confirmá los pagos (comprobante por WhatsApp); cancelar un pendiente libera su stock.</p>
+
+        <div class="ord-tabs" id="ord-tabs"></div>
 
         <div class="ord-toolbar">
           <div class="ord-filter">
@@ -879,6 +895,7 @@
         </div>
         <div class="ord-counts" id="ord-counts"></div>
         <div class="ord-list" id="ord-list"></div>
+        <div class="ord-pager" id="ord-pager"></div>
         <div class="mock-flash" id="ord-flash"></div>
       </div>
     </div>
@@ -974,7 +991,10 @@
 <script>
   // Data mock centralizada en db.json (servido junto al HTML)
   var DB = { links: {}, compras: [], storeProducts: [], pedidos: [] };
-  fetch('db.json').then(function (r) { return r.json(); }).then(function (d) { DB = d; }).catch(function () {});
+  fetch('db.json').then(function (r) { return r.json(); }).then(function (d) {
+    DB = d;
+    if (document.body.className === 'role-db' && typeof renderDb === 'function') renderDb();
+  }).catch(function () {});
 
   var PER_ROW = 3;
   var tabs = document.querySelectorAll('.tab-btn');
@@ -1013,13 +1033,40 @@
   window.addEventListener('scroll', updateFabs, { passive: true });
   window.addEventListener('resize', updateFabs);
 
+  function hlJson(obj) {
+    var json = JSON.stringify(obj, null, 2)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (m) {
+      var cls = 'j-num';
+      if (/^"/.test(m)) cls = /:$/.test(m) ? 'j-key' : 'j-str';
+      else if (/true|false/.test(m)) cls = 'j-bool';
+      else if (/null/.test(m)) cls = 'j-null';
+      return '<span class="' + cls + '">' + m + '</span>';
+    });
+  }
+  function renderDb() {
+    var pre = document.getElementById('db-json');
+    var chips = document.getElementById('db-chips');
+    if (!pre) return;
+    pre.innerHTML = hlJson(DB);
+    var parts = [];
+    Object.keys(DB).forEach(function (k) {
+      var v = DB[k];
+      var n = Array.isArray(v) ? v.length : Object.keys(v).length;
+      parts.push('<span class="db-chip">' + k + ' <b>' + n + '</b></span>');
+    });
+    chips.innerHTML = parts.join('');
+  }
+
   function select(role) {
     tabs.forEach(function (t) {
       t.setAttribute('aria-selected', t.dataset.role === role ? 'true' : 'false');
     });
     document.getElementById('panel-admin').classList.toggle('active', role === 'admin');
     document.getElementById('panel-user').classList.toggle('active', role === 'user');
+    document.getElementById('panel-db').classList.toggle('active', role === 'db');
     document.body.className = 'role-' + role;
+    if (role === 'db') renderDb();
     if (location.hash.slice(1) !== role) history.replaceState(null, '', '#' + role);
     window.scrollTo({ top: 0 });
     updateFabs();
@@ -1027,7 +1074,8 @@
   tabs.forEach(function (t) {
     t.addEventListener('click', function () { select(t.dataset.role); });
   });
-  select(location.hash.slice(1) === 'user' ? 'user' : 'admin');
+  var h = location.hash.slice(1);
+  select(h === 'user' || h === 'db' ? h : 'admin');
 
   /* ---- Detail view ---- */
   var detailInner = document.getElementById('detail-inner');
@@ -1199,16 +1247,15 @@
         });
         modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
 
-        var copyBtn = function (i) { return '<button class="btn-ghost cc-act cc-copy" data-i="' + i + '" type="button">🔗 Copiar link</button>'; };
         var actionsFor = function (c, i) {
           if (c.estado === 'No publicada') {
             return '<button class="btn-ghost cc-act cc-publish" data-i="' + i + '" type="button">Publicar</button>' +
               '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
           }
           if (c.estado === 'Liquidada') {
-            return copyBtn(i) + '<button class="btn-ghost cc-act cc-ventas" data-i="' + i + '" type="button">Info de ventas</button>';
+            return '<button class="btn-ghost cc-act cc-ventas" data-i="' + i + '" type="button">Info de ventas</button>';
           }
-          return copyBtn(i) + '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
+          return '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
         };
         var renderList = function () {
           ccCrumb.textContent = '— Compras';
@@ -1329,12 +1376,6 @@
             if (b.classList.contains('cc-publish')) { publicar(i); return; }
             if (b.classList.contains('cc-ventas')) { ventas(i); return; }
             if (b.classList.contains('cc-edit')) { editCompra(i); return; }
-            if (b.classList.contains('cc-copy')) {
-              var url = (DB.links.compraBase || 'meliquina.app/compra/') + compras[i].id;
-              if (navigator.clipboard) { try { navigator.clipboard.writeText(url); } catch (e) {} }
-              flash('🔗 Link copiado: ' + url, false);
-              return;
-            }
           }
           var item = e.target.closest('.cc-item');
           if (item) { listSel = +item.dataset.i; renderList(); }
@@ -1507,32 +1548,49 @@
         var roleBtns = detailInner.querySelectorAll('.srb');
         var roleHint = detailInner.querySelector('#srole-hint');
 
-        // Dos links a la misma tienda: el del mercado (fijo) y el de una compra puntual
+        // Dos links a la misma tienda: el del mercado (fijo) y el de LA COMPRA PUBLICADA
+        var stMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var stDate = function (iso) { if (!iso) return '—'; var p = iso.split('-'); return (+p[2]) + ' ' + stMES[(+p[1]) - 1]; };
+        var si = function (k, v) { return '<div class="si"><span class="si-k">' + k + '</span><span class="si-v">' + v + '</span></div>'; };
         var slbs = detailInner.querySelectorAll('.slb');
         var slinkHint = detailInner.querySelector('#slink-hint');
         var storeAddr = detailInner.querySelector('#store-addr');
         var storeId = detailInner.querySelector('#store-id');
         var storeSub = detailInner.querySelector('#store-sub');
+        var storeStatus = detailInner.querySelector('#store-status');
+        var storeInfo = detailInner.querySelector('#store-info');
+        var pub = DB.compras.filter(function (c) { return c.estado === 'Publicada'; });
+        var pc = pub[0] || null;   // compra publicada a mostrar (la primera, si hay)
         var LINKS = {
           mercado: {
             addr: DB.links.mercado, id: 'El mercado — en stock ahora',
-            sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. Los pedidos entran en la compra publicada.',
-            hint: 'El link del mercado es fijo y público: siempre muestra el stock disponible.'
+            sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. El pedido se entrega en la próxima compra.',
+            hint: 'El link del mercado es fijo y público: siempre muestra el stock disponible.',
+            status: 'Mercado abierto',
+            info: '<div class="si si-wide"><span class="si-k">Entrega</span><span class="si-v">En la próxima compra (el link del mercado no fija fecha).</span></div>'
           },
-          compra: {
-            addr: DB.links.compraBase + 'entrega-26-jul', id: 'Compra — entrega 26 jul',
-            sub: 'Link de una compra puntual: se comparte con quienes quieras (US-3) para limitar quién participa.',
-            hint: 'El link de una compra apunta a una entrega puntual; muestra el mismo stock, enmarcado en esa compra.'
-          }
+          compra: pc ? {
+            addr: DB.links.compraBase + pc.id, id: 'Compra — entrega ' + stDate(pc.entrega),
+            sub: 'Link de la compra publicada: se comparte con ciertas personas (US-3) para limitar quién participa.',
+            hint: 'El link de la compra apunta a una entrega puntual; muestra el mismo stock, con sus fechas y retiro.',
+            status: 'Publicada · cierra ' + stDate(pc.fin),
+            info: si('Comienza', stDate(pc.inicio)) + si('Cierra', stDate(pc.fin)) +
+              si('Lugar de retiro', pc.retiro || 'a definir') + si('Entrega', stDate(pc.entrega))
+          } : null
         };
+        var applyLink = function (key) {
+          var L = LINKS[key]; if (!L) return;
+          slbs.forEach(function (x) { x.classList.toggle('active', x.dataset.link === key); });
+          storeAddr.textContent = L.addr; storeId.textContent = L.id;
+          storeSub.textContent = L.sub; slinkHint.textContent = L.hint;
+          storeStatus.textContent = L.status; storeInfo.innerHTML = L.info;
+        };
+        // Si no hay compra publicada, el botón de la compra queda deshabilitado
         slbs.forEach(function (b) {
-          b.addEventListener('click', function () {
-            var L = LINKS[b.dataset.link];
-            slbs.forEach(function (x) { x.classList.toggle('active', x === b); });
-            storeAddr.textContent = L.addr; storeId.textContent = L.id;
-            storeSub.textContent = L.sub; slinkHint.textContent = L.hint;
-          });
+          if (b.dataset.link === 'compra' && !pc) { b.disabled = true; b.title = 'No hay compra publicada'; }
+          b.addEventListener('click', function () { if (!b.disabled) applyLink(b.dataset.link); });
         });
+        applyLink('mercado');
 
         var quedanOf = function (o) { return Math.max(0, o.stock - o.pagados); };
 
@@ -1596,16 +1654,42 @@
       var ordList = detailInner.querySelector('#ord-list');
       if (ordList) {
         var ofmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
+        var ordMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var shortDate = function (iso) { var p = iso.split('-'); return (+p[2]) + ' ' + ordMES[(+p[1]) - 1]; };
         var pedidos = DB.pedidos.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
-        var filtro = 'todos';
+        var filtro = 'todos', ordPage = 0, OPAGE = 5, destino = 'mercado';
+        // Pestañas por destino: mercado + cada compra publicada
+        var destinos = [{ key: 'mercado', label: 'Mercado' }].concat(
+          DB.compras.filter(function (c) { return c.estado === 'Publicada'; })
+            .map(function (c) { return { key: c.id, label: 'Compra ' + shortDate(c.entrega) }; }));
+        var ordTabs = detailInner.querySelector('#ord-tabs');
         var ordCounts = detailInner.querySelector('#ord-counts');
         var ordFlash = detailInner.querySelector('#ord-flash');
+        var ordPager = detailInner.querySelector('#ord-pager');
         var ofbs = detailInner.querySelectorAll('.ofb');
         var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
+        var renderTabs = function () {
+          ordTabs.innerHTML = destinos.map(function (d) {
+            var n = pedidos.filter(function (p) { return p.destino === d.key; }).length;
+            return '<button class="otb' + (d.key === destino ? ' active' : '') + '" data-d="' + d.key + '" type="button">' +
+              d.label + '<span class="otb-n">' + n + '</span></button>';
+          }).join('');
+        };
+        var itemsHtml = function (its) {
+          return '<ul class="ord-items">' + its.map(function (it) {
+            return '<li><span class="oi-q">' + it.cant + '×</span> ' + it.prod + '</li>';
+          }).join('') + '</ul>';
+        };
 
         var drawOrders = function () {
-          var vis = pedidos.filter(function (p) { return filtro === 'todos' || p.estado === filtro; });
-          ordList.innerHTML = vis.map(function (p) {
+          var vis = pedidos.filter(function (p) {
+            return p.destino === destino && (filtro === 'todos' || p.estado === filtro);
+          });
+          var pages = Math.max(1, Math.ceil(vis.length / OPAGE));
+          if (ordPage >= pages) ordPage = pages - 1;
+          if (ordPage < 0) ordPage = 0;
+          var start = ordPage * OPAGE;
+          ordList.innerHTML = vis.length ? vis.slice(start, start + OPAGE).map(function (p) {
             var gi = pedidos.indexOf(p);
             var acts = p.estado === 'pendiente'
               ? '<div class="ord-acts">' +
@@ -1614,21 +1698,38 @@
                 '</div>'
               : '';
             return '<div class="ord-item">' +
-              '<div class="ord-main"><div class="ord-name">' + p.n + '</div>' +
-              '<div class="ord-sub">' + p.tel + ' · ' + p.mail + ' · ' + p.items + '</div></div>' +
-              '<div class="ord-total">' + ofmt(p.total) + '</div>' +
-              '<span class="ord-estado ' + p.estado + '">' + cap(p.estado) + '</span>' +
-              acts + '</div>';
-          }).join('');
+              '<div class="ord-main">' +
+                '<div class="ord-name">' + p.n + ' <span class="ord-estado ' + p.estado + '">' + cap(p.estado) + '</span></div>' +
+                '<div class="ord-contact">' + p.tel + ' · ' + p.mail + '</div>' +
+                itemsHtml(p.items) +
+              '</div>' +
+              '<div class="ord-side"><div class="ord-total">' + ofmt(p.total) + '</div>' + acts + '</div>' +
+            '</div>';
+          }).join('') : '<div class="ord-empty">No hay pedidos en esta pestaña' + (filtro !== 'todos' ? ' con ese estado' : '') + '.</div>';
+          ordPager.innerHTML = vis.length > OPAGE
+            ? '<button class="pg" data-pg="-1" type="button"' + (ordPage === 0 ? ' disabled' : '') + '>‹</button>' +
+              '<span>Página ' + (ordPage + 1) + ' de ' + pages + '</span>' +
+              '<button class="pg" data-pg="1" type="button"' + (ordPage === pages - 1 ? ' disabled' : '') + '>›</button>'
+            : '';
+          var dp = pedidos.filter(function (p) { return p.destino === destino; });
           var c = { pendiente: 0, confirmado: 0, cancelado: 0 };
-          pedidos.forEach(function (p) { c[p.estado]++; });
-          ordCounts.textContent = pedidos.length + ' pedidos · ' + c.pendiente + ' pendientes · ' +
+          dp.forEach(function (p) { c[p.estado]++; });
+          ordCounts.textContent = dp.length + ' pedidos · ' + c.pendiente + ' pendientes · ' +
             c.confirmado + ' confirmados · ' + c.cancelado + ' cancelados';
         };
 
+        ordTabs.addEventListener('click', function (e) {
+          var b = e.target.closest('.otb'); if (!b) return;
+          destino = b.dataset.d; ordPage = 0;
+          renderTabs(); drawOrders();
+        });
+        ordPager.addEventListener('click', function (e) {
+          var b = e.target.closest('.pg'); if (!b) return;
+          ordPage += (+b.dataset.pg); drawOrders();
+        });
         detailInner.querySelectorAll('.ofb').forEach(function (b) {
           b.addEventListener('click', function () {
-            filtro = b.dataset.f;
+            filtro = b.dataset.f; ordPage = 0;
             ofbs.forEach(function (x) { x.classList.toggle('active', x === b); });
             drawOrders();
           });
@@ -1638,30 +1739,43 @@
           var i = +b.dataset.i;
           if (b.dataset.act === 'confirmar') { pedidos[i].estado = 'confirmado'; ordFlash.textContent = '✓ Pedido de ' + pedidos[i].n + ' confirmado (email enviado).'; ordFlash.className = 'mock-flash show'; }
           else if (b.dataset.act === 'cancelar') { pedidos[i].estado = 'cancelado'; ordFlash.textContent = 'Pedido de ' + pedidos[i].n + ' cancelado — stock liberado.'; ordFlash.className = 'mock-flash show warn'; }
-          drawOrders();
+          renderTabs(); drawOrders();
         });
         detailInner.querySelector('#ord-csv').addEventListener('click', function () {
-          ordFlash.textContent = '✓ CSV exportado con ' + pedidos.length + ' pedidos (mock, no descarga nada).';
+          var n = pedidos.filter(function (p) { return p.destino === destino; }).length;
+          ordFlash.textContent = '✓ CSV exportado con ' + n + ' pedidos de esta pestaña (mock, no descarga nada).';
           ordFlash.className = 'mock-flash show';
         });
+        renderTabs();
         drawOrders();
       }
 
-      // US-3: compartir links (mercado / compra) con botón de copiar
+      // US-3: compartir links — mercado (fijo) + una fila por cada compra PUBLICADA (con scroll)
       var share = detailInner.querySelector('.share-row');
       if (share) {
+        var shMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var shDate = function (iso) { if (!iso) return '—'; var p = iso.split('-'); return (+p[2]) + ' ' + shMES[(+p[1]) - 1]; };
         var shMercado = detailInner.querySelector('#sh-mercado');
-        var shCompra = detailInner.querySelector('#sh-compra');
         var shFlash = detailInner.querySelector('#share-flash');
+        var shCompras = detailInner.querySelector('#share-compras');
         if (DB.links.mercado) shMercado.textContent = DB.links.mercado;
-        if (DB.links.compraBase) shCompra.textContent = DB.links.compraBase + 'entrega-26-jul';
-        detailInner.querySelectorAll('.share-copy').forEach(function (b) {
-          b.addEventListener('click', function () {
-            var url = b.dataset.copy === 'mercado' ? shMercado.textContent : shCompra.textContent;
-            if (navigator.clipboard) { try { navigator.clipboard.writeText(url); } catch (e) {} }
-            shFlash.textContent = '✓ Link copiado: ' + url;
-            shFlash.className = 'mock-flash show';
-          });
+        var pubs = DB.compras.filter(function (c) { return c.estado === 'Publicada'; });
+        shCompras.innerHTML = pubs.length ? pubs.map(function (c) {
+          var url = DB.links.compraBase + c.id;
+          return '<div class="share-row">' +
+            '<div class="share-info">' +
+              '<div class="share-k">Compra — entrega ' + shDate(c.entrega) + '</div>' +
+              '<div class="share-url">' + url + '</div>' +
+              '<div class="share-note">Cierra ' + shDate(c.fin) + ' · retiro ' + (c.retiro || 'a definir') + '</div>' +
+            '</div>' +
+            '<button class="btn-primary share-copy" data-url="' + url + '" type="button">Copiar</button></div>';
+        }).join('') : '<div class="share-empty">No hay ninguna compra publicada. Publicá una compra para tener su link.</div>';
+        detailInner.querySelector('.mock-form').addEventListener('click', function (e) {
+          var b = e.target.closest('.share-copy'); if (!b) return;
+          var url = b.dataset.copy === 'mercado' ? shMercado.textContent : b.dataset.url;
+          if (navigator.clipboard) { try { navigator.clipboard.writeText(url); } catch (e2) {} }
+          shFlash.textContent = '✓ Link copiado: ' + url;
+          shFlash.className = 'mock-flash show';
         });
       }
 
