@@ -652,7 +652,7 @@
       <article class="card">
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —fechas, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
         <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda sin publicar (no visible al público). Puede haber varias compras publicadas a la vez (cada una con su link).</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
@@ -1110,8 +1110,8 @@
             { key: 'mercado', label: 'Ganancia del mercado', type: 'gain', val: 5, unit: 'pct' },
             { key: 'transporte', label: 'Ganancia del transporte', type: 'gain', val: null, unit: 'pct' },
             { key: 'retiro', label: 'Lugar de retiro', type: 'text', val: '' },
-            { key: 'inicio', label: 'Inicio de la ventana', type: 'datetime', val: '' },
-            { key: 'fin', label: 'Fin de la ventana', type: 'datetime', val: '' },
+            { key: 'inicio', label: 'Inicio de la compra', type: 'datetime', val: '' },
+            { key: 'fin', label: 'Cierre de la compra', type: 'datetime', val: '' },
             { key: 'entrega', label: 'Fecha de entrega', type: 'date', val: '' }
           ];
         };
