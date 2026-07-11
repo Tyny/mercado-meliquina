@@ -321,6 +321,8 @@
   .gain-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
   .gt { border: none; background: var(--bg); color: var(--muted); padding: 0 15px; font: inherit; font-weight: 800; cursor: pointer; }
   .gt.active { background: var(--admin); color: #fff; }
+  .g-preview { margin: 20px 0 6px; padding: 14px 16px; background: var(--admin-soft); border-radius: 12px; color: var(--ink); font-size: .98rem; line-height: 1.8; }
+  .g-preview b { font-weight: 800; }
   .mock-side h4 { margin: 0 0 14px; font-size: 1.05rem; }
   .sum-id {
     font-weight: 800; font-size: 1.05rem; color: var(--admin);
@@ -740,6 +742,13 @@
         <p class="accept">Sobre los pedidos confirmados: total vendido, ganancia del mercado, transporte y monto a proveedores (= total − mercado − transporte), con desglose por producto. Las dos ganancias (mercado y transporte, cada una % o monto fijo) se definen acá si faltan y son obligatorias para cerrar. "Marcar liquidada" deja la compra en estado liquidada.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
+      <article class="card">
+        <div class="meta"><span class="id">US-19</span><span class="epic">Configuración</span></div>
+        <h3>Configurar ganancias</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero definir la ganancia del <b>mercado</b> y la de las <b>compras</b> en una pantalla propia, para que el precio de venta salga solo (<b>precio = costo + ganancia</b>).</p>
+        <p class="accept">Dos valores, cada uno <b>% o monto fijo</b>: la ganancia que se aplica a lo que se vende por el <b>mercado</b> y la que se aplica a los productos de una <b>compra</b>. La ganancia <b>define el precio de venta</b> sobre el costo; ya no se cargan ganancias al crear una compra ni al liquidar. El <b>flete no es ganancia</b>: es costo de la orden de compra.</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
+      </article>
     </div>
   </section>
 
@@ -795,7 +804,7 @@
 
       <article class="dicc-card">
         <div class="dicc-term">🛒 Compra</div>
-        <p class="dicc-def">Ronda donde las <b>compradoras</b> hacen <b>pedidos</b>. <span class="dicc-arrow">Entra demanda: compradora → organizadora ❤️.</span> No lleva nombre: se identifica por su fecha de entrega.</p>
+        <p class="dicc-def">Ronda donde las <b>compradoras</b> hacen <b>pedidos</b>. <span class="dicc-arrow">Entra demanda: compradora → organizadora ❤️.</span> No lleva nombre: se identifica por su fecha de entrega. Ofrece una <b>subselección</b> de productos del catálogo (la organizadora los agrega a la compra; editable <b>hasta antes de publicar</b>). No filtra por stock: la compra se abastece después con su orden de compra.</p>
         <div class="dicc-sm">
           <span class="sm-state">No publicada</span>
           <span class="sm-arrow"><span class="sm-act">Publicar</span><span class="sm-line">→</span></span>
@@ -1096,6 +1105,45 @@
   </div>
 </template>
 
+<!-- Mock for US-19: pantalla "Configurar ganancias" -->
+<template id="mock-US-19">
+  <div class="detail-lead">
+    <h2 class="detail-title">Configurar ganancias</h2>
+  </div>
+  <div class="mock mock-desktop">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr">meliquina.app/admin/ganancias</span>
+    </div>
+    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Ganancias</span></div>
+    <div class="mock-desktop-body">
+      <div class="mock-form" style="max-width:640px">
+        <h3>Ganancias</h3>
+        <p class="sub">La ganancia <b>define el precio de venta</b> sobre el costo: <b>precio = costo + ganancia</b>. Se configura una vez para el mercado y otra para las compras; no se cargan al crear una compra ni al liquidar.</p>
+        <div class="field">
+          <label>Ganancia del mercado</label>
+          <div class="gain" data-gain="g-merc">
+            <input type="number" class="gain-val" id="g-merc-val" min="0" value="30">
+            <div class="gain-toggle"><button class="gt active" data-t="pct" type="button">%</button><button class="gt" data-t="fijo" type="button">$</button></div>
+          </div>
+          <p class="hint">Se aplica a lo que se vende por el link del mercado.</p>
+        </div>
+        <div class="field">
+          <label>Ganancia de las compras</label>
+          <div class="gain" data-gain="g-comp">
+            <input type="number" class="gain-val" id="g-comp-val" min="0" value="20">
+            <div class="gain-toggle"><button class="gt active" data-t="pct" type="button">%</button><button class="gt" data-t="fijo" type="button">$</button></div>
+          </div>
+          <p class="hint">Se aplica a los productos de una compra.</p>
+        </div>
+        <div class="g-preview" id="g-preview"></div>
+        <div class="mock-actions"><button class="btn-primary" id="g-save" type="button">Guardar ganancias</button></div>
+        <div class="mock-flash" id="g-flash"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <!-- Mock for US-16: pantalla "Administrar catálogo" -->
 <template id="mock-US-16">
   <div class="detail-lead">
@@ -1278,8 +1326,6 @@
         var cloneFields = function (f) { return f.map(function (x) { var o = {}; for (var k in x) o[k] = x[k]; return o; }); };
         var blank = function () {
           return [
-            { key: 'mercado', label: 'Ganancia del mercado', type: 'gain', val: 5, unit: 'pct' },
-            { key: 'transporte', label: 'Ganancia del transporte', type: 'gain', val: null, unit: 'pct' },
             { key: 'retiro', label: 'Lugar de retiro', type: 'text', val: '' },
             { key: 'inicio', label: 'Inicio de la compra', type: 'datetime', val: '' },
             { key: 'fin', label: 'Cierre de la compra', type: 'datetime', val: '' },
@@ -1288,10 +1334,8 @@
         };
         var getField = function (f, k) { for (var i = 0; i < f.length; i++) if (f[i].key === k) return f[i]; return null; };
         var setKey = function (f, k, v, unit) { var x = getField(f, k); if (x) { x.val = v; if (unit) x.unit = unit; } };
-        var seed = function (dateISO, mkt, trans, retiro) {
+        var seed = function (dateISO, retiro) {
           var f = blank();
-          setKey(f, 'mercado', mkt, 'pct');
-          setKey(f, 'transporte', trans, 'fijo');
           setKey(f, 'retiro', retiro);
           setKey(f, 'entrega', dateISO);
           return f;
@@ -1316,7 +1360,7 @@
         var sel = 0, editingId = null, editIdx = 0, listPage = 0, CPAGE = 4, listSel = 0;
         // Compras desde el DB (db.json)
         var compras = DB.compras.map(function (c) {
-          return { id: c.id, estado: c.estado, ventas: c.ventas || null, fields: seed(c.entrega, c.mercado, c.transporte, c.retiro) };
+          return { id: c.id, estado: c.estado, ventas: c.ventas || null, fields: seed(c.entrega, c.retiro) };
         });
 
         var reviewView = detailInner.querySelector('#cc-review-view');
@@ -1439,9 +1483,9 @@
           var start = listPage * CPAGE;
           ccList.innerHTML = compras.slice(start, start + CPAGE).map(function (c, k) {
             var i = start + k, f = c.fields;
-            var sub = 'Mercado ' + dispVal(getField(f, 'mercado')) +
-              ' · Transporte ' + dispVal(getField(f, 'transporte')) +
-              ' · Lugar de retiro ' + (getField(f, 'retiro').val || 'sin definir');
+            var sub = 'Cierre ' + dispVal(getField(f, 'fin')) +
+              ' · Entrega ' + dispVal(getField(f, 'entrega')) +
+              ' · Retiro ' + (getField(f, 'retiro').val || 'sin definir');
             var openCls = c.estado === 'Publicada' ? ' is-open' : '';
             return '<div class="cc-item' + (c.isNew ? ' new' : '') + (i === listSel ? ' current' : '') + '" data-i="' + i + '">' +
               '<div class="ci-main"><div class="ci-id">' + idOf(f) + '</div><div class="ci-sub">' + sub + '</div></div>' +
@@ -2003,6 +2047,37 @@
           detailInner.querySelector('#liq-flash').classList.add('show');
           liqMark.textContent = 'Liquidada ✓'; liqMark.disabled = true;
         });
+      }
+
+      // US-19: Configurar ganancias (precio = costo + ganancia; mercado y compras)
+      var gMercVal = detailInner.querySelector('#g-merc-val');
+      if (gMercVal) {
+        var gMoney = function (n) { return '$' + Math.round(n).toLocaleString('es-AR'); };
+        var gMerc = { el: gMercVal, box: detailInner.querySelector('[data-gain="g-merc"]'), unit: 'pct' };
+        var gComp = { el: detailInner.querySelector('#g-comp-val'), box: detailInner.querySelector('[data-gain="g-comp"]'), unit: 'pct' };
+        var gPrev = detailInner.querySelector('#g-preview');
+        var priceOf = function (cost, val, unit) { var v = +val || 0; return unit === 'pct' ? cost * (1 + v / 100) : cost + v; };
+        var renderPrev = function () {
+          var cost = 1000;
+          gPrev.innerHTML = 'Ejemplo · un producto que te <b>cuesta ' + gMoney(cost) + '</b> se vende a:<br>' +
+            'Mercado <b>' + gMoney(priceOf(cost, gMerc.el.value, gMerc.unit)) + '</b> · ' +
+            'Compra <b>' + gMoney(priceOf(cost, gComp.el.value, gComp.unit)) + '</b>';
+        };
+        [gMerc, gComp].forEach(function (g) {
+          g.box.querySelectorAll('.gt').forEach(function (b) {
+            b.addEventListener('click', function () {
+              g.box.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
+              b.classList.add('active'); g.unit = b.dataset.t; renderPrev();
+            });
+          });
+          g.el.addEventListener('input', renderPrev);
+        });
+        var gFlash = detailInner.querySelector('#g-flash');
+        detailInner.querySelector('#g-save').addEventListener('click', function () {
+          gFlash.textContent = 'Ganancias guardadas ✓ (mock, no se guarda nada)';
+          gFlash.className = 'mock-flash show';
+        });
+        renderPrev();
       }
     } else {
       var title = card.querySelector('h3').textContent;
