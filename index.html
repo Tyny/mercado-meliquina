@@ -520,6 +520,39 @@
   .srb.active { background: var(--user); color: #fff; }
   .srb.active[data-role="admin"] { background: var(--admin); }
   .srole-hint { font-size: .82rem; color: var(--muted); }
+  .slink { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+  .slb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .9rem; padding: 7px 16px; cursor: pointer; }
+  .slb.active { background: var(--user); color: #fff; }
+  /* US-10 procesar pedidos */
+  .ord-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .ord-filter { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .ofb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .88rem; padding: 7px 14px; cursor: pointer; }
+  .ofb.active { background: var(--admin); color: #fff; }
+  .ord-csv { padding: 7px 14px; }
+  .ord-counts { font-size: .85rem; color: var(--muted); margin-bottom: 14px; }
+  .ord-list { display: flex; flex-direction: column; gap: 10px; }
+  .ord-item { display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .ord-main { flex: 1; min-width: 0; }
+  .ord-name { font-weight: 700; }
+  .ord-sub { color: var(--muted); font-size: .82rem; margin-top: 2px; }
+  .ord-total { font-weight: 800; white-space: nowrap; }
+  .ord-estado { font-size: .72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .ord-estado.pendiente { background: #fbeecd; color: #8a5a00; }
+  .ord-estado.confirmado { background: var(--admin-soft); color: var(--admin); }
+  .ord-estado.cancelado { background: var(--chip); color: var(--muted); text-decoration: line-through; }
+  @media (prefers-color-scheme: dark) { .ord-estado.pendiente { background: #3a2f14; color: #f0c65a; } }
+  .ord-acts { display: flex; gap: 8px; }
+  .ord-acts .oa { padding: 6px 12px; white-space: nowrap; }
+  .oa-confirm { background: var(--admin); border-color: var(--admin); color: #fff; }
+  @media (max-width: 620px) { .ord-item { flex-wrap: wrap; } .ord-acts { width: 100%; } }
+  /* US-3 compartir links */
+  .share-row { display: flex; align-items: center; gap: 14px; border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .share-info { flex: 1; min-width: 0; }
+  .share-k { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 800; }
+  .share-url { font-weight: 700; font-size: 1.05rem; margin: 4px 0; word-break: break-all; }
+  .share-note { color: var(--muted); font-size: .85rem; }
+  .share-copy { padding: 10px 18px; white-space: nowrap; }
+  @media (max-width: 560px) { .share-row { flex-wrap: wrap; } .share-copy { width: 100%; } }
   .sadmin { font-size: .85rem; font-weight: 700; color: var(--admin); background: var(--admin-soft); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .sadmin b { color: var(--admin); }
   .sadmin-tag { margin-left: auto; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; opacity: .8; }
@@ -589,14 +622,15 @@
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
+        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda sin publicar (no visible al público). Solo puede haber una compra publicada a la vez.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
-        <h3>Compartir el link de la compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero un link de la compra para compartir, para enviarlo solo a ciertas personas cuando quiero limitar quién participa.</p>
-        <p class="accept">No hay cupo numérico: se limita compartiendo el link (ej. por WhatsApp) con quienes uno quiera. Cualquiera con el link puede pedir mientras la compra esté publicada.</p>
+        <h3>Compartir links al mercado</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero copiar y compartir el link del mercado o el de una compra puntual, para difundir el mercado o limitar quién participa en una compra.</p>
+        <p class="accept">Dos links, cada uno con <b>botón de copiar</b>: el <b>link del mercado</b> (fijo y público, siempre disponible) y el <b>link de una compra puntual</b> (se copia desde el <b>listado de compras</b> y se comparte solo con ciertas personas — ej. por WhatsApp). No hay cupo numérico: se limita compartiendo el link de la compra con quienes uno quiera.</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-16</span><span class="epic">Catálogo</span></div>
@@ -610,6 +644,7 @@
         <h3>Procesar los pedidos de una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos de una compra, para procesarlos de punta a punta.</p>
         <p class="accept"><b>Ver</b>: todos los pedidos con datos de contacto de la compradora y estado. <b>Confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado, dispara el email de confirmación. <b>Cancelar</b> un pendiente que nunca se pagó: libera el stock, queda "cancelado" (sin expiración automática). <b>Exportar</b> a CSV para organizar el retiro y la entrega.</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
@@ -629,7 +664,7 @@
         <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
         <h3>Explorar el mercado (en stock)</h3>
         <p class="story">Como <b>compradora</b>, quiero ver lo que hay en stock en el mercado con precio y cuánto queda, para decidir qué pedir.</p>
-        <p class="accept">Es la vista del <b>mercado</b> (el stock vivo del catálogo), no de una compra puntual. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos. Los contadores <b>pagados y confirmados</b> por producto (ej. "8 pagados · 7 confirmados") los ve <b>solo la organizadora ❤️</b>. Retiro + fecha de entrega cuando están definidos.</p>
+        <p class="accept">Se llega por <b>dos links</b>: el <b>link del mercado</b> (fijo y público, siempre muestra lo que hay en stock) o el <b>link de una compra puntual</b> (se comparte con ciertas personas — US-3 — para limitar quién participa). Los dos muestran el mismo <b>stock vivo del catálogo</b>; el de la compra lo enmarca en una entrega puntual. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos. Los contadores <b>pagados y confirmados</b> por producto (ej. "8 pagados · 7 confirmados") los ve <b>solo la organizadora ❤️</b>. Lugar de retiro + fecha de entrega cuando están definidos.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -730,14 +765,23 @@
   <div class="mock mock-desktop store-mock">
     <div class="browser-bar">
       <span class="dots"><i></i><i></i><i></i></span>
-      <span class="addr">meliquina.app/mercado</span>
+      <span class="addr" id="store-addr">meliquina.app/mercado</span>
     </div>
     <div class="store-topbar">Mercado Meliquina</div>
     <div class="store-body">
+      <div class="slink">
+        <span class="srole-lbl">Estás viendo</span>
+        <div class="srole-seg">
+          <button type="button" class="slb active" data-link="mercado">Link del mercado</button>
+          <button type="button" class="slb" data-link="compra">Link de una compra</button>
+        </div>
+        <span class="srole-hint" id="slink-hint">El link del mercado es fijo y público: siempre muestra el stock disponible.</span>
+      </div>
+
       <header class="store-head">
         <div>
-          <div class="store-id">El mercado — en stock ahora</div>
-          <div class="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
+          <div class="store-id" id="store-id">El mercado — en stock ahora</div>
+          <div class="store-sub" id="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
         </div>
         <span class="store-status">Publicada · cierra en 3 días</span>
       </header>
@@ -765,6 +809,78 @@
       <div class="store-grid" id="store-offers"></div>
 
       <div class="mock-flash" id="store-flash" style="margin-top:20px">→ Continúa en US-6 (carrito y checkout con tus datos).</div>
+    </div>
+  </div>
+</template>
+
+<!-- Mock for US-3: pantalla "Compartir links" (organizadora) -->
+<template id="mock-US-3">
+  <div class="detail-lead">
+    <h2 class="detail-title">Compartir links al mercado</h2>
+  </div>
+
+  <div class="mock mock-desktop">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr">meliquina.app/admin/compartir</span>
+    </div>
+    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Compartir</span></div>
+    <div class="mock-desktop-body">
+      <div class="mock-form">
+        <h3>Compartir links</h3>
+        <p class="sub">Compartí el link del mercado (siempre disponible) o el de una compra puntual para limitar quién participa.</p>
+        <div class="share-row">
+          <div class="share-info">
+            <div class="share-k">Link del mercado</div>
+            <div class="share-url" id="sh-mercado">meliquina.app/mercado</div>
+            <div class="share-note">Fijo y público — siempre muestra el stock.</div>
+          </div>
+          <button class="btn-primary share-copy" data-copy="mercado" type="button">Copiar</button>
+        </div>
+        <div class="share-row">
+          <div class="share-info">
+            <div class="share-k">Link de una compra</div>
+            <div class="share-url" id="sh-compra">meliquina.app/compra/entrega-26-jul</div>
+            <div class="share-note">Cada compra tiene su link — también se copia desde el listado de compras (US-1).</div>
+          </div>
+          <button class="btn-primary share-copy" data-copy="compra" type="button">Copiar</button>
+        </div>
+        <div class="mock-flash" id="share-flash"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Mock for US-10: pantalla "Procesar pedidos" (organizadora) -->
+<template id="mock-US-10">
+  <div class="detail-lead">
+    <h2 class="detail-title">Procesar los pedidos de una compra</h2>
+  </div>
+
+  <div class="mock mock-desktop">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr">meliquina.app/admin/compras/entrega-26-jul/pedidos</span>
+    </div>
+    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Compras / Pedidos</span></div>
+    <div class="mock-desktop-body">
+      <div class="mock-form">
+        <h3>Compra — entrega 26 jul · pedidos</h3>
+        <p class="sub">Confirmá los pagos (comprobante por WhatsApp) y gestioná los pedidos. Cancelar un pendiente libera su stock.</p>
+
+        <div class="ord-toolbar">
+          <div class="ord-filter">
+            <button type="button" class="ofb active" data-f="todos">Todos</button>
+            <button type="button" class="ofb" data-f="pendiente">Pendientes</button>
+            <button type="button" class="ofb" data-f="confirmado">Confirmados</button>
+            <button type="button" class="ofb" data-f="cancelado">Cancelados</button>
+          </div>
+          <button type="button" class="btn-ghost ord-csv" id="ord-csv">Exportar CSV</button>
+        </div>
+        <div class="ord-counts" id="ord-counts"></div>
+        <div class="ord-list" id="ord-list"></div>
+        <div class="mock-flash" id="ord-flash"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -856,6 +972,10 @@
 <button class="nav-fab" id="fab-down" aria-label="Ver las 3 siguientes">▼</button>
 
 <script>
+  // Data mock centralizada en db.json (servido junto al HTML)
+  var DB = { links: {}, compras: [], storeProducts: [], pedidos: [] };
+  fetch('db.json').then(function (r) { return r.json(); }).then(function (d) { DB = d; }).catch(function () {});
+
   var PER_ROW = 3;
   var tabs = document.querySelectorAll('.tab-btn');
   var fabUp = document.getElementById('fab-up');
@@ -975,14 +1095,10 @@
 
         var fields = blank();
         var sel = 0, editingId = null, editIdx = 0, listPage = 0, CPAGE = 4, listSel = 0;
-        var compras = [
-          { id: 'entrega-26-jul', estado: 'No publicada', fields: seed('2026-07-26', 5, null, '') },
-          { id: 'entrega-19-jul', estado: 'No publicada', fields: seed('2026-07-19', 5, null, 'Almacén de Ana') },
-          { id: 'entrega-12-jul', estado: 'Publicada', fields: seed('2026-07-12', 5, 6000, 'Salón comunitario') },
-          { id: 'entrega-5-jul', estado: 'Finalizada', fields: seed('2026-07-05', 5, 6000, 'Salón comunitario') },
-          { id: 'entrega-28-jun', estado: 'Liquidada', fields: seed('2026-06-28', 5, 6000, 'Almacén de Ana'), ventas: { unidades: 63, total: 418500 } },
-          { id: 'entrega-21-jun', estado: 'Liquidada', fields: seed('2026-06-21', 8, 5000, 'Salón comunitario'), ventas: { unidades: 41, total: 274300 } }
-        ];
+        // Compras desde el DB (db.json)
+        var compras = DB.compras.map(function (c) {
+          return { id: c.id, estado: c.estado, ventas: c.ventas || null, fields: seed(c.entrega, c.mercado, c.transporte, c.retiro) };
+        });
 
         var reviewView = detailInner.querySelector('#cc-review-view');
         var listView = detailInner.querySelector('#cc-list-view');
@@ -1083,15 +1199,16 @@
         });
         modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
 
+        var copyBtn = function (i) { return '<button class="btn-ghost cc-act cc-copy" data-i="' + i + '" type="button">🔗 Copiar link</button>'; };
         var actionsFor = function (c, i) {
           if (c.estado === 'No publicada') {
             return '<button class="btn-ghost cc-act cc-publish" data-i="' + i + '" type="button">Publicar</button>' +
               '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
           }
           if (c.estado === 'Liquidada') {
-            return '<button class="btn-ghost cc-act cc-ventas" data-i="' + i + '" type="button">Info de ventas</button>';
+            return copyBtn(i) + '<button class="btn-ghost cc-act cc-ventas" data-i="' + i + '" type="button">Info de ventas</button>';
           }
-          return '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
+          return copyBtn(i) + '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
         };
         var renderList = function () {
           ccCrumb.textContent = '— Compras';
@@ -1212,6 +1329,12 @@
             if (b.classList.contains('cc-publish')) { publicar(i); return; }
             if (b.classList.contains('cc-ventas')) { ventas(i); return; }
             if (b.classList.contains('cc-edit')) { editCompra(i); return; }
+            if (b.classList.contains('cc-copy')) {
+              var url = (DB.links.compraBase || 'meliquina.app/compra/') + compras[i].id;
+              if (navigator.clipboard) { try { navigator.clipboard.writeText(url); } catch (e) {} }
+              flash('🔗 Link copiado: ' + url, false);
+              return;
+            }
           }
           var item = e.target.closest('.cc-item');
           if (item) { listSel = +item.dataset.i; renderList(); }
@@ -1374,18 +1497,8 @@
       var store = detailInner.querySelector('#store-offers');
       if (store) {
         var sfmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
-        // pagados = pedidos con pago reportado (reservan stock); confirmados = subconjunto verificado por el organizador
-        var prods = [
-          { n: 'Miel 500g', price: 4500, stock: 30, pagados: 8, confirmados: 7 },
-          { n: 'Dulce de frambuesa', price: 3800, stock: 20, pagados: 6, confirmados: 5 },
-          { n: 'Queso de cabra', price: 6200, stock: 15, pagados: 15, confirmados: 12 },
-          { n: 'Pan de campo', price: 2500, stock: 40, pagados: 22, confirmados: 20 },
-          { n: 'Huevos x12', price: 3200, stock: 25, pagados: 9, confirmados: 6 },
-          { n: 'Aceite de oliva', price: 8900, stock: 12, pagados: 4, confirmados: 3 },
-          { n: 'Nueces 250g', price: 4100, stock: 18, pagados: 6, confirmados: 6 },
-          { n: 'Café molido', price: 5600, stock: 22, pagados: 11, confirmados: 8 },
-          { n: 'Yerba orgánica', price: 3900, stock: 35, pagados: 14, confirmados: 12 }
-        ];
+        // Productos del mercado desde el DB (pagados = pago reportado, reservan stock; confirmados = verificados)
+        var prods = DB.storeProducts.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
         var qtys = prods.map(function () { return 0; });
         var role = 'user';
         var cartInfo = detailInner.querySelector('#cart-info');
@@ -1393,6 +1506,33 @@
         var storeFlash = detailInner.querySelector('#store-flash');
         var roleBtns = detailInner.querySelectorAll('.srb');
         var roleHint = detailInner.querySelector('#srole-hint');
+
+        // Dos links a la misma tienda: el del mercado (fijo) y el de una compra puntual
+        var slbs = detailInner.querySelectorAll('.slb');
+        var slinkHint = detailInner.querySelector('#slink-hint');
+        var storeAddr = detailInner.querySelector('#store-addr');
+        var storeId = detailInner.querySelector('#store-id');
+        var storeSub = detailInner.querySelector('#store-sub');
+        var LINKS = {
+          mercado: {
+            addr: DB.links.mercado, id: 'El mercado — en stock ahora',
+            sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. Los pedidos entran en la compra publicada.',
+            hint: 'El link del mercado es fijo y público: siempre muestra el stock disponible.'
+          },
+          compra: {
+            addr: DB.links.compraBase + 'entrega-26-jul', id: 'Compra — entrega 26 jul',
+            sub: 'Link de una compra puntual: se comparte con quienes quieras (US-3) para limitar quién participa.',
+            hint: 'El link de una compra apunta a una entrega puntual; muestra el mismo stock, enmarcado en esa compra.'
+          }
+        };
+        slbs.forEach(function (b) {
+          b.addEventListener('click', function () {
+            var L = LINKS[b.dataset.link];
+            slbs.forEach(function (x) { x.classList.toggle('active', x === b); });
+            storeAddr.textContent = L.addr; storeId.textContent = L.id;
+            storeSub.textContent = L.sub; slinkHint.textContent = L.hint;
+          });
+        });
 
         var quedanOf = function (o) { return Math.max(0, o.stock - o.pagados); };
 
@@ -1450,6 +1590,79 @@
         });
         contBtn.addEventListener('click', function () { storeFlash.classList.add('show'); });
         drawStore();
+      }
+
+      // US-10: procesar pedidos (ver / confirmar / cancelar / exportar) — organizadora
+      var ordList = detailInner.querySelector('#ord-list');
+      if (ordList) {
+        var ofmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
+        var pedidos = DB.pedidos.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
+        var filtro = 'todos';
+        var ordCounts = detailInner.querySelector('#ord-counts');
+        var ordFlash = detailInner.querySelector('#ord-flash');
+        var ofbs = detailInner.querySelectorAll('.ofb');
+        var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
+
+        var drawOrders = function () {
+          var vis = pedidos.filter(function (p) { return filtro === 'todos' || p.estado === filtro; });
+          ordList.innerHTML = vis.map(function (p) {
+            var gi = pedidos.indexOf(p);
+            var acts = p.estado === 'pendiente'
+              ? '<div class="ord-acts">' +
+                  '<button class="btn-ghost oa oa-confirm" data-act="confirmar" data-i="' + gi + '" type="button">Confirmar</button>' +
+                  '<button class="btn-ghost oa oa-cancel" data-act="cancelar" data-i="' + gi + '" type="button">Cancelar</button>' +
+                '</div>'
+              : '';
+            return '<div class="ord-item">' +
+              '<div class="ord-main"><div class="ord-name">' + p.n + '</div>' +
+              '<div class="ord-sub">' + p.tel + ' · ' + p.mail + ' · ' + p.items + '</div></div>' +
+              '<div class="ord-total">' + ofmt(p.total) + '</div>' +
+              '<span class="ord-estado ' + p.estado + '">' + cap(p.estado) + '</span>' +
+              acts + '</div>';
+          }).join('');
+          var c = { pendiente: 0, confirmado: 0, cancelado: 0 };
+          pedidos.forEach(function (p) { c[p.estado]++; });
+          ordCounts.textContent = pedidos.length + ' pedidos · ' + c.pendiente + ' pendientes · ' +
+            c.confirmado + ' confirmados · ' + c.cancelado + ' cancelados';
+        };
+
+        detailInner.querySelectorAll('.ofb').forEach(function (b) {
+          b.addEventListener('click', function () {
+            filtro = b.dataset.f;
+            ofbs.forEach(function (x) { x.classList.toggle('active', x === b); });
+            drawOrders();
+          });
+        });
+        ordList.addEventListener('click', function (e) {
+          var b = e.target.closest('button'); if (!b) return;
+          var i = +b.dataset.i;
+          if (b.dataset.act === 'confirmar') { pedidos[i].estado = 'confirmado'; ordFlash.textContent = '✓ Pedido de ' + pedidos[i].n + ' confirmado (email enviado).'; ordFlash.className = 'mock-flash show'; }
+          else if (b.dataset.act === 'cancelar') { pedidos[i].estado = 'cancelado'; ordFlash.textContent = 'Pedido de ' + pedidos[i].n + ' cancelado — stock liberado.'; ordFlash.className = 'mock-flash show warn'; }
+          drawOrders();
+        });
+        detailInner.querySelector('#ord-csv').addEventListener('click', function () {
+          ordFlash.textContent = '✓ CSV exportado con ' + pedidos.length + ' pedidos (mock, no descarga nada).';
+          ordFlash.className = 'mock-flash show';
+        });
+        drawOrders();
+      }
+
+      // US-3: compartir links (mercado / compra) con botón de copiar
+      var share = detailInner.querySelector('.share-row');
+      if (share) {
+        var shMercado = detailInner.querySelector('#sh-mercado');
+        var shCompra = detailInner.querySelector('#sh-compra');
+        var shFlash = detailInner.querySelector('#share-flash');
+        if (DB.links.mercado) shMercado.textContent = DB.links.mercado;
+        if (DB.links.compraBase) shCompra.textContent = DB.links.compraBase + 'entrega-26-jul';
+        detailInner.querySelectorAll('.share-copy').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var url = b.dataset.copy === 'mercado' ? shMercado.textContent : shCompra.textContent;
+            if (navigator.clipboard) { try { navigator.clipboard.writeText(url); } catch (e) {} }
+            shFlash.textContent = '✓ Link copiado: ' + url;
+            shFlash.className = 'mock-flash show';
+          });
+        });
       }
 
       // US-15: liquidación (totales + desglose por producto)
