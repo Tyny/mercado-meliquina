@@ -199,6 +199,20 @@
     color: var(--muted); font-size: 1rem; text-align: center;
   }
 
+  /* Definición de una US (concepto): cómo + desafíos + posibilidades */
+  .def-how { max-width: 900px; margin: 0 0 22px; color: var(--muted); line-height: 1.7; font-size: 1rem; }
+  .def-how b { color: var(--ink); font-weight: 700; }
+  .def-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 900px; align-items: start; }
+  @media (max-width: 680px) { .def-grid { grid-template-columns: 1fr; } }
+  .def-block { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--card); }
+  .def-block.challenges { border-top: 4px solid #c0564c; }
+  .def-block.wins { border-top: 4px solid var(--admin); }
+  .def-block h4 { margin: 0 0 14px; font-size: 1.08rem; }
+  .def-block ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 13px; }
+  .def-block li { line-height: 1.5; font-size: .95rem; }
+  .def-block li b { display: block; font-weight: 700; margin-bottom: 2px; }
+  .def-block li span { color: var(--muted); }
+
   /* Mock "app" chrome */
   .mock {
     border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
@@ -684,6 +698,13 @@
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
+        <div class="meta"><span class="id">US-17</span><span class="epic">Procesar pedidos</span></div>
+        <h3>Conciliar pagos</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero cruzar los pedidos pendientes con un <b>extracto bancario</b> o de <b>Mercado Pago</b>, para <b>confirmar los pagos en lote</b> en vez de uno por uno.</p>
+        <p class="accept">Subo o pego el detalle de acreditaciones (fecha, monto, quién pagó); la app sugiere el match con cada pedido pendiente por <b>monto + nombre</b> y confirmo en lote. Los dudosos quedan para revisión manual. Alimenta el paso <b>confirmar</b> de Revisar pedidos (US-10); el comprobante por WhatsApp deja de ser obligatorio.</p>
+        <p class="open-hint">Ver definición, desafíos y posibilidades →</p>
+      </article>
+      <article class="card">
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
         <h3>Liquidar una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
@@ -988,6 +1009,39 @@
         </div>
       </div>
     </div>
+  </div>
+</template>
+
+<!-- Mock for US-17: definición conceptual "Conciliar pagos" (desafíos + posibilidades) -->
+<template id="mock-US-17">
+  <div class="detail-lead">
+    <h2 class="detail-title">Conciliar pagos</h2>
+    <p class="detail-story">Como <b>organizadora ❤️</b>, quiero cruzar los pedidos pendientes con un <b>extracto bancario</b> o de <b>Mercado Pago</b>, para <b>confirmar los pagos en lote</b> en vez de uno por uno.</p>
+  </div>
+  <p class="def-how">Hoy la organizadora confirma a mano: revisa el comprobante que llega por WhatsApp y marca el pedido, uno por uno. <b>Cómo funcionaría:</b> sube o pega el detalle de acreditaciones (fecha, monto, quién pagó); la app las cruza con los pedidos <b>pendientes</b> por <b>monto + similitud de nombre</b>, sugiere el match y ella confirma <b>en lote</b>. Los casos dudosos caen en una cola corta para resolver a mano. Alimenta directo el paso <b>confirmar</b> de <b>Revisar pedidos</b> (US-10).</p>
+  <div class="def-grid">
+    <section class="def-block challenges">
+      <h4>⚠️ Desafíos</h4>
+      <ul>
+        <li><b>El nombre no coincide</b><span>Quien transfiere suele no ser la compradora (paga un familiar, otra cuenta). El match por nombre falla seguido.</span></li>
+        <li><b>Sin referencia del pedido</b><span>Transferencias y Mercado Pago casi nunca traen un concepto útil; no hay un ID para cruzar directo.</span></li>
+        <li><b>Montos iguales = ambigüedad</b><span>Si dos pedidos suman lo mismo, una acreditación podría ser de cualquiera de los dos.</span></li>
+        <li><b>Pagos parciales o combinados</b><span>Alguien paga dos pedidos en una transferencia, o paga de menos/más. El match 1-a-1 no alcanza.</span></li>
+        <li><b>Cada export es distinto</b><span>Bancos y Mercado Pago exportan columnas y formatos diferentes; hay que normalizar la entrada.</span></li>
+        <li><b>Acreditar ≠ pedido pagado</b><span>Una acreditación puede no corresponder a ningún pedido. La decisión final siempre la toma la organizadora.</span></li>
+      </ul>
+    </section>
+    <section class="def-block wins">
+      <h4>✨ Posibilidades</h4>
+      <ul>
+        <li><b>Confirmar en lote</b><span>Los matches exactos (monto + nombre) se confirman de una; se termina el chequeo comprobante por comprobante.</span></li>
+        <li><b>Monto único por pedido</b><span>Sugerir un total con centavos (ej. $11.500,07) vuelve cada acreditación inequívoca y elimina la ambigüedad.</span></li>
+        <li><b>Cola de dudosos</b><span>Los ambiguos o sin match quedan en una lista corta para elegir entre candidatos, sin frenar al resto.</span></li>
+        <li><b>Semiautomático y seguro</b><span>La app sugiere, la organizadora confirma. Nunca confirma sola: mantiene el control.</span></li>
+        <li><b>Menos ida y vuelta</b><span>El comprobante por WhatsApp deja de ser obligatorio para la mayoría de los pedidos.</span></li>
+        <li><b>Integración a futuro</b><span>Arrancar con CSV pegado/subido y, más adelante, traer las acreditaciones solas vía API de Mercado Pago.</span></li>
+      </ul>
+    </section>
   </div>
 </template>
 
