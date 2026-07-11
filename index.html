@@ -625,6 +625,26 @@
   .slb.active { background: var(--user); color: #fff; }
   .slb:disabled { opacity: .4; cursor: default; }
   .si-wide { flex-basis: 100%; }
+  /* US-6 carrito + checkout */
+  .co-h { margin: 20px 0 12px; font-size: 1.1rem; }
+  .co-summary { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 8px; }
+  .cosum-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .cosum-row:last-child { border-bottom: none; }
+  .cosum-q { font-weight: 800; color: var(--user); min-width: 34px; }
+  .cosum-n { flex: 1; }
+  .cosum-s { font-weight: 700; }
+  .cosum-tot { background: var(--user-soft); font-weight: 800; }
+  .cosum-tot .cosum-s { color: var(--user); }
+  .co-form { flex-wrap: wrap; }
+  .co-form .field { flex: 1; min-width: 180px; }
+  .co-note { font-size: .85rem; color: var(--muted); margin: 6px 0 16px; line-height: 1.5; }
+  .co-done-card { text-align: center; border: 1px solid var(--user); background: var(--user-soft); border-radius: 16px; padding: 28px 22px; }
+  .co-done-ic { width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 999px; background: var(--user); color: #fff; font-size: 1.7rem; display: flex; align-items: center; justify-content: center; }
+  .co-done-card h3 { margin: 0 0 8px; }
+  .co-done-sub { color: var(--ink); margin-bottom: 14px; }
+  .co-done-items { list-style: none; display: inline-flex; flex-direction: column; gap: 4px; margin: 0 auto 16px; padding: 12px 20px; background: var(--card); border-radius: 12px; text-align: left; font-size: .92rem; }
+  .co-done-steps { display: flex; flex-direction: column; gap: 10px; text-align: left; max-width: 520px; margin: 0 auto 18px; font-size: .9rem; color: var(--ink); line-height: 1.5; }
+  .co-done-steps > div { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; }
   /* US-10 procesar pedidos */
   .ord-context { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); padding: 12px 14px; margin-bottom: 14px; background: var(--accent-soft); border-radius: 12px; }
   .octx-badge { font-weight: 800; font-size: .8rem; padding: 4px 11px; border-radius: 999px; background: var(--accent); color: #fff; white-space: nowrap; }
@@ -826,6 +846,7 @@
         <h3>Hacer un pedido con carrito</h3>
         <p class="story">Como <b>compradora</b>, quiero agregar varios productos a un carrito y finalizar el pedido con mi nombre, apellido, email y teléfono, tanto en el mercado como en una compra publicada, para pedir todo en un solo paso.</p>
         <p class="accept">El carrito y el checkout son <b>iguales</b> para el mercado y para una compra — <b>depende del link</b> por el que entró la compradora. La versión de la <b>compra</b> muestra además <b>cuándo comienza, cuándo cierra y el lugar de entrega/retiro</b>; la del mercado no fija fecha. Solo se puede pedir mientras la compra está publicada; el pedido se crea como pendiente.</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-8</span><span class="epic">Comprar</span></div>
@@ -1083,6 +1104,70 @@
         </div>
         <div class="mock-flash" id="share-flash"></div>
       </div>
+    </div>
+  </div>
+</template>
+
+<!-- Mock for US-6: pantalla "Hacer un pedido con carrito" (compradora) -->
+<template id="mock-US-6">
+  <div class="detail-lead">
+    <h2 class="detail-title">Hacer un pedido con carrito</h2>
+  </div>
+  <div class="mock mock-desktop store-mock">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr" id="co-addr">meliquina.app/mercado</span>
+    </div>
+    <div class="store-topbar">Mercado Meliquina</div>
+    <div class="store-body">
+      <div class="slink">
+        <span class="srole-lbl">Pedís por</span>
+        <div class="srole-seg">
+          <button type="button" class="slb active" data-link="mercado">Link del mercado</button>
+          <button type="button" class="slb" data-link="compra">Link de la compra publicada</button>
+        </div>
+        <span class="srole-hint" id="co-linkhint">Mismo carrito y checkout; sólo cambia el link por el que entrás.</span>
+      </div>
+
+      <!-- Paso 1: tienda + carrito -->
+      <div id="co-shop">
+        <header class="store-head">
+          <div>
+            <div class="store-id" id="co-id">El mercado — en stock ahora</div>
+            <div class="store-sub" id="co-sub"></div>
+          </div>
+          <span class="store-status" id="co-status">Mercado abierto</span>
+        </header>
+        <div class="store-info" id="co-info"></div>
+        <div class="cart-bar">
+          <span class="cart-info" id="co-cart">Tu pedido está vacío</span>
+          <button class="btn-primary user" id="co-continue" type="button" disabled>Continuar al pedido →</button>
+        </div>
+        <div class="store-grid" id="co-offers"></div>
+      </div>
+
+      <!-- Paso 2: checkout (resumen + datos) -->
+      <div id="co-checkout" hidden>
+        <button class="oc-back" id="co-back" type="button">‹ Volver a la tienda</button>
+        <h3 class="co-h">Tu pedido</h3>
+        <div class="co-summary" id="co-summary"></div>
+        <h3 class="co-h">Tus datos</h3>
+        <div class="field-row co-form">
+          <div class="field"><label>Nombre</label><input type="text" id="co-nombre" placeholder="Tu nombre"></div>
+          <div class="field"><label>Apellido</label><input type="text" id="co-apellido" placeholder="Tu apellido"></div>
+        </div>
+        <div class="field-row co-form">
+          <div class="field"><label>Email</label><input type="email" id="co-email" placeholder="vos@mail.com"></div>
+          <div class="field"><label>Teléfono</label><input type="tel" id="co-tel" placeholder="2972-000000"></div>
+        </div>
+        <p class="co-note" id="co-note"></p>
+        <button class="btn-primary user" id="co-submit" type="button">Confirmar pedido</button>
+      </div>
+
+      <!-- Paso 3: confirmación -->
+      <div id="co-done" hidden></div>
+
+      <div class="mock-flash" id="co-flash"></div>
     </div>
   </div>
 </template>
@@ -2091,6 +2176,160 @@
         contBtn.addEventListener('click', function () { storeFlash.classList.add('show'); });
 
         applyLink('mercado');
+      }
+
+      // US-6: hacer un pedido con carrito (compradora) — tienda → checkout → confirmación
+      var coStore = detailInner.querySelector('#co-offers');
+      if (coStore) {
+        var cfmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
+        var coMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var coDate = function (iso) { if (!iso) return '—'; var p = iso.split('-'); return (+p[2]) + ' ' + coMES[(+p[1]) - 1]; };
+        var coSi = function (k, v) { return '<div class="si"><span class="si-k">' + k + '</span><span class="si-v">' + v + '</span></div>'; };
+        var coLink = 'mercado';
+        var coByName = {}; DB.storeProducts.forEach(function (p) { coByName[p.n] = p; });
+        var coPub = DB.compras.filter(function (c) { return c.estado === 'Publicada'; });
+        var coPc = coPub[0] || null;
+        var coQuedan = function (o) { return Math.max(0, o.stock - o.pagados); };
+        var coMarket = DB.storeProducts.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
+        var coCompra = coPc ? (coPc.productos || []).map(function (n) { var sp = coByName[n] || { n: n, price: 0 }; return { n: n, price: sp.price }; }) : [];
+        var coProds = coMarket, coQtys = coProds.map(function () { return 0; });
+
+        var coShop = detailInner.querySelector('#co-shop');
+        var coCheckout = detailInner.querySelector('#co-checkout');
+        var coDone = detailInner.querySelector('#co-done');
+        var coAddr = detailInner.querySelector('#co-addr');
+        var coId = detailInner.querySelector('#co-id');
+        var coSub = detailInner.querySelector('#co-sub');
+        var coStatus = detailInner.querySelector('#co-status');
+        var coInfo = detailInner.querySelector('#co-info');
+        var coLinkHint = detailInner.querySelector('#co-linkhint');
+        var coCart = detailInner.querySelector('#co-cart');
+        var coCont = detailInner.querySelector('#co-continue');
+        var coSummary = detailInner.querySelector('#co-summary');
+        var coNote = detailInner.querySelector('#co-note');
+        var coFlash = detailInner.querySelector('#co-flash');
+
+        var CO_LINKS = {
+          mercado: {
+            addr: DB.links.mercado, id: 'El mercado — en stock ahora', status: 'Mercado abierto',
+            sub: 'Pedí lo que haya disponible; la entrega del mercado se coordina aparte, sin fecha fija.',
+            hint: 'Mismo carrito y checkout; por el link del mercado pedís lo que hay en stock.',
+            info: '<div class="si si-wide"><span class="si-k">Entrega</span><span class="si-v">Asincrónica: se coordina aparte, sin fecha fija.</span></div>'
+          },
+          compra: coPc ? {
+            addr: DB.links.compraBase + coPc.id, id: 'Compra — entrega ' + coDate(coPc.entrega), status: 'Publicada · cierra ' + coDate(coPc.fin),
+            sub: 'Pedís de la subselección de la compra; se agrupa y se compra al cerrar (sin stock previo).',
+            hint: 'Mismo carrito y checkout; por el link de la compra pedís a demanda.',
+            info: coSi('Comienza', coDate(coPc.inicio)) + coSi('Cierra', coDate(coPc.fin)) + coSi('Lugar de retiro', coPc.retiro || 'a definir') + coSi('Entrega', coDate(coPc.entrega))
+          } : null
+        };
+
+        var coUpdateCart = function () {
+          var u = 0, t = 0;
+          coProds.forEach(function (o, i) { u += coQtys[i]; t += coQtys[i] * o.price; });
+          coCart.textContent = u ? (u + ' ' + (u === 1 ? 'unidad' : 'unidades') + ' · ' + cfmt(t)) : 'Tu pedido está vacío';
+          coCont.disabled = u === 0;
+        };
+        var coDraw = function () {
+          coStore.innerHTML = coProds.map(function (o, i) {
+            if (coLink === 'compra') {
+              return '<div class="soffer">' +
+                '<div class="soffer-top"><span class="sname">' + o.n + '</span><span class="sprice">' + cfmt(o.price) + '</span></div>' +
+                '<div class="sstock"><span class="sademand">A pedido · se agrupa al cerrar la compra</span></div>' +
+                '<div class="sbuy"><div class="stepper">' +
+                '<button class="sbtn" data-act="minus" data-i="' + i + '" ' + (coQtys[i] <= 0 ? 'disabled' : '') + '>−</button>' +
+                '<span class="qty">' + coQtys[i] + '</span>' +
+                '<button class="sbtn" data-act="plus" data-i="' + i + '">+</button></div></div></div>';
+            }
+            var quedan = coQuedan(o), sold = quedan <= 0;
+            var buy = sold ? '' : '<div class="sbuy"><div class="stepper">' +
+              '<button class="sbtn" data-act="minus" data-i="' + i + '" ' + (coQtys[i] <= 0 ? 'disabled' : '') + '>−</button>' +
+              '<span class="qty">' + coQtys[i] + '</span>' +
+              '<button class="sbtn" data-act="plus" data-i="' + i + '" ' + (coQtys[i] >= quedan ? 'disabled' : '') + '>+</button></div></div>';
+            return '<div class="soffer' + (sold ? ' sold' : '') + '">' +
+              '<div class="soffer-top"><span class="sname">' + o.n + '</span><span class="sprice">' + cfmt(o.price) + '</span></div>' +
+              '<div class="sstock">' + (sold ? '<span class="sinstock">Sin stock</span>' : 'Quedan <b>' + quedan + '</b> de ' + o.stock) + '</div>' +
+              buy + '</div>';
+          }).join('');
+          coUpdateCart();
+        };
+        var coApplyLink = function (key) {
+          var L = CO_LINKS[key]; if (!L) return;
+          coLink = key;
+          detailInner.querySelectorAll('.store-mock .slb').forEach(function (x) { x.classList.toggle('active', x.dataset.link === key); });
+          coAddr.textContent = L.addr; coId.textContent = L.id; coSub.textContent = L.sub;
+          coLinkHint.textContent = L.hint; coStatus.textContent = L.status; coInfo.innerHTML = L.info;
+          coProds = (key === 'compra') ? coCompra : coMarket;
+          coQtys = coProds.map(function () { return 0; });
+          if (typeof setMode === 'function') setMode(key);
+          coDraw();
+        };
+
+        var coShowShop = function () { coShop.hidden = false; coCheckout.hidden = true; coDone.hidden = true; coFlash.className = 'mock-flash'; };
+        var coRenderSummary = function () {
+          var rows = '', t = 0, u = 0;
+          coProds.forEach(function (o, i) {
+            if (coQtys[i] > 0) {
+              var sub = coQtys[i] * o.price; t += sub; u += coQtys[i];
+              rows += '<div class="cosum-row"><span class="cosum-q">' + coQtys[i] + '×</span><span class="cosum-n">' + o.n + '</span><span class="cosum-s">' + cfmt(sub) + '</span></div>';
+            }
+          });
+          coSummary.innerHTML = rows + '<div class="cosum-row cosum-tot"><span class="cosum-q"></span><span class="cosum-n">Total · ' + u + ' ' + (u === 1 ? 'unidad' : 'unidades') + '</span><span class="cosum-s">' + cfmt(t) + '</span></div>';
+          coNote.innerHTML = coLink === 'compra'
+            ? 'Pedido para la <b>compra ' + coDate(coPc.entrega) + '</b>: se agrupa al cerrar. Retiro en ' + (coPc.retiro || 'a definir') + '.'
+            : 'Pedido al <b>mercado</b>: entrega asincrónica, se coordina aparte.';
+        };
+        var coGoCheckout = function () { coShop.hidden = true; coCheckout.hidden = false; coDone.hidden = true; coRenderSummary(); var f = detailInner.querySelector('#co-nombre'); if (f) f.focus(); };
+
+        var coSubmit = function () {
+          var nombre = detailInner.querySelector('#co-nombre').value.trim();
+          var apellido = detailInner.querySelector('#co-apellido').value.trim();
+          var email = detailInner.querySelector('#co-email').value.trim();
+          var tel = detailInner.querySelector('#co-tel').value.trim();
+          var falta = [];
+          if (!nombre) falta.push('nombre');
+          if (!apellido) falta.push('apellido');
+          if (!email || email.indexOf('@') < 0) falta.push('email válido');
+          if (!tel) falta.push('teléfono');
+          if (falta.length) { coFlash.textContent = 'Falta completar: ' + falta.join(', ') + '.'; coFlash.className = 'mock-flash show warn'; return; }
+          var t = 0, u = 0, items = '';
+          coProds.forEach(function (o, i) { if (coQtys[i] > 0) { t += coQtys[i] * o.price; u += coQtys[i]; items += '<li>' + coQtys[i] + '× ' + o.n + '</li>'; } });
+          coCheckout.hidden = true; coShop.hidden = true; coDone.hidden = false;
+          coDone.innerHTML =
+            '<div class="co-done-card">' +
+              '<div class="co-done-ic">✓</div>' +
+              '<h3>¡Pedido creado!</h3>' +
+              '<p class="co-done-sub">Gracias, <b>' + nombre + '</b>. Tu pedido de <b>' + u + ' ' + (u === 1 ? 'unidad' : 'unidades') + '</b> por <b>' + cfmt(t) + '</b> quedó <span class="ord-estado pendiente">Pendiente</span>.</p>' +
+              '<ul class="co-done-items">' + items + '</ul>' +
+              '<div class="co-done-steps">' +
+                '<div>📧 Te enviamos un email a <b>' + email + '</b> con el detalle y tu <b>link de seguimiento</b> (US-8).</div>' +
+                '<div>💸 Pagá por transferencia/Mercado Pago y mandá el <b>comprobante por WhatsApp</b>; la organizadora ❤️ lo confirma (US-10).</div>' +
+                (coLink === 'compra' ? '<div>📅 Es un pedido de la <b>compra ' + coDate(coPc.entrega) + '</b>: se agrupa con los demás y se compra al cerrar. Retiro en ' + (coPc.retiro || 'a definir') + '.</div>' : '<div>🏪 Es un pedido al <b>mercado</b>: la entrega se coordina aparte, sin fecha fija.</div>') +
+              '</div>' +
+              '<button class="btn-ghost" id="co-again" type="button">Hacer otro pedido</button>' +
+            '</div>';
+          detailInner.querySelector('#co-again').addEventListener('click', function () {
+            coQtys = coProds.map(function () { return 0; });
+            ['#co-nombre', '#co-apellido', '#co-email', '#co-tel'].forEach(function (s) { var e = detailInner.querySelector(s); if (e) e.value = ''; });
+            coDraw(); coShowShop();
+          });
+        };
+
+        detailInner.querySelectorAll('.store-mock .slb').forEach(function (b) {
+          if (b.dataset.link === 'compra' && !coPc) { b.disabled = true; b.title = 'No hay compra publicada'; }
+          b.addEventListener('click', function () { if (!b.disabled) coApplyLink(b.dataset.link); });
+        });
+        coStore.addEventListener('click', function (e) {
+          var btn = e.target.closest('.sbtn'); if (!btn) return;
+          var i = +btn.dataset.i;
+          if (btn.dataset.act === 'plus') { if (coLink === 'compra' || coQtys[i] < coQuedan(coProds[i])) coQtys[i]++; }
+          else if (btn.dataset.act === 'minus' && coQtys[i] > 0) coQtys[i]--;
+          coDraw();
+        });
+        coCont.addEventListener('click', coGoCheckout);
+        detailInner.querySelector('#co-back').addEventListener('click', coShowShop);
+        detailInner.querySelector('#co-submit').addEventListener('click', coSubmit);
+        coApplyLink('mercado');
       }
 
       // US-10: procesar pedidos (ver / confirmar / cancelar / exportar) — organizadora
