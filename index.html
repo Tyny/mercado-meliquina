@@ -67,6 +67,7 @@
   .tab-btn[aria-selected="true"][data-role="admin"] { color: #fff; background: var(--admin); border-color: var(--admin); }
   .tab-btn[aria-selected="true"][data-role="user"]  { color: #fff; background: var(--user);  border-color: var(--user); }
   .tab-btn[aria-selected="true"][data-role="db"]    { color: #fff; background: #5b6570; border-color: #5b6570; }
+  .tab-btn[aria-selected="true"][data-role="dicc"]  { color: #fff; background: #6a7f5b; border-color: #6a7f5b; }
   .db-view { max-width: 1000px; margin: 0 auto; }
   .db-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
   .db-chip { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 7px 15px; font-size: .85rem; font-weight: 700; }
@@ -78,6 +79,31 @@
   .db-json .j-bool { color: #a4508b; }
   .db-json .j-null { color: var(--muted); }
   @media (prefers-color-scheme: dark) { .db-json .j-str { color: #e0a45e; } .db-json .j-bool { color: #d08bc0; } }
+
+  /* Diccionario */
+  .dicc { max-width: 1000px; margin: 0 auto; }
+  .dicc-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 680px) { .dicc-modes { grid-template-columns: 1fr; } }
+  .dicc-mode { border: 1px solid var(--line); border-radius: 12px; padding: 15px 17px; background: var(--card); }
+  .dicc-mode .dm-title { font-weight: 800; font-size: 1.05rem; margin-bottom: 7px; display: flex; align-items: center; gap: 8px; }
+  .dicc-mode .dm-tag { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; }
+  .dicc-mode p { margin: 0; color: var(--muted); line-height: 1.6; font-size: .95rem; }
+  .dicc-mode b { color: var(--ink); }
+  .dicc-card { border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; background: var(--card); margin-bottom: 14px; }
+  .dicc-term { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: baseline; gap: 8px; }
+  .dicc-term .dt-sub { font-size: .9rem; font-weight: 600; color: var(--muted); }
+  .dicc-def { margin: 0 0 14px; color: var(--muted); line-height: 1.6; }
+  .dicc-def b { color: var(--ink); font-weight: 700; }
+  .dicc-arrow { display: inline-block; color: var(--admin); font-weight: 600; }
+  .dicc-sm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .sm-state { padding: 5px 13px; border-radius: 999px; background: var(--admin-soft); color: var(--admin); font-weight: 800; font-size: .85rem; white-space: nowrap; }
+  .sm-state.ok { background: rgba(74,143,90,.16); color: #4a8f5a; }
+  .sm-state.no { background: rgba(192,86,76,.16); color: #c0564c; }
+  .sm-arrow { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; color: var(--muted); }
+  .sm-arrow .sm-act { font-size: .72rem; font-weight: 600; white-space: nowrap; }
+  .sm-arrow .sm-line { font-size: 1.15rem; }
+  .dicc-note { margin: 12px 0 0; font-size: .85rem; color: var(--muted); line-height: 1.55; }
+  .dicc-note b { color: var(--ink); font-weight: 700; }
 
   main { max-width: 1200px; margin: 0 auto; padding: 22px 3% 80px; }
   .panel { display: none; }
@@ -662,6 +688,9 @@
   <button class="tab-btn" data-role="db" role="tab" aria-selected="false" aria-controls="panel-db" id="tab-db">
     <span class="dot"></span>DB
   </button>
+  <button class="tab-btn" data-role="dicc" role="tab" aria-selected="false" aria-controls="panel-dicc" id="tab-dicc">
+    <span class="dot"></span>Diccionario
+  </button>
 </nav>
 
 <main>
@@ -746,6 +775,88 @@
     <div class="db-view">
       <div class="db-chips" id="db-chips"></div>
       <pre class="db-json" id="db-json">cargando…</pre>
+    </div>
+  </section>
+
+  <!-- DICCIONARIO -->
+  <section class="panel" id="panel-dicc" role="tabpanel" aria-labelledby="tab-dicc">
+    <p class="panel-head">Las entidades del dominio, su definición y cómo cambian de estado en cada proceso.</p>
+    <div class="dicc">
+      <div class="dicc-modes">
+        <div class="dicc-mode">
+          <div class="dm-title">🏪 Modo mercado <span class="dm-tag">continuo</span></div>
+          <p>La organizadora ❤️ <b>repone stock</b> (comprando a proveedores) y la gente <b>compra lo disponible</b> cuando quiere. El pedido descuenta stock del catálogo.</p>
+        </div>
+        <div class="dicc-mode">
+          <div class="dm-title">📅 Modo compra <span class="dm-tag">por ronda</span></div>
+          <p>La gente <b>hace pedidos</b> durante una ventana; al cerrar, se <b>agrupan</b> y la organizadora ❤️ le compra a proveedores <b>justo lo pedido</b>. El pedido no descuenta stock: se acumula como demanda.</p>
+        </div>
+      </div>
+
+      <article class="dicc-card">
+        <div class="dicc-term">🛒 Compra</div>
+        <p class="dicc-def">Ronda donde las <b>compradoras</b> hacen <b>pedidos</b>. <span class="dicc-arrow">Entra demanda: compradora → organizadora ❤️.</span> No lleva nombre: se identifica por su fecha de entrega.</p>
+        <div class="dicc-sm">
+          <span class="sm-state">No publicada</span>
+          <span class="sm-arrow"><span class="sm-act">Publicar</span><span class="sm-line">→</span></span>
+          <span class="sm-state">Publicada</span>
+          <span class="sm-arrow"><span class="sm-act">Cerrar</span><span class="sm-line">→</span></span>
+          <span class="sm-state">Cerrada</span>
+          <span class="sm-arrow"><span class="sm-act">Liquidar</span><span class="sm-line">→</span></span>
+          <span class="sm-state">Liquidada</span>
+        </div>
+        <p class="dicc-note">Publicar exige lugar de retiro. No cierra con pedidos pendientes. En <b>Cerrada</b>: ☐ orden de compra generada · ☐ mercadería recibida + flete.</p>
+      </article>
+
+      <article class="dicc-card">
+        <div class="dicc-term">📦 Orden de compra</div>
+        <p class="dicc-def">Lo que la <b>organizadora ❤️</b> le compra a <b>proveedores</b>. <span class="dicc-arrow">Entra mercadería: proveedores → organizadora ❤️.</span> Nace <b>de la nada</b> (reponer el mercado) o <b>agregando</b> los pedidos de una compra cerrada. <b>No es lo mismo que una compra</b>: están en puntas opuestas.</p>
+        <div class="dicc-sm">
+          <span class="sm-state">Generada</span>
+          <span class="sm-arrow"><span class="sm-act">Registrar recepción + flete</span><span class="sm-line">→</span></span>
+          <span class="sm-state">Recibida</span>
+        </div>
+        <p class="dicc-note">Al recibir: si es de reposición → suma stock al catálogo; si es de una compra → queda lista para entregar esa compra. El <b>flete real</b> se carga acá (distinto de la ganancia de transporte que se le cobra a la compradora).</p>
+      </article>
+
+      <article class="dicc-card">
+        <div class="dicc-term">🧺 Pedido</div>
+        <p class="dicc-def">El carrito que arma una <b>compradora</b> (varios productos) en el mercado o en una compra. Siempre es de una compradora — nunca se confunde con la orden de compra.</p>
+        <div class="dicc-sm">
+          <span class="sm-state">Pendiente</span>
+          <span class="sm-arrow"><span class="sm-act">Confirmar</span><span class="sm-line">→</span></span>
+          <span class="sm-state ok">Confirmado</span>
+        </div>
+        <div class="dicc-sm" style="margin-top:8px">
+          <span class="sm-state">Pendiente</span>
+          <span class="sm-arrow"><span class="sm-act">Cancelar</span><span class="sm-line">→</span></span>
+          <span class="sm-state no">Cancelado</span>
+        </div>
+        <p class="dicc-note">Se confirma tras ver el pago (por WhatsApp o vía conciliación, US-17). Una compra no cierra hasta que no queden pendientes.</p>
+      </article>
+
+      <article class="dicc-card">
+        <div class="dicc-term">🏷️ Producto <span class="dt-sub">— catálogo</span></div>
+        <p class="dicc-def">Ítem del catálogo con <b>stock vivo</b>, precio y unidad de medida. El catálogo es <b>compartido</b> por el mercado y las compras.</p>
+        <div class="dicc-sm">
+          <span class="sm-state ok">Con stock</span>
+          <span class="sm-arrow"><span class="sm-act">venta de mercado</span><span class="sm-line">→</span></span>
+          <span class="sm-state no">Sin stock</span>
+          <span class="sm-arrow"><span class="sm-act">recepción / reposición</span><span class="sm-line">→</span></span>
+          <span class="sm-state ok">Con stock</span>
+        </div>
+        <p class="dicc-note">Sube con la recepción de una orden de reposición; baja cuando se confirma una venta del mercado.</p>
+      </article>
+
+      <article class="dicc-card">
+        <div class="dicc-term">👤 Compradora</div>
+        <p class="dicc-def">Quien compra. Se identifica <b>sin cuenta</b> (nombre, apellido, email, teléfono) en cada pedido. Es una entidad <b>sin estados</b>.</p>
+      </article>
+
+      <article class="dicc-card">
+        <div class="dicc-term">🧮 Liquidación</div>
+        <p class="dicc-def">Cierre de cuentas de una compra: total vendido, <b>ganancia del mercado</b>, <b>transporte cobrado</b> vs <b>flete pagado</b>, y monto a <b>proveedores</b> (= total − mercado − transporte). Lleva la compra de <b>Cerrada</b> a <b>Liquidada</b>.</p>
+      </article>
     </div>
   </section>
 </main>
@@ -948,7 +1059,7 @@
             <div class="store-id">Compra — entrega 26 jul</div>
             <div class="store-sub">Cuentas sobre pedidos confirmados. Proveedores = total − mercado − transporte.</div>
           </div>
-          <span class="store-status admin-status">Finalizada · lista para liquidar</span>
+          <span class="store-status admin-status">Cerrada · lista para liquidar</span>
         </header>
 
         <div class="field-row" style="max-width:640px">
@@ -1124,6 +1235,7 @@
     document.getElementById('panel-admin').classList.toggle('active', role === 'admin');
     document.getElementById('panel-user').classList.toggle('active', role === 'user');
     document.getElementById('panel-db').classList.toggle('active', role === 'db');
+    document.getElementById('panel-dicc').classList.toggle('active', role === 'dicc');
     document.body.className = 'role-' + role;
     if (role === 'db') renderDb();
     if (location.hash.slice(1) !== role) history.replaceState(null, '', '#' + role);
@@ -1134,7 +1246,7 @@
     t.addEventListener('click', function () { select(t.dataset.role); });
   });
   var h = location.hash.slice(1);
-  select(h === 'user' || h === 'db' ? h : 'admin');
+  select(h === 'user' || h === 'db' || h === 'dicc' ? h : 'admin');
 
   /* ---- Detail view ---- */
   var detailInner = document.getElementById('detail-inner');

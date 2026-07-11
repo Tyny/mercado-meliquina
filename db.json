@@ -9,7 +9,7 @@
     { "id": "entrega-12-jul", "entrega": "2026-07-12", "estado": "Publicada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-07-01", "fin": "2026-07-08" },
     { "id": "entrega-9-ago", "entrega": "2026-08-09", "estado": "Publicada", "mercado": 5, "transporte": 5500, "retiro": "Escuela N°12", "inicio": "2026-07-29", "fin": "2026-08-05" },
     { "id": "entrega-2-ago", "entrega": "2026-08-02", "estado": "Publicada", "mercado": 6, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-07-22", "fin": "2026-07-29" },
-    { "id": "entrega-5-jul", "entrega": "2026-07-05", "estado": "Finalizada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-06-24", "fin": "2026-07-01" },
+    { "id": "entrega-5-jul", "entrega": "2026-07-05", "estado": "Cerrada", "mercado": 5, "transporte": 6000, "retiro": "Salón comunitario", "inicio": "2026-06-24", "fin": "2026-07-01" },
     { "id": "entrega-28-jun", "entrega": "2026-06-28", "estado": "Liquidada", "mercado": 5, "transporte": 6000, "retiro": "Almacén de Ana", "inicio": "2026-06-17", "fin": "2026-06-24", "ventas": { "unidades": 63, "total": 418500 } },
     { "id": "entrega-21-jun", "entrega": "2026-06-21", "estado": "Liquidada", "mercado": 8, "transporte": 5000, "retiro": "Salón comunitario", "inicio": "2026-06-10", "fin": "2026-06-17", "ventas": { "unidades": 41, "total": 274300 } }
   ],
