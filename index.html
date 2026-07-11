@@ -725,7 +725,7 @@
         <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
         <h3>Revisar pedidos</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos —los del <b>mercado</b> y los de cada <b>compra publicada</b> en pestañas separadas—, para procesarlos de punta a punta.</p>
-        <p class="accept">Los pedidos se agrupan en <b>pestañas por destino</b>: uno para el <b>mercado</b> y uno por cada <b>compra publicada</b>. Dentro de cada pestaña: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado libera el stock (queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
+        <p class="accept">Los pedidos se agrupan en <b>pestañas por destino</b>: uno para el <b>mercado</b> y uno por cada <b>compra publicada</b>. Dentro de cada pestaña: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado (en el mercado libera stock; en una compra baja la demanda — queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -739,7 +739,7 @@
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
         <h3>Liquidar una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-        <p class="accept">Sobre los pedidos confirmados: total vendido, ganancia del mercado, transporte y monto a proveedores (= total − mercado − transporte), con desglose por producto. Las dos ganancias (mercado y transporte, cada una % o monto fijo) se definen acá si faltan y son obligatorias para cerrar. "Marcar liquidada" deja la compra en estado liquidada.</p>
+        <p class="accept">Trae la <b>orden de compra asociada</b> y usa costos reales: sobre los pedidos confirmados calcula <b>total vendido − costo de productos − flete = ganancia</b>, con el flete discriminado y desglose por producto. Las ganancias ya no se cargan acá (vienen de Configurar ganancias, US-19; el precio de venta ya las incluye). "Marcar liquidada" deja la compra en estado liquidada.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -864,7 +864,7 @@
 
       <article class="dicc-card">
         <div class="dicc-term">🧮 Liquidación</div>
-        <p class="dicc-def">Cierre de cuentas de una compra: total vendido, <b>ganancia del mercado</b>, <b>transporte cobrado</b> vs <b>flete pagado</b>, y monto a <b>proveedores</b> (= total − mercado − transporte). Lleva la compra de <b>Cerrada</b> a <b>Liquidada</b>.</p>
+        <p class="dicc-def">Cierre de cuentas de una compra. Trae su <b>orden de compra asociada</b> y usa costos <b>reales</b>: <b>ganancia = total vendido − costo de productos − flete</b> (el flete se discrimina como línea). El precio de venta ya trae la ganancia (se definió en Configurar ganancias). Lleva la compra de <b>Cerrada</b> a <b>Liquidada</b>.</p>
       </article>
     </div>
   </section>
