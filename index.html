@@ -943,7 +943,7 @@
       <header class="store-head">
         <div>
           <div class="store-id" id="store-id">El mercado — en stock ahora</div>
-          <div class="store-sub" id="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
+          <div class="store-sub" id="store-sub">Pedí lo que haya disponible; la entrega del mercado se coordina aparte, sin fecha fija.</div>
         </div>
         <span class="store-status" id="store-status">Mercado abierto</span>
       </header>
@@ -1110,13 +1110,13 @@
     <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Catálogo</span></div>
     <div class="mock-desktop-body">
       <div class="mock-form">
-        <div class="deck-layout">
-          <div class="deck-col"><div id="deck"></div></div>
-          <aside class="added-panel">
-            <h4>Catálogo (<span id="cat-count">0</span>)</h4>
-            <div class="added-list" id="cat-list"></div>
-            <div class="added-pager" id="cat-list-pager"></div>
-          </aside>
+        <h3>Catálogo (<span id="cat-count">0</span>)</h3>
+        <p class="sub">Los productos son del <b>catálogo compartido</b> (mercado y compras). Movés con ↑/↓ y la <b>barra espaciadora</b> edita stock, precio y unidad.</p>
+        <div class="cc-list" id="cat-list" tabindex="0"></div>
+        <div class="cc-list-pager" id="cat-list-pager"></div>
+        <div class="cc-hintbar">
+          <span><kbd class="mini-kbd">↑</kbd><kbd class="mini-kbd">↓</kbd>moverse</span>
+          <span><kbd class="mini-kbd">Espacio</kbd>editar producto</span>
         </div>
       </div>
     </div>
@@ -1563,9 +1563,9 @@
         showReview();
       }
 
-      // US-16 Catálogo: mazo para navegar + editor de stock (barra) + lista de productos
-      var deck = detailInner.querySelector('#deck');
-      if (deck) {
+      // US-16 Catálogo: listado navegable (↑/↓ mueve, barra espaciadora edita stock/precio/unidad)
+      var catList = detailInner.querySelector('#cat-list');
+      if (catList) {
         var names = ['Miel 500g', 'Dulce de frambuesa', 'Queso de cabra', 'Pan de campo',
           'Yerba orgánica', 'Huevos x12', 'Aceite de oliva', 'Harina integral',
           'Mermelada de sauco', 'Tomates secos', 'Nueces 250g', 'Café molido',
@@ -1586,20 +1586,25 @@
         var fmt = function (p) { return '$' + (p || 0).toLocaleString('es-AR'); };
         var unitLabel = function (v) { for (var k = 0; k < UNITS.length; k++) { if (UNITS[k].v === v) return UNITS[k].label; } return v; };
         var pos = 0, listPage = 0, PAGE = 8;
-        var catList = detailInner.querySelector('#cat-list');
         var catCount = detailInner.querySelector('#cat-count');
         var catPager = detailInner.querySelector('#cat-list-pager');
 
+        var syncPage = function () { listPage = Math.floor(pos / PAGE); };
         var renderList = function () {
           var pages = Math.max(1, Math.ceil(catalog.length / PAGE));
           if (listPage >= pages) listPage = pages - 1;
           if (listPage < 0) listPage = 0;
+          if (pos < 0) pos = 0;
+          if (pos > catalog.length - 1) pos = catalog.length - 1;
           var start = listPage * PAGE;
           catList.innerHTML = catalog.slice(start, start + PAGE).map(function (p, k) {
             var gi = start + k;
-            return '<div class="cat-row' + (gi === pos ? ' current' : '') + '" data-i="' + gi + '">' +
-              '<span class="cr-n">' + p.n + '</span>' +
-              '<span class="cr-s' + (p.stock <= 0 ? ' zero' : '') + '">' + p.stock + ' ' + p.unit + '</span></div>';
+            return '<div class="cc-item' + (gi === pos ? ' current' : '') + '" data-i="' + gi + '">' +
+              '<div class="ci-main"><div class="ci-id">' + p.n + '</div>' +
+              '<div class="ci-sub">' + fmt(p.price) + ' · se mide en ' + unitLabel(p.unit).toLowerCase() + '</div></div>' +
+              '<span class="cr-s' + (p.stock <= 0 ? ' zero' : '') + '">' + p.stock + ' ' + p.unit + (p.stock <= 0 ? ' · sin stock' : '') + '</span>' +
+              '<button class="btn-ghost cc-act cat-edit" data-i="' + gi + '" type="button">Editar</button>' +
+              '</div>';
           }).join('');
           catCount.textContent = catalog.length;
           catPager.innerHTML = catalog.length > PAGE
@@ -1608,18 +1613,6 @@
               '<button class="pg" data-pg="1" type="button"' + (listPage === pages - 1 ? ' disabled' : '') + '>›</button>'
             : '';
         };
-        catList.addEventListener('click', function (e) {
-          var r = e.target.closest('.cat-row'); if (!r) return;
-          pos = +r.dataset.i; renderList(); renderCard();
-        });
-        catPager.addEventListener('click', function (e) {
-          var b = e.target.closest('.pg'); if (!b) return;
-          listPage += (+b.dataset.pg); renderList();
-        });
-
-        var syncList = function () { listPage = Math.floor(pos / PAGE); renderList(); };
-        var prev = function () { if (pos > 0) { pos--; syncList(); renderCard(); } };
-        var next = function () { if (pos < catalog.length - 1) { pos++; syncList(); renderCard(); } };
 
         // Editor de catálogo (modal, se crea una vez)
         var modal = document.createElement('div');
@@ -1645,19 +1638,20 @@
         var edPrice = modal.querySelector('#ed-price');
         var edUnit = modal.querySelector('#ed-unit');
 
-        var openEditor = function () {
+        var openEditor = function (i) {
+          pos = i; syncPage(); renderList();
           var p = catalog[pos];
           edTitle.textContent = 'Catálogo · ' + p.n;
           edStock.value = p.stock; edPrice.value = p.price; edUnit.value = p.unit;
           modal.hidden = false; edStock.focus();
         };
-        var closeEditor = function () { modal.hidden = true; var c = deck.querySelector('.deck-card'); if (c) c.focus(); };
+        var closeEditor = function () { modal.hidden = true; catList.focus(); };
         var saveEditor = function () {
           var p = catalog[pos];
           p.stock = Math.max(0, +edStock.value || 0);
           p.price = Math.max(0, +edPrice.value || 0);
           p.unit = edUnit.value;
-          renderList(); renderCard(); closeEditor();
+          renderList(); closeEditor();
         };
         modal.querySelectorAll('.qbtn').forEach(function (b) {
           b.addEventListener('click', function () { edStock.value = Math.max(0, (+edStock.value || 0) + (+b.dataset.q)); });
@@ -1671,36 +1665,23 @@
         });
         modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
 
-        function renderCard() {
-          if (pos >= catalog.length) pos = catalog.length - 1;
-          var p = catalog[pos];
-          deck.innerHTML =
-            '<div class="deck-nav">' +
-              '<button class="deck-arrow" data-nav="-1" type="button" aria-label="Anterior"' + (pos === 0 ? ' disabled' : '') + '>‹</button>' +
-              '<div class="deck-progress">Producto <b>' + (pos + 1) + '</b> de ' + catalog.length + '</div>' +
-              '<button class="deck-arrow" data-nav="1" type="button" aria-label="Siguiente"' + (pos === catalog.length - 1 ? ' disabled' : '') + '>›</button>' +
-            '</div>' +
-            '<div class="deck-card" tabindex="0">' +
-              '<div class="dc-name">' + p.n + '</div>' +
-              '<div class="dc-meta">' + fmt(p.price) + ' · se mide en ' + unitLabel(p.unit).toLowerCase() + '</div>' +
-              '<div class="dc-stock' + (p.stock <= 0 ? ' zero' : '') + '">Stock actual: <b>' + p.stock + ' ' + p.unit + '</b>' + (p.stock <= 0 ? ' — sin stock' : '') + '</div>' +
-              '<button class="dc-cat" type="button">Editar stock (espacio)</button>' +
-              '<div class="dc-hint">←/→ navegar · Espacio edita stock/precio/unidad · Esc cierra</div>' +
-            '</div>';
-          deck.querySelector('[data-nav="-1"]').addEventListener('click', prev);
-          deck.querySelector('[data-nav="1"]').addEventListener('click', next);
-          var cardEl = deck.querySelector('.deck-card');
-          cardEl.focus();
-          deck.querySelector('.dc-cat').addEventListener('click', openEditor);
-          cardEl.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
-            else if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-            else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openEditor(); }
-          });
-        }
+        catList.addEventListener('click', function (e) {
+          var ed = e.target.closest('.cat-edit');
+          var r = e.target.closest('.cc-item'); if (!r) return;
+          pos = +r.dataset.i; syncPage();
+          if (ed) { openEditor(pos); } else { renderList(); }
+        });
+        catPager.addEventListener('click', function (e) {
+          var b = e.target.closest('.pg'); if (!b) return;
+          listPage += (+b.dataset.pg); renderList();
+        });
+        catList.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); pos = Math.min(catalog.length - 1, pos + 1); syncPage(); renderList(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); pos = Math.max(0, pos - 1); syncPage(); renderList(); }
+          else if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); openEditor(pos); }
+        });
 
         renderList();
-        renderCard();
       }
 
       // US-5: storefront público con contadores y carrito
@@ -1733,10 +1714,10 @@
         var LINKS = {
           mercado: {
             addr: DB.links.mercado, id: 'El mercado — en stock ahora',
-            sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. El pedido se entrega en la próxima compra.',
+            sub: 'Link fijo del mercado: siempre muestra lo que hay en stock. La entrega del mercado se coordina aparte, sin fecha fija.',
             hint: 'El link del mercado es fijo y público: siempre muestra el stock disponible.',
             status: 'Mercado abierto',
-            info: '<div class="si si-wide"><span class="si-k">Entrega</span><span class="si-v">En la próxima compra (el link del mercado no fija fecha).</span></div>'
+            info: '<div class="si si-wide"><span class="si-k">Entrega</span><span class="si-v">Asincrónica: se coordina aparte, el mercado no arma una entrega grupal ni fija fecha.</span></div>'
           },
           compra: pc ? {
             addr: DB.links.compraBase + pc.id, id: 'Compra — entrega ' + stDate(pc.entrega),
@@ -2037,7 +2018,7 @@
     window.scrollTo({ top: 0 });
     // Enfocar la pantalla navegable recién ahora que el detalle es visible (si no, focus() no prende):
     // review de compras (US-1), lista de compras, o la tarjeta del catálogo (US-16) para que las flechas anden ya.
-    var focusable = detailInner.querySelector('#cc-review') || detailInner.querySelector('.deck-card');
+    var focusable = detailInner.querySelector('#cc-review') || detailInner.querySelector('#cat-list');
     if (focusable) setTimeout(function () { focusable.focus(); }, 0);
   }
 
