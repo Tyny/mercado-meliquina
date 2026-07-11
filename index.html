@@ -356,6 +356,8 @@
   .cc-list { display: flex; flex-direction: column; gap: 10px; }
   .cc-item { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
   .cc-item.new { border-color: var(--admin); background: var(--admin-soft); }
+  .cc-item.current { border-color: var(--admin); box-shadow: 0 0 0 2px var(--admin-soft); }
+  .cc-list:focus { outline: none; }
   .cc-item .ci-main { flex: 1; min-width: 0; }
   .cc-item .ci-id { font-weight: 700; }
   .cc-item .ci-sub { color: var(--muted); font-size: .82rem; margin-top: 2px; }
@@ -390,7 +392,6 @@
     display: flex; flex-direction: column; gap: 12px;
     touch-action: pan-y; user-select: none; cursor: grab; outline: none;
   }
-  .deck-card:focus-visible { box-shadow: 0 0 0 3px var(--admin-soft), 0 8px 22px rgba(0,0,0,.08); }
   .deck-progress { font-size: .82rem; color: var(--muted); font-weight: 700; }
   .badge-added { background: var(--admin-soft); color: var(--admin); padding: 2px 9px; border-radius: 999px; font-size: .75rem; }
   .dc-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -.01em; }
@@ -431,11 +432,8 @@
   .ar-x:hover { color: #c0564c; }
   .added-empty { color: var(--muted); font-size: .9rem; padding: 8px 2px; }
 
-  /* Mazo: foco invertido + navegación + modal de catálogo */
+  /* Mazo: navegación + modal de catálogo (el foco no cambia nada visualmente) */
   .deck-card { cursor: default; }
-  .deck-card:focus { background: var(--admin); color: #fff; border-color: var(--admin); box-shadow: 0 12px 28px rgba(0,0,0,.2); }
-  .deck-card:focus .deck-progress, .deck-card:focus .dc-meta, .deck-card:focus .dc-hint { color: rgba(255,255,255,.85); }
-  .deck-card:focus .badge-added { background: rgba(255,255,255,.22); color: #fff; }
   .deck-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
   .deck-nav .deck-progress { font-size: .9rem; }
   .deck-arrow {
@@ -456,8 +454,6 @@
   .dc-stock { font-size: 1.05rem; }
   .dc-stock b { font-weight: 800; }
   .dc-stock.zero b { color: #c0564c; }
-  .deck-card:focus .dc-stock { color: #fff; }
-  .deck-card:focus .dc-stock.zero b { color: #ffd7d2; }
   .cat-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
   .cat-row:hover { border-color: var(--muted); }
   .cat-row.current { border-color: var(--admin); background: var(--admin-soft); }
@@ -597,16 +593,10 @@
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
-        <div class="meta"><span class="id">US-2</span><span class="epic">Gestión de compras</span></div>
-        <h3>Definir y actualizar el lugar de retiro</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero definir o cambiar el lugar de retiro en cualquier momento, incluso después de crear la compra, para poder anunciarlo aunque al principio no lo sepa.</p>
-        <p class="accept">Se define al <b>crear</b> o al <b>publicar</b> la compra, y es <b>obligatorio para publicar</b> (no se puede publicar sin retiro). Editable en cualquier momento; al cambiarlo se actualiza la vista pública y las páginas de estado de la compradora.</p>
-      </article>
-      <article class="card">
         <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
         <h3>Compartir el link de la compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero un link de la compra para compartir, para enviarlo solo a ciertas personas cuando quiero limitar quién participa.</p>
-        <p class="accept">No hay cupo numérico: se limita compartiendo el link (ej. por WhatsApp) con quienes uno quiera. Cualquiera con el link puede pedir mientras la ventana esté abierta.</p>
+        <p class="accept">No hay cupo numérico: se limita compartiendo el link (ej. por WhatsApp) con quienes uno quiera. Cualquiera con el link puede pedir mientras la compra esté publicada.</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-16</span><span class="epic">Catálogo</span></div>
@@ -617,25 +607,9 @@
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Revisar pedidos</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero ver todos los pedidos de una compra con los datos de contacto de la compradora y su estado, para poder procesarlos.</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-11</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Confirmar un pedido</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero marcar un pedido como confirmado después de ver el comprobante de pago por WhatsApp, para que la compradora sepa que está listo.</p>
-        <p class="accept">Confirmar pasa el pedido de pendiente → confirmado y dispara el email de confirmación.</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-12</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Cancelar un pedido</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero cancelar un pedido pendiente que nunca se pagó, para liberar sus unidades para otros.</p>
-        <p class="accept">Cancelar libera el stock; el estado de la compradora muestra "cancelado"; no hay expiración automática.</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-13</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Exportar pedidos</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero descargar los pedidos de una compra como CSV, para organizar el retiro y la entrega.</p>
+        <h3>Procesar los pedidos de una compra</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos de una compra, para procesarlos de punta a punta.</p>
+        <p class="accept"><b>Ver</b>: todos los pedidos con datos de contacto de la compradora y estado. <b>Confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado, dispara el email de confirmación. <b>Cancelar</b> un pendiente que nunca se pagó: libera el stock, queda "cancelado" (sin expiración automática). <b>Exportar</b> a CSV para organizar el retiro y la entrega.</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
@@ -662,25 +636,13 @@
         <div class="meta"><span class="id">US-6</span><span class="epic">Comprar</span></div>
         <h3>Hacer un pedido con carrito</h3>
         <p class="story">Como <b>compradora</b>, quiero agregar varios productos a un carrito y finalizar la compra una sola vez con mi nombre, apellido, email y teléfono, para pedir todo en un solo paso.</p>
-        <p class="accept">Solo mientras la ventana está abierta; el pedido se crea como pendiente.</p>
+        <p class="accept">Solo mientras la compra está publicada; el pedido se crea como pendiente.</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-8</span><span class="epic">Comprar</span></div>
         <h3>Seguir mi pedido</h3>
         <p class="story">Como <b>compradora</b>, quiero un enlace único (también por email) para ver el estado de mi pedido, para seguirlo sin necesidad de una cuenta.</p>
-        <p class="accept">El enlace muestra el estado actual; después de cerrarse la ventana muestra el lugar de retiro + la fecha de entrega.</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-9</span><span class="epic">Comprar</span></div>
-        <h3>Recibir notificaciones</h3>
-        <p class="story">Como <b>compradora</b>, quiero un email cuando hago el pedido y cuando se confirma, para saber qué está pasando.</p>
-        <p class="accept">El email de pedido incluye el enlace de estado; el email de confirmación incluye los datos de retiro cuando están disponibles.</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-14</span><span class="epic">Ciclo de la ventana</span></div>
-        <h3>Los pedidos abren y cierran por tiempo</h3>
-        <p class="story">Como <b>compradora</b>, quiero que solo se pueda pedir durante la ventana, para que el proceso sea justo y predecible.</p>
-        <p class="accept">Borrador (sin fechas, no visible al público) → próximo (antes del inicio) → abierto (entre inicio y fin, se puede pedir) → cerrado (después del fin: pedidos deshabilitados, se destacan retiro + entrega) → liquidada (cuentas cerradas y proveedores pagados). Solo una compra abierta a la vez.</p>
+        <p class="accept">El enlace muestra el estado actual; después de finalizar la compra muestra el lugar de retiro + la fecha de entrega.</p>
       </article>
     </div>
   </section>
@@ -734,21 +696,21 @@
         <div id="cc-review-view">
           <h3 id="cc-h3">Revisar y crear</h3>
           <p class="sub">La compra <b>agrupa pedidos</b>: los productos salen del catálogo, no se eligen acá. Movés con ↑/↓, la <b>barra espaciadora</b> abre un editor y <b>Enter</b> crea la compra.</p>
-          <div class="sum-id draft" id="cc-id">Borrador — entrega a definir</div>
+          <div class="sum-id draft" id="cc-id">Compra — entrega a definir</div>
           <div class="review-box cc-review" id="cc-review" tabindex="0"></div>
           <div class="cc-hintbar">
             <span><kbd class="mini-kbd">↑</kbd><kbd class="mini-kbd">↓</kbd>moverse</span>
             <span><kbd class="mini-kbd">Espacio</kbd>editar valor</span>
             <span><kbd class="mini-kbd">Enter</kbd>crear compra</span>
           </div>
-          <p class="side-note">Se crea como <b>borrador</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Solo puede haber <b>una compra abierta a la vez</b>. Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
+          <p class="side-note">Se crea <b>sin publicar</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Solo puede haber <b>una compra publicada a la vez</b>. Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
         </div>
 
         <!-- Vista: Listado de compras -->
         <div id="cc-list-view" hidden>
           <h3>Compras</h3>
-          <p class="sub">Se crea como <b>borrador</b>. <b>Publicá</b> desde acá para hacerla visible (necesita lugar de retiro). Una compra <b>liquidada</b> muestra su <b>info de ventas</b>.</p>
-          <div class="cc-list" id="cc-list"></div>
+          <p class="sub">Se crea <b>sin publicar</b>. <b>Publicá</b> desde acá para hacerla visible (necesita lugar de retiro). Editá con <kbd class="mini-kbd">Espacio</kbd> o con «Editar»; una compra <b>liquidada</b> muestra su <b>info de ventas</b>.</p>
+          <div class="cc-list" id="cc-list" tabindex="0"></div>
           <div class="cc-list-pager" id="cc-list-pager"></div>
           <div class="cc-sales" id="cc-sales" hidden></div>
           <div class="mock-flash" id="cc-flash"></div>
@@ -777,7 +739,7 @@
           <div class="store-id">El mercado — en stock ahora</div>
           <div class="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
         </div>
-        <span class="store-status">Compra abierta · cierra en 3 días</span>
+        <span class="store-status">Publicada · cierra en 3 días</span>
       </header>
 
       <div class="srole">
@@ -826,7 +788,7 @@
             <div class="store-id">Compra — entrega 26 jul</div>
             <div class="store-sub">Cuentas sobre pedidos confirmados. Proveedores = total − mercado − transporte.</div>
           </div>
-          <span class="store-status admin-status">Cerrada · lista para liquidar</span>
+          <span class="store-status admin-status">Finalizada · lista para liquidar</span>
         </header>
 
         <div class="field-row" style="max-width:640px">
@@ -1008,16 +970,16 @@
         };
         var idOf = function (f) {
           var e = getField(f, 'entrega');
-          return e.val ? 'Compra — entrega ' + fmtDate(e.val) : 'Borrador — entrega a definir';
+          return e.val ? 'Compra — entrega ' + fmtDate(e.val) : 'Compra — entrega a definir';
         };
 
         var fields = blank();
-        var sel = 0, editingId = null, editIdx = 0, listPage = 0, CPAGE = 4;
+        var sel = 0, editingId = null, editIdx = 0, listPage = 0, CPAGE = 4, listSel = 0;
         var compras = [
-          { id: 'entrega-26-jul', estado: 'Borrador', fields: seed('2026-07-26', 5, null, '') },
-          { id: 'entrega-19-jul', estado: 'Borrador', fields: seed('2026-07-19', 5, null, 'Almacén de Ana') },
-          { id: 'entrega-12-jul', estado: 'Abierta', fields: seed('2026-07-12', 5, 6000, 'Salón comunitario') },
-          { id: 'entrega-5-jul', estado: 'Cerrada', fields: seed('2026-07-05', 5, 6000, 'Salón comunitario') },
+          { id: 'entrega-26-jul', estado: 'No publicada', fields: seed('2026-07-26', 5, null, '') },
+          { id: 'entrega-19-jul', estado: 'No publicada', fields: seed('2026-07-19', 5, null, 'Almacén de Ana') },
+          { id: 'entrega-12-jul', estado: 'Publicada', fields: seed('2026-07-12', 5, 6000, 'Salón comunitario') },
+          { id: 'entrega-5-jul', estado: 'Finalizada', fields: seed('2026-07-05', 5, 6000, 'Salón comunitario') },
           { id: 'entrega-28-jun', estado: 'Liquidada', fields: seed('2026-06-28', 5, 6000, 'Almacén de Ana'), ventas: { unidades: 63, total: 418500 } },
           { id: 'entrega-21-jun', estado: 'Liquidada', fields: seed('2026-06-21', 8, 5000, 'Salón comunitario'), ventas: { unidades: 41, total: 274300 } }
         ];
@@ -1122,7 +1084,7 @@
         modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
 
         var actionsFor = function (c, i) {
-          if (c.estado === 'Borrador') {
+          if (c.estado === 'No publicada') {
             return '<button class="btn-ghost cc-act cc-publish" data-i="' + i + '" type="button">Publicar</button>' +
               '<button class="btn-ghost cc-act cc-edit" data-i="' + i + '" type="button">Editar</button>';
           }
@@ -1137,14 +1099,16 @@
           var pages = Math.max(1, Math.ceil(compras.length / CPAGE));
           if (listPage >= pages) listPage = pages - 1;
           if (listPage < 0) listPage = 0;
+          if (listSel < 0) listSel = 0;
+          if (listSel > compras.length - 1) listSel = compras.length - 1;
           var start = listPage * CPAGE;
           ccList.innerHTML = compras.slice(start, start + CPAGE).map(function (c, k) {
             var i = start + k, f = c.fields;
             var sub = 'Mercado ' + dispVal(getField(f, 'mercado')) +
               ' · Transporte ' + dispVal(getField(f, 'transporte')) +
               ' · Lugar de retiro ' + (getField(f, 'retiro').val || 'sin definir');
-            var openCls = (c.estado === 'Próximo' || c.estado === 'Abierta') ? ' is-open' : '';
-            return '<div class="cc-item' + (c.isNew ? ' new' : '') + '">' +
+            var openCls = c.estado === 'Publicada' ? ' is-open' : '';
+            return '<div class="cc-item' + (c.isNew ? ' new' : '') + (i === listSel ? ' current' : '') + '" data-i="' + i + '">' +
               '<div class="ci-main"><div class="ci-id">' + idOf(f) + '</div><div class="ci-sub">' + sub + '</div></div>' +
               '<span class="cc-estado' + openCls + '">' + c.estado + '</span>' +
               actionsFor(c, i) + '</div>';
@@ -1162,7 +1126,21 @@
           ccAddr.textContent = editingId ? 'meliquina.app/admin/compras/' + editingId + '/editar' : 'meliquina.app/admin/compras/nueva';
           sel = 0; renderReview(); ccReview.focus();
         };
-        var showList = function () { reviewView.hidden = true; listView.hidden = false; renderList(); };
+        var showList = function () {
+          reviewView.hidden = true; listView.hidden = false;
+          listPage = Math.floor(listSel / CPAGE);
+          renderList();
+          setTimeout(function () { ccList.focus(); }, 0);
+        };
+        var editCompra = function (i) {
+          clearFlash(); listSel = i;
+          fields = cloneFields(compras[i].fields); editingId = compras[i].id;
+          showReview();
+        };
+        var spaceAction = function (i) {
+          if (compras[i].estado === 'Liquidada') { listSel = i; renderList(); ventas(i); }
+          else editCompra(i);
+        };
         var createCompra = function () {
           clearFlash();
           compras.forEach(function (c) { c.isNew = false; });
@@ -1173,9 +1151,9 @@
           } else {
             var e = getField(fields, 'entrega');
             var newId = e.val ? 'entrega-' + fmtDate(e.val).replace(' ', '-') : 'borrador-' + (compras.length + 1);
-            compras.unshift({ id: newId, estado: 'Borrador', fields: fields, isNew: true });
-            listPage = 0;
-            flash('✓ Compra creada como borrador. Publicala cuando tenga lugar de retiro.', false);
+            compras.unshift({ id: newId, estado: 'No publicada', fields: fields, isNew: true });
+            listSel = 0;
+            flash('✓ Compra creada (sin publicar). Publicala cuando tenga lugar de retiro.', false);
           }
           editingId = null; fields = blank();
           showList();
@@ -1193,7 +1171,7 @@
             return;
           }
           compras.forEach(function (x) { x.isNew = false; });
-          c.estado = 'Abierta'; c.isNew = true;
+          c.estado = 'Publicada'; c.isNew = true; listSel = i;
           renderList();
           flash('✓ Compra publicada — ya es visible y recibe pedidos.', false);
         };
@@ -1227,15 +1205,21 @@
           sel = +r.dataset.i; renderReview(); openEditor(sel);
         });
         ccList.addEventListener('click', function (e) {
-          var b = e.target.closest('button'); if (!b) return;
-          var i = +b.dataset.i;
-          if (b.classList.contains('cc-publish')) { publicar(i); return; }
-          if (b.classList.contains('cc-ventas')) { ventas(i); return; }
-          if (b.classList.contains('cc-edit')) {
-            clearFlash();
-            fields = cloneFields(compras[i].fields); editingId = compras[i].id;
-            showReview();
+          var b = e.target.closest('button');
+          if (b) {
+            var i = +b.dataset.i;
+            listSel = i;
+            if (b.classList.contains('cc-publish')) { publicar(i); return; }
+            if (b.classList.contains('cc-ventas')) { ventas(i); return; }
+            if (b.classList.contains('cc-edit')) { editCompra(i); return; }
           }
+          var item = e.target.closest('.cc-item');
+          if (item) { listSel = +item.dataset.i; renderList(); }
+        });
+        ccList.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); listSel = Math.min(compras.length - 1, listSel + 1); listPage = Math.floor(listSel / CPAGE); renderList(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); listSel = Math.max(0, listSel - 1); listPage = Math.floor(listSel / CPAGE); renderList(); }
+          else if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spaceAction(listSel); }
         });
         detailInner.querySelector('#cc-new').addEventListener('click', function () {
           clearFlash(); fields = blank(); editingId = null; showReview();
@@ -1555,8 +1539,9 @@
     }
     document.body.classList.add('detail-open');
     window.scrollTo({ top: 0 });
-    // Enfocar la pantalla navegable recién ahora que el detalle es visible (si no, focus() no prende)
-    var focusable = detailInner.querySelector('#cc-review');
+    // Enfocar la pantalla navegable recién ahora que el detalle es visible (si no, focus() no prende):
+    // review de compras (US-1), lista de compras, o la tarjeta del catálogo (US-16) para que las flechas anden ya.
+    var focusable = detailInner.querySelector('#cc-review') || detailInner.querySelector('.deck-card');
     if (focusable) setTimeout(function () { focusable.focus(); }, 0);
   }
 
