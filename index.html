@@ -338,6 +338,24 @@
   .sum-row .k { color: var(--muted); }
   .sum-row .v { font-weight: 700; text-align: right; }
   .side-note { margin-top: 16px; font-size: .85rem; color: var(--muted); line-height: 1.5; }
+  /* US-1 crear compra: pantalla revisar navegable + listado */
+  .cc-review { padding: 4px 6px; outline: none; }
+  .cc-review:focus-visible { box-shadow: 0 0 0 3px var(--admin-soft); }
+  .cc-row { cursor: pointer; padding-left: 8px; padding-right: 8px; border-radius: 8px; }
+  .cc-row.current { background: var(--admin-soft); box-shadow: inset 3px 0 0 var(--admin); }
+  .cc-edit-icon { margin-left: 8px; color: var(--muted); font-size: .8rem; opacity: 0; }
+  .cc-row.current .cc-edit-icon { opacity: 1; color: var(--admin); }
+  .cc-hintbar { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 16px; font-size: .85rem; color: var(--muted); }
+  .mini-kbd { display: inline-block; font: inherit; font-size: .75rem; font-weight: 700; padding: 1px 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: var(--card); color: var(--ink); margin-right: 3px; }
+  .cc-list { display: flex; flex-direction: column; gap: 10px; }
+  .cc-item { display: flex; align-items: center; gap: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .cc-item.new { border-color: var(--admin); background: var(--admin-soft); }
+  .cc-item .ci-main { flex: 1; min-width: 0; }
+  .cc-item .ci-id { font-weight: 700; }
+  .cc-item .ci-sub { color: var(--muted); font-size: .82rem; margin-top: 2px; }
+  .cc-estado { font-size: .72rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--chip); color: var(--muted); white-space: nowrap; }
+  .cc-estado.is-open { background: var(--admin-soft); color: var(--admin); }
+  .cc-item .cc-edit { padding: 6px 14px; }
   .pub-preview {
     margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
   }
@@ -551,7 +569,7 @@
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
         <p class="story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y ganancias (mercado y transporte, cada una % o monto fijo, opcionales acá) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
+        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -684,92 +702,40 @@
   <div class="detail-lead">
     <h2 class="detail-title">Crear una compra</h2>
     <p class="detail-story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y ganancias (mercado y transporte, cada una % o monto fijo, opcionales acá) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
+    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
   <div class="mock mock-desktop">
     <div class="browser-bar">
       <span class="dots"><i></i><i></i><i></i></span>
-      <span class="addr">meliquina.app/admin/compras/nueva</span>
+      <span class="addr" id="cc-addr">meliquina.app/admin/compras/nueva</span>
     </div>
-    <div class="mock-topbar">Mercado Meliquina · Admin <span class="crumb">— Compras / Nueva</span></div>
+    <div class="mock-topbar">Mercado Meliquina · Admin <span class="crumb" id="cc-crumb">— Compras / Nueva</span></div>
     <div class="mock-desktop-body">
       <!-- Columna: formulario -->
       <div class="mock-form">
-        <div class="wiz-steps">
-          <div class="wiz-step active" data-step="1"><span class="n">1</span>Retiro y ganancias</div>
-          <div class="wiz-step" data-step="2"><span class="n">2</span>Fechas</div>
-          <div class="wiz-step" data-step="3"><span class="n">3</span>Revisar</div>
+        <!-- Vista: Revisar (crear / editar) -->
+        <div id="cc-review-view">
+          <h3 id="cc-h3">Revisar y crear</h3>
+          <p class="sub">La compra <b>agrupa pedidos</b>: los productos salen del catálogo, no se eligen acá. Movés con ↑/↓, la <b>barra espaciadora</b> abre un editor y <b>Enter</b> crea la compra.</p>
+          <div class="sum-id draft" id="cc-id">Borrador — entrega a definir</div>
+          <div class="review-box cc-review" id="cc-review" tabindex="0"></div>
+          <div class="cc-hintbar">
+            <span><kbd class="mini-kbd">↑</kbd><kbd class="mini-kbd">↓</kbd>moverse</span>
+            <span><kbd class="mini-kbd">Espacio</kbd>editar valor</span>
+            <span><kbd class="mini-kbd">Enter</kbd>crear compra</span>
+          </div>
+          <p class="side-note">Como borrador <b>no es visible al público</b>. Al cargar la fecha de entrega pasa a <b>próximo</b>. Solo puede haber <b>una compra abierta a la vez</b>. Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
         </div>
 
-        <!-- Paso 1: Retiro y ganancias -->
-        <div class="wiz-panel" data-panel="1">
-          <h3>Retiro y ganancias</h3>
-          <p class="sub">La compra <b>agrupa pedidos</b>: no se eligen productos acá. Sin cupo (para limitar, compartís el link). Las ganancias podés definirlas ahora o dejarlas para la liquidación (pero son obligatorias para cerrar).</p>
-          <div class="field-row">
-            <div class="field">
-              <label>Ganancia del mercado <span class="opt">— opcional acá</span></label>
-              <div class="gain" data-gain="mercado">
-                <input type="number" class="gain-val" min="0" value="5">
-                <div class="gain-toggle"><button type="button" class="gt active" data-t="pct">%</button><button type="button" class="gt" data-t="fijo">$</button></div>
-              </div>
-            </div>
-            <div class="field">
-              <label>Ganancia del transporte <span class="opt">— opcional acá</span></label>
-              <div class="gain" data-gain="transporte">
-                <input type="number" class="gain-val" min="0" placeholder="—">
-                <div class="gain-toggle"><button type="button" class="gt active" data-t="pct">%</button><button type="button" class="gt" data-t="fijo">$</button></div>
-              </div>
-            </div>
-          </div>
-          <p class="hint">Cada una puede ser porcentaje (%) o monto fijo ($). Lo que quede después de mercado + transporte es de los proveedores.</p>
-          <div class="field">
-            <label>Lugar de retiro <span class="opt">— opcional</span></label>
-            <input type="text" placeholder="Todavía sin definir">
-            <p class="hint">Podés completarlo más tarde; se muestra cuando lo cargues.</p>
-          </div>
+        <!-- Vista: Listado de compras -->
+        <div id="cc-list-view" hidden>
+          <h3>Compras</h3>
+          <p class="sub">La compra quedó creada y aparece en el listado. <b>Editar</b> te lleva de vuelta a la pantalla de revisión.</p>
+          <div class="cc-list" id="cc-list"></div>
+          <button class="btn-ghost" id="cc-new" type="button" style="margin-top:16px">+ Nueva compra</button>
         </div>
-
-        <!-- Paso 2: Fechas (opcionales) -->
-        <div class="wiz-panel" data-panel="2" hidden>
-          <h3>Fechas <span class="opt">— opcionales</span></h3>
-          <p class="sub">Si todavía no las tenés, dejalas vacías: la compra queda como <b>borrador</b> hasta que definas la entrega.</p>
-          <div class="field-row">
-            <div class="field"><label>Inicio de la ventana</label><input type="datetime-local"></div>
-            <div class="field"><label>Fin de la ventana</label><input type="datetime-local"></div>
-          </div>
-          <div class="field">
-            <label>Fecha de entrega</label>
-            <input type="date">
-            <p class="hint">Identifica la compra. Sin ella queda como <b>“Borrador”</b>.</p>
-          </div>
-        </div>
-
-        <!-- Paso 3: Revisar -->
-        <div class="wiz-panel" data-panel="3" hidden>
-          <h3>Revisar y crear</h3>
-          <p class="sub">Repasá todo antes de crear. Podés crearla ahora aunque falten las fechas.</p>
-          <div class="sum-id draft">Borrador — entrega a definir</div>
-          <div class="review-box">
-            <div class="sum-row"><span class="k">Productos</span><span class="v">catálogo con stock</span></div>
-            <div class="sum-row"><span class="k">Ganancia mercado</span><span class="v" id="rev-mkt">5%</span></div>
-            <div class="sum-row"><span class="k">Ganancia transporte</span><span class="v" id="rev-trans">a definir</span></div>
-            <div class="sum-row"><span class="k">Retiro</span><span class="v">Sin definir</span></div>
-            <div class="sum-row"><span class="k">Ventana</span><span class="v">A definir</span></div>
-            <div class="sum-row"><span class="k">Entrega</span><span class="v">A definir</span></div>
-            <div class="sum-row"><span class="k">Estado</span><span class="v">Borrador</span></div>
-          </div>
-          <p class="side-note">Como borrador <b>no es visible al público</b>. Al cargar la fecha de entrega pasa a <b>próximo</b>. Solo puede haber <b>una compra abierta a la vez</b>.</p>
-        </div>
-
-        <div class="wiz-nav">
-          <button class="btn-ghost" data-wiz="prev" type="button" hidden>Atrás</button>
-          <span class="spacer"></span>
-          <button class="btn-primary" data-wiz="next" type="button">Siguiente</button>
-          <button class="btn-primary" id="mock-create" type="button" hidden>Crear compra</button>
-        </div>
-        <div class="mock-flash" id="mock-flash">✓ Compra creada como borrador (mock — no se guarda nada)</div>
       </div>
     </div>
   </div>
@@ -981,66 +947,213 @@
     detailInner.innerHTML = '';
     if (tpl) {
       detailInner.appendChild(tpl.content.cloneNode(true));
-      var createBtn = detailInner.querySelector('#mock-create');
-      if (createBtn) {
-        createBtn.addEventListener('click', function () {
-          detailInner.querySelector('#mock-flash').classList.add('show');
-        });
-      }
+      // US-1 Crear compra: pantalla "Revisar" navegable (↑/↓, espacio edita, enter crea) + listado
+      var ccReview = detailInner.querySelector('#cc-review');
+      if (ccReview) {
+        var MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var money1 = function (n) { return '$' + (+n).toLocaleString('es-AR'); };
+        var escAttr = function (s) { return String(s).replace(/"/g, '&quot;'); };
+        var fmtDate = function (iso) { var p = iso.split('-'); return (+p[2]) + ' ' + MES[(+p[1]) - 1]; };
+        var fmtDateTime = function (iso) { var d = iso.split('T'); return fmtDate(d[0]) + (d[1] ? ' ' + d[1] : ''); };
 
-      // Wizard
-      var wSteps = detailInner.querySelectorAll('.wiz-step');
-      var wPanels = detailInner.querySelectorAll('.wiz-panel');
-      if (wPanels.length) {
-        var cur = 1, total = wPanels.length;
-        var prevB = detailInner.querySelector('[data-wiz="prev"]');
-        var nextB = detailInner.querySelector('[data-wiz="next"]');
-        var render = function () {
-          wPanels.forEach(function (p) { p.hidden = (+p.dataset.panel !== cur); });
-          wSteps.forEach(function (s) {
-            var n = +s.dataset.step;
-            s.classList.toggle('active', n === cur);
-            s.classList.toggle('done', n < cur);
-          });
-          prevB.hidden = cur === 1;
-          nextB.hidden = cur === total;
-          createBtn.hidden = cur !== total;
+        var cloneFields = function (f) { return f.map(function (x) { var o = {}; for (var k in x) o[k] = x[k]; return o; }); };
+        var blank = function () {
+          return [
+            { key: 'mercado', label: 'Ganancia del mercado', type: 'gain', val: 5, unit: 'pct' },
+            { key: 'transporte', label: 'Ganancia del transporte', type: 'gain', val: null, unit: 'pct' },
+            { key: 'retiro', label: 'Lugar de retiro', type: 'text', val: '' },
+            { key: 'inicio', label: 'Inicio de la ventana', type: 'datetime', val: '' },
+            { key: 'fin', label: 'Fin de la ventana', type: 'datetime', val: '' },
+            { key: 'entrega', label: 'Fecha de entrega', type: 'date', val: '' }
+          ];
         };
-        prevB.addEventListener('click', function () { if (cur > 1) { cur--; render(); } });
-        nextB.addEventListener('click', function () { if (cur < total) { cur++; render(); } });
-        wSteps.forEach(function (s) {
-          s.addEventListener('click', function () { cur = +s.dataset.step; render(); });
-        });
-        render();
-      }
+        var getField = function (f, k) { for (var i = 0; i < f.length; i++) if (f[i].key === k) return f[i]; return null; };
+        var setKey = function (f, k, v, unit) { var x = getField(f, k); if (x) { x.val = v; if (unit) x.unit = unit; } };
+        var seed = function (dateISO, mkt, trans, retiro) {
+          var f = blank();
+          setKey(f, 'mercado', mkt, 'pct');
+          setKey(f, 'transporte', trans, 'fijo');
+          setKey(f, 'retiro', retiro);
+          setKey(f, 'entrega', dateISO);
+          return f;
+        };
 
-      // Ganancias (mercado / transporte): % o $ fijo, opcionales al crear
-      var gains = detailInner.querySelectorAll('.wiz-panel .gain');
-      if (gains.length) {
-        var revMkt = detailInner.querySelector('#rev-mkt');
-        var revTrans = detailInner.querySelector('#rev-trans');
-        var gainText = function (g) {
-          var v = g.querySelector('.gain-val').value;
-          if (v === '' || v === null) return 'a definir';
-          var t = g.querySelector('.gt.active').dataset.t;
-          return t === 'pct' ? (+v) + '%' : '$' + (+v).toLocaleString('es-AR');
+        var dispVal = function (fld) {
+          if (fld.type === 'gain') {
+            if (fld.val === null || fld.val === '') return 'a definir';
+            return fld.unit === 'pct' ? (+fld.val) + '%' : money1(fld.val);
+          }
+          if (fld.type === 'text') return fld.val ? fld.val : 'Sin definir';
+          if (fld.type === 'date') return fld.val ? fmtDate(fld.val) : 'A definir';
+          if (fld.type === 'datetime') return fld.val ? fmtDateTime(fld.val) : 'A definir';
+          return fld.val || '—';
         };
-        var syncGains = function () {
-          gains.forEach(function (g) {
-            var target = g.dataset.gain === 'mercado' ? revMkt : revTrans;
-            if (target) target.textContent = gainText(g);
-          });
+        var estadoDe = function (f) { return getField(f, 'entrega').val ? 'Próximo' : 'Borrador'; };
+        var idOf = function (f) {
+          var e = getField(f, 'entrega');
+          return e.val ? 'Compra — entrega ' + fmtDate(e.val) : 'Borrador — entrega a definir';
         };
-        gains.forEach(function (g) {
-          g.querySelector('.gain-val').addEventListener('input', syncGains);
-          g.querySelectorAll('.gt').forEach(function (b) {
-            b.addEventListener('click', function () {
-              g.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
-              b.classList.add('active'); syncGains();
+
+        var fields = blank();
+        var sel = 0, editingId = null, editIdx = 0;
+        var compras = [
+          { id: 'entrega-5-jul', estado: 'Cerrada', fields: seed('2026-07-05', 5, 6000, 'Salón comunitario') },
+          { id: 'entrega-28-jun', estado: 'Liquidada', fields: seed('2026-06-28', 5, null, 'Almacén de Ana') }
+        ];
+
+        var reviewView = detailInner.querySelector('#cc-review-view');
+        var listView = detailInner.querySelector('#cc-list-view');
+        var ccId = detailInner.querySelector('#cc-id');
+        var ccList = detailInner.querySelector('#cc-list');
+        var ccH3 = detailInner.querySelector('#cc-h3');
+        var ccCrumb = detailInner.querySelector('#cc-crumb');
+        var ccAddr = detailInner.querySelector('#cc-addr');
+
+        var renderReview = function () {
+          var e = getField(fields, 'entrega');
+          ccId.textContent = idOf(fields);
+          ccId.className = 'sum-id' + (e.val ? '' : ' draft');
+          ccReview.innerHTML = fields.map(function (fld, i) {
+            return '<div class="sum-row cc-row' + (i === sel ? ' current' : '') + '" data-i="' + i + '">' +
+              '<span class="k">' + fld.label + '</span>' +
+              '<span class="v">' + dispVal(fld) + '<span class="cc-edit-icon">✎ espacio</span></span></div>';
+          }).join('');
+        };
+
+        // Editor modal (genérico según tipo de campo; se crea una vez)
+        var modal = document.createElement('div');
+        modal.className = 'cat-modal';
+        modal.hidden = true;
+        modal.innerHTML =
+          '<div class="cat-box" role="dialog" aria-modal="true">' +
+            '<div class="cat-head"><h3 id="cc-ed-title"></h3><button class="cat-x" type="button" aria-label="Cerrar">✕</button></div>' +
+            '<div id="cc-ed-body"></div>' +
+            '<div class="cat-actions"><button class="cat-cancel" type="button">Cancelar</button>' +
+              '<button class="cat-ok" type="button">Guardar</button></div>' +
+            '<div class="cat-hint">Enter guarda · Esc cancela (deja el valor como estaba)</div>' +
+          '</div>';
+        detailInner.appendChild(modal);
+        var ccEdTitle = modal.querySelector('#cc-ed-title');
+        var ccEdBody = modal.querySelector('#cc-ed-body');
+
+        var editorBody = function (fld) {
+          if (fld.type === 'gain') {
+            var v = (fld.val === null ? '' : fld.val);
+            return '<div class="field"><label>' + fld.label + '</label>' +
+              '<div class="gain"><input type="number" class="gain-val cc-ed-input" min="0" value="' + v + '" placeholder="—">' +
+                '<div class="gain-toggle">' +
+                  '<button type="button" class="gt' + (fld.unit === 'pct' ? ' active' : '') + '" data-t="pct">%</button>' +
+                  '<button type="button" class="gt' + (fld.unit === 'fijo' ? ' active' : '') + '" data-t="fijo">$</button>' +
+                '</div></div>' +
+              '<p class="hint">Porcentaje del total o monto fijo. Vacío = se define al liquidar.</p></div>';
+          }
+          if (fld.type === 'text') {
+            return '<div class="field"><label>' + fld.label + '</label>' +
+              '<input type="text" class="cc-ed-input" value="' + escAttr(fld.val || '') + '" placeholder="Todavía sin definir"></div>';
+          }
+          var itype = fld.type === 'date' ? 'date' : 'datetime-local';
+          return '<div class="field"><label>' + fld.label + '</label>' +
+            '<input type="' + itype + '" class="cc-ed-input" value="' + escAttr(fld.val || '') + '"></div>';
+        };
+        var openEditor = function (i) {
+          editIdx = i;
+          var fld = fields[i];
+          ccEdTitle.textContent = 'Compra · ' + fld.label;
+          ccEdBody.innerHTML = editorBody(fld);
+          modal.hidden = false;
+          if (fld.type === 'gain') {
+            ccEdBody.querySelectorAll('.gt').forEach(function (b) {
+              b.addEventListener('click', function () {
+                ccEdBody.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
+                b.classList.add('active');
+              });
             });
-          });
+          }
+          var inp = ccEdBody.querySelector('.cc-ed-input');
+          if (inp) { inp.focus(); if (inp.select) inp.select(); }
+        };
+        var closeEditor = function () { modal.hidden = true; ccReview.focus(); };
+        var saveEditor = function () {
+          var fld = fields[editIdx];
+          var inp = ccEdBody.querySelector('.cc-ed-input');
+          if (fld.type === 'gain') {
+            var raw = inp.value;
+            fld.val = (raw === '' ? null : Math.max(0, +raw || 0));
+            fld.unit = ccEdBody.querySelector('.gt.active').dataset.t;
+          } else {
+            fld.val = inp.value;
+          }
+          closeEditor();
+          renderReview();
+        };
+        modal.querySelector('.cat-x').addEventListener('click', closeEditor);
+        modal.querySelector('.cat-cancel').addEventListener('click', closeEditor);
+        modal.querySelector('.cat-ok').addEventListener('click', saveEditor);
+        modal.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); closeEditor(); }
+          else if (e.key === 'Enter') { e.preventDefault(); saveEditor(); }
         });
-        syncGains();
+        modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
+
+        var renderList = function () {
+          ccCrumb.textContent = '— Compras';
+          ccAddr.textContent = 'meliquina.app/admin/compras';
+          ccList.innerHTML = compras.map(function (c, i) {
+            var f = c.fields;
+            var sub = 'Mercado ' + dispVal(getField(f, 'mercado')) +
+              ' · Transporte ' + dispVal(getField(f, 'transporte')) +
+              ' · Retiro ' + (getField(f, 'retiro').val || 'sin definir');
+            var openCls = (c.estado === 'Próximo' || c.estado === 'Abierta') ? ' is-open' : '';
+            return '<div class="cc-item' + (c.isNew ? ' new' : '') + '">' +
+              '<div class="ci-main"><div class="ci-id">' + idOf(f) + '</div><div class="ci-sub">' + sub + '</div></div>' +
+              '<span class="cc-estado' + openCls + '">' + c.estado + '</span>' +
+              '<button class="btn-ghost cc-edit" data-i="' + i + '" type="button">Editar</button></div>';
+          }).join('');
+        };
+        var showReview = function () {
+          reviewView.hidden = false; listView.hidden = true;
+          ccH3.textContent = editingId ? 'Editar compra' : 'Revisar y crear';
+          ccCrumb.textContent = editingId ? '— Compras / Editar' : '— Compras / Nueva';
+          ccAddr.textContent = editingId ? 'meliquina.app/admin/compras/' + editingId + '/editar' : 'meliquina.app/admin/compras/nueva';
+          sel = 0; renderReview(); ccReview.focus();
+        };
+        var showList = function () { reviewView.hidden = true; listView.hidden = false; renderList(); };
+        var createCompra = function () {
+          compras.forEach(function (c) { c.isNew = false; });
+          if (editingId) {
+            for (var i = 0; i < compras.length; i++) if (compras[i].id === editingId) {
+              compras[i].fields = fields; compras[i].estado = estadoDe(fields); compras[i].isNew = true;
+            }
+          } else {
+            var e = getField(fields, 'entrega');
+            var newId = e.val ? 'entrega-' + fmtDate(e.val).replace(' ', '-') : 'borrador-' + (compras.length + 1);
+            compras.unshift({ id: newId, estado: estadoDe(fields), fields: fields, isNew: true });
+          }
+          editingId = null; fields = blank();
+          showList();
+        };
+
+        ccReview.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(fields.length - 1, sel + 1); renderReview(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(0, sel - 1); renderReview(); }
+          else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openEditor(sel); }
+          else if (e.key === 'Enter') { e.preventDefault(); createCompra(); }
+        });
+        ccReview.addEventListener('click', function (e) {
+          var r = e.target.closest('.cc-row'); if (!r) return;
+          sel = +r.dataset.i; renderReview(); openEditor(sel);
+        });
+        ccList.addEventListener('click', function (e) {
+          var b = e.target.closest('.cc-edit'); if (!b) return;
+          var c = compras[+b.dataset.i];
+          fields = cloneFields(c.fields); editingId = c.id;
+          showReview();
+        });
+        detailInner.querySelector('#cc-new').addEventListener('click', function () {
+          fields = blank(); editingId = null; showReview();
+        });
+
+        showReview();
       }
 
       // US-16 Catálogo: mazo para navegar + editor de stock (barra) + lista de productos
