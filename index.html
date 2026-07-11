@@ -256,6 +256,13 @@
   .review-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; margin-bottom: 14px; }
   .review-grid .pub-preview { margin-top: 0; }
   @media (max-width: 640px) { .review-grid { grid-template-columns: 1fr; } }
+
+  /* Input de ganancia: valor + toggle % / $ */
+  .gain { display: flex; gap: 8px; align-items: stretch; }
+  .gain-val { flex: 1; font: inherit; font-size: 1rem; color: var(--ink); padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); min-width: 0; }
+  .gain-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; flex: none; }
+  .gt { border: none; background: var(--bg); color: var(--muted); padding: 0 15px; font: inherit; font-weight: 800; cursor: pointer; }
+  .gt.active { background: var(--admin); color: #fff; }
   .mock-side h4 { margin: 0 0 14px; font-size: 1.05rem; }
   .sum-id {
     font-weight: 800; font-size: 1.05rem; color: var(--admin);
@@ -481,8 +488,9 @@
 
   /* Liquidación (US-15) */
   .store-status.admin-status { background: var(--admin-soft); color: var(--admin); }
-  .liq-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
-  @media (max-width: 640px) { .liq-stats { grid-template-columns: 1fr; } }
+  .liq-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 820px) { .liq-stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .liq-stats { grid-template-columns: 1fr; } }
   .liq-stat { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; background: var(--card); }
   .liq-stat .lk { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 800; }
   .liq-stat .lv { font-size: 1.55rem; font-weight: 800; margin-top: 6px; }
@@ -542,8 +550,8 @@
       <article class="card">
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
-        <p class="story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y % del mercado— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
+        <p class="story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
+        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y ganancias (mercado y transporte, cada una % o monto fijo, opcionales acá) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -591,7 +599,7 @@
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
         <h3>Liquidar una compra</h3>
         <p class="story">Como <b>organizador</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-        <p class="accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por producto. "Marcar liquidada" deja la compra en estado liquidada.</p>
+        <p class="accept">Sobre los pedidos confirmados: total vendido, ganancia del mercado, transporte y monto a proveedores (= total − mercado − transporte), con desglose por producto. Las dos ganancias (mercado y transporte, cada una % o monto fijo) se definen acá si faltan y son obligatorias para cerrar. "Marcar liquidada" deja la compra en estado liquidada.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
     </div>
@@ -675,8 +683,8 @@
 <template id="mock-US-1">
   <div class="detail-lead">
     <h2 class="detail-title">Crear una compra</h2>
-    <p class="detail-story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y % del mercado— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
+    <p class="detail-story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
+    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: retiro y ganancias (mercado y transporte, cada una % o monto fijo, opcionales acá) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
@@ -690,20 +698,32 @@
       <!-- Columna: formulario -->
       <div class="mock-form">
         <div class="wiz-steps">
-          <div class="wiz-step active" data-step="1"><span class="n">1</span>Retiro y reparto</div>
+          <div class="wiz-step active" data-step="1"><span class="n">1</span>Retiro y ganancias</div>
           <div class="wiz-step" data-step="2"><span class="n">2</span>Fechas</div>
           <div class="wiz-step" data-step="3"><span class="n">3</span>Revisar</div>
         </div>
 
-        <!-- Paso 1: Retiro y reparto -->
+        <!-- Paso 1: Retiro y ganancias -->
         <div class="wiz-panel" data-panel="1">
-          <h3>Retiro y reparto</h3>
-          <p class="sub">La compra <b>agrupa pedidos</b>: no se eligen productos acá. Al presentarla muestra todos los del <b>catálogo con stock</b>. No hay cupo: si querés limitar, compartís el link solo con ciertas personas.</p>
-          <div class="field">
-            <label>% para el mercado</label>
-            <input type="number" id="mkt-pct" value="5" min="0" max="100">
-            <p class="hint">El resto va a proveedores: <b id="prov-pct">95%</b>.</p>
+          <h3>Retiro y ganancias</h3>
+          <p class="sub">La compra <b>agrupa pedidos</b>: no se eligen productos acá. Sin cupo (para limitar, compartís el link). Las ganancias podés definirlas ahora o dejarlas para la liquidación (pero son obligatorias para cerrar).</p>
+          <div class="field-row">
+            <div class="field">
+              <label>Ganancia del mercado <span class="opt">— opcional acá</span></label>
+              <div class="gain" data-gain="mercado">
+                <input type="number" class="gain-val" min="0" value="5">
+                <div class="gain-toggle"><button type="button" class="gt active" data-t="pct">%</button><button type="button" class="gt" data-t="fijo">$</button></div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Ganancia del transporte <span class="opt">— opcional acá</span></label>
+              <div class="gain" data-gain="transporte">
+                <input type="number" class="gain-val" min="0" placeholder="—">
+                <div class="gain-toggle"><button type="button" class="gt active" data-t="pct">%</button><button type="button" class="gt" data-t="fijo">$</button></div>
+              </div>
+            </div>
           </div>
+          <p class="hint">Cada una puede ser porcentaje (%) o monto fijo ($). Lo que quede después de mercado + transporte es de los proveedores.</p>
           <div class="field">
             <label>Lugar de retiro <span class="opt">— opcional</span></label>
             <input type="text" placeholder="Todavía sin definir">
@@ -733,7 +753,8 @@
           <div class="sum-id draft">Borrador — entrega a definir</div>
           <div class="review-box">
             <div class="sum-row"><span class="k">Productos</span><span class="v">catálogo con stock</span></div>
-            <div class="sum-row"><span class="k">Reparto</span><span class="v" id="rev-split">Mercado 5% · Proveedores 95%</span></div>
+            <div class="sum-row"><span class="k">Ganancia mercado</span><span class="v" id="rev-mkt">5%</span></div>
+            <div class="sum-row"><span class="k">Ganancia transporte</span><span class="v" id="rev-trans">a definir</span></div>
             <div class="sum-row"><span class="k">Retiro</span><span class="v">Sin definir</span></div>
             <div class="sum-row"><span class="k">Ventana</span><span class="v">A definir</span></div>
             <div class="sum-row"><span class="k">Entrega</span><span class="v">A definir</span></div>
@@ -801,7 +822,7 @@
   <div class="detail-lead">
     <h2 class="detail-title">Liquidar una compra</h2>
     <p class="detail-story">Como <b>organizador</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-    <p class="detail-accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por producto. "Marcar liquidada" deja la compra en estado liquidada.</p>
+    <p class="detail-accept">Sobre los pedidos confirmados: total vendido, ganancia del mercado, transporte y monto a proveedores (= total − mercado − transporte), con desglose por producto. Las dos ganancias (mercado y transporte, cada una % o monto fijo) se definen acá si faltan y son obligatorias para cerrar. "Marcar liquidada" deja la compra en estado liquidada.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
@@ -816,19 +837,30 @@
         <header class="store-head">
           <div>
             <div class="store-id">Compra — entrega 26 jul</div>
-            <div class="store-sub">Cuentas sobre pedidos confirmados. Reparto: <b>Mercado 5% · Proveedores 95%</b>.</div>
+            <div class="store-sub">Cuentas sobre pedidos confirmados. Proveedores = total − mercado − transporte.</div>
           </div>
           <span class="store-status admin-status">Cerrada · lista para liquidar</span>
         </header>
 
-        <div class="field" style="max-width:340px">
-          <label>Total a pagar a transporte</label>
-          <input type="number" id="liq-transport" value="6000" min="0">
-          <p class="hint">Se sabe al liquidar. Se descuenta de la ganancia del mercado.</p>
+        <div class="field-row" style="max-width:640px">
+          <div class="field">
+            <label>Ganancia del mercado</label>
+            <div class="gain" data-gain="mercado">
+              <input type="number" class="gain-val" min="0" value="5">
+              <div class="gain-toggle"><button class="gt active" data-t="pct" type="button">%</button><button class="gt" data-t="fijo" type="button">$</button></div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Ganancia del transporte</label>
+            <div class="gain" data-gain="transporte">
+              <input type="number" class="gain-val" min="0" value="6000">
+              <div class="gain-toggle"><button class="gt" data-t="pct" type="button">%</button><button class="gt active" data-t="fijo" type="button">$</button></div>
+            </div>
+          </div>
         </div>
+        <p class="liq-note">Obligatorias para liquidar (podían venir de la compra). Cada una % o $ fijo. Los pedidos pendientes o cancelados no se incluyen.</p>
 
         <div class="liq-stats" id="liq-stats"></div>
-        <p class="liq-note">Los pedidos pendientes o cancelados no se incluyen. El % del mercado viene de la compra.</p>
 
         <div class="liq-table-wrap">
           <table class="liq-table" id="liq-table"></table>
@@ -982,19 +1014,33 @@
         render();
       }
 
-      // Reparto: % mercado / % proveedores en vivo
-      var pctEl = detailInner.querySelector('#mkt-pct');
-      if (pctEl) {
-        var provEl = detailInner.querySelector('#prov-pct');
-        var revSplit = detailInner.querySelector('#rev-split');
-        var syncPct = function () {
-          var m = Math.max(0, Math.min(100, +pctEl.value || 0));
-          var p = 100 - m;
-          if (provEl) provEl.textContent = p + '%';
-          if (revSplit) revSplit.textContent = 'Mercado ' + m + '% · Proveedores ' + p + '%';
+      // Ganancias (mercado / transporte): % o $ fijo, opcionales al crear
+      var gains = detailInner.querySelectorAll('.wiz-panel .gain');
+      if (gains.length) {
+        var revMkt = detailInner.querySelector('#rev-mkt');
+        var revTrans = detailInner.querySelector('#rev-trans');
+        var gainText = function (g) {
+          var v = g.querySelector('.gain-val').value;
+          if (v === '' || v === null) return 'a definir';
+          var t = g.querySelector('.gt.active').dataset.t;
+          return t === 'pct' ? (+v) + '%' : '$' + (+v).toLocaleString('es-AR');
         };
-        pctEl.addEventListener('input', syncPct);
-        syncPct();
+        var syncGains = function () {
+          gains.forEach(function (g) {
+            var target = g.dataset.gain === 'mercado' ? revMkt : revTrans;
+            if (target) target.textContent = gainText(g);
+          });
+        };
+        gains.forEach(function (g) {
+          g.querySelector('.gain-val').addEventListener('input', syncGains);
+          g.querySelectorAll('.gt').forEach(function (b) {
+            b.addEventListener('click', function () {
+              g.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
+              b.classList.add('active'); syncGains();
+            });
+          });
+        });
+        syncGains();
       }
 
       // US-16 Catálogo: mazo para navegar + editor de stock (barra) + lista de productos
@@ -1216,33 +1262,62 @@
           { n: 'Yerba orgánica', price: 3900, u: 14 }
         ];
         var tot = 0, units = 0;
-        data.forEach(function (d) {
-          d.rec = d.price * d.u; d.mkt = d.rec * pct; d.prov = d.rec * (1 - pct);
-          tot += d.rec; units += d.u;
-        });
-        var totMkt = tot * pct, totProv = tot * (1 - pct), orders = 34;
-        var transEl = detailInner.querySelector('#liq-transport');
-        var renderStats = function () {
-          var trans = Math.max(0, +transEl.value || 0);
-          var net = totMkt - trans;
+        data.forEach(function (d) { d.rec = d.price * d.u; tot += d.rec; units += d.u; });
+        var orders = 34;
+        var liqTable = detailInner.querySelector('#liq-table');
+        var liqMark = detailInner.querySelector('#liq-mark');
+        var gainEls = detailInner.querySelectorAll('.gain');
+
+        var gainAmount = function (g) {
+          var raw = g.querySelector('.gain-val').value;
+          if (raw === '' || raw === null) return null;               // sin definir
+          var v = Math.max(0, +raw || 0);
+          return g.querySelector('.gt.active').dataset.t === 'pct' ? tot * v / 100 : v;
+        };
+        var gainOf = function (name) {
+          var found = null;
+          gainEls.forEach(function (g) { if (g.dataset.gain === name) found = g; });
+          return found ? gainAmount(found) : 0;
+        };
+
+        var recompute = function () {
+          var mkt = gainOf('mercado'), trans = gainOf('transporte');
+          var ready = mkt !== null && trans !== null;
+          var m = mkt || 0, t = trans || 0, prov = tot - m - t;
           liqStats.innerHTML =
             '<div class="liq-stat"><div class="lk">Total confirmado</div><div class="lv">' + money(tot) + '</div><div class="ls">' + orders + ' pedidos · ' + units + ' unidades</div></div>' +
-            '<div class="liq-stat prov"><div class="lk">A proveedores (95%)</div><div class="lv">' + money(totProv) + '</div></div>' +
-            '<div class="liq-stat market"><div class="lk">Ganancia del mercado</div><div class="lv">' + money(net) + '</div><div class="ls">5% (' + money(totMkt) + ') − transporte (' + money(trans) + ')</div></div>';
+            '<div class="liq-stat market"><div class="lk">Ganancia mercado</div><div class="lv">' + (mkt === null ? '—' : money(m)) + '</div></div>' +
+            '<div class="liq-stat"><div class="lk">Transporte</div><div class="lv">' + (trans === null ? '—' : money(t)) + '</div></div>' +
+            '<div class="liq-stat prov"><div class="lk">A proveedores</div><div class="lv">' + (ready ? money(prov) : '—') + '</div></div>';
+          var rows = data.map(function (d) {
+            var f = tot ? d.rec / tot : 0;
+            return '<tr><td>' + d.n + '</td><td>' + d.u + '</td><td>' + money(d.rec) +
+              '</td><td class="market">' + money(m * f) + '</td><td>' + money(t * f) +
+              '</td><td class="prov">' + money(d.rec - m * f - t * f) + '</td></tr>';
+          }).join('');
+          liqTable.innerHTML =
+            '<thead><tr><th>Producto</th><th>Unid.</th><th>Recaudado</th><th>Mercado</th><th>Transporte</th><th>Proveedores</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody>' +
+            '<tfoot><tr><td>Total</td><td>' + units + '</td><td>' + money(tot) +
+            '</td><td class="market">' + money(m) + '</td><td>' + money(t) +
+            '</td><td class="prov">' + money(prov) + '</td></tr></tfoot>';
+          liqMark.disabled = !ready;
+          liqMark.title = ready ? '' : 'Definí ambas ganancias para poder liquidar';
         };
-        transEl.addEventListener('input', renderStats);
-        renderStats();
-        var rows = data.map(function (d) {
-          return '<tr><td>' + d.n + '</td><td>' + d.u + '</td><td>' + money(d.rec) +
-            '</td><td class="market">' + money(d.mkt) + '</td><td class="prov">' + money(d.prov) + '</td></tr>';
-        }).join('');
-        detailInner.querySelector('#liq-table').innerHTML =
-          '<thead><tr><th>Producto</th><th>Unid.</th><th>Recaudado</th><th>Mercado</th><th>Proveedores</th></tr></thead>' +
-          '<tbody>' + rows + '</tbody>' +
-          '<tfoot><tr><td>Total</td><td>' + units + '</td><td>' + money(tot) +
-          '</td><td class="market">' + money(totMkt) + '</td><td class="prov">' + money(totProv) + '</td></tr></tfoot>';
-        var liqMark = detailInner.querySelector('#liq-mark');
+
+        gainEls.forEach(function (g) {
+          g.querySelector('.gain-val').addEventListener('input', recompute);
+          g.querySelectorAll('.gt').forEach(function (b) {
+            b.addEventListener('click', function () {
+              g.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
+              b.classList.add('active'); recompute();
+            });
+          });
+        });
+        recompute();
+
         liqMark.addEventListener('click', function () {
+          if (liqMark.disabled) return;
           detailInner.querySelector('#liq-flash').classList.add('show');
           liqMark.textContent = 'Liquidada ✓'; liqMark.disabled = true;
         });
