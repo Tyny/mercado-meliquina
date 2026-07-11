@@ -449,6 +449,19 @@
   .cc-sales .csrow { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
   .cc-sales .csrow:last-child { border-bottom: none; }
   .cc-sales .csrow b { font-weight: 800; }
+  .cc-sales .cs-note { margin: 10px 0 0; font-size: .82rem; color: var(--muted); line-height: 1.5; }
+  .cc-prods-sec { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .cc-prods-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .cc-prods-head h4 { margin: 0; font-size: 1.02rem; }
+  .cc-prods-add { display: flex; gap: 8px; }
+  .cc-prods-add select { font: inherit; font-size: .88rem; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); max-width: 220px; }
+  .cc-prods-add select:disabled { opacity: .5; }
+  .cc-prods { display: flex; flex-wrap: wrap; gap: 8px; min-height: 20px; }
+  .prod-chip { display: inline-flex; align-items: center; gap: 4px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); border-radius: 999px; padding: 5px 6px 5px 13px; font-size: .88rem; font-weight: 700; }
+  .prod-chip .prod-x { border: none; background: transparent; color: inherit; cursor: pointer; font-size: .95rem; line-height: 1; padding: 0 4px; border-radius: 999px; }
+  .prod-chip .prod-x:hover { background: var(--accent); color: #fff; }
+  .cc-prods-empty { color: var(--muted); font-size: .88rem; }
+  .cc-prods-note { margin: 12px 0 0; font-size: .82rem; color: var(--muted); line-height: 1.5; }
   .pub-preview {
     margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
   }
@@ -928,7 +941,7 @@
         <!-- Vista: Revisar (crear / editar) -->
         <div id="cc-review-view">
           <h3 id="cc-h3">Revisar y crear</h3>
-          <p class="sub">La compra <b>agrupa pedidos</b>: los productos salen del catálogo, no se eligen acá. Movés con ↑/↓, la <b>barra espaciadora</b> abre un editor y <b>Enter</b> crea la compra.</p>
+          <p class="sub">La compra agrupa pedidos sobre una <b>subselección del catálogo</b>. Movés con ↑/↓, la <b>barra espaciadora</b> edita un valor y <b>Enter</b> crea la compra.</p>
           <div class="sum-id draft" id="cc-id">Compra — entrega a definir</div>
           <div class="review-box cc-review" id="cc-review" tabindex="0"></div>
           <div class="cc-hintbar">
@@ -936,7 +949,18 @@
             <span><kbd class="mini-kbd">Espacio</kbd>editar valor</span>
             <span><kbd class="mini-kbd">Enter</kbd>crear compra</span>
           </div>
-          <p class="side-note">Se crea <b>sin publicar</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Puede haber <b>varias compras publicadas</b> a la vez (cada una con su link). Las ganancias son opcionales acá, pero obligatorias para liquidar.</p>
+          <div class="cc-prods-sec">
+            <div class="cc-prods-head">
+              <h4>Productos de la compra (<span id="cc-prods-count">0</span>)</h4>
+              <div class="cc-prods-add">
+                <select id="cc-prod-select"></select>
+                <button type="button" class="btn-ghost" id="cc-prod-add">Agregar</button>
+              </div>
+            </div>
+            <div class="cc-prods" id="cc-prods"></div>
+            <p class="cc-prods-note"></p>
+          </div>
+          <p class="side-note">Se crea <b>sin publicar</b> (no visible al público). Para <b>publicarla</b> hace falta el <b>lugar de retiro</b>; se publica desde el listado. Los productos se agregan/quitan <b>hasta antes de publicar</b>. Las ganancias no se cargan acá (van en Configurar ganancias, US-19).</p>
         </div>
 
         <!-- Vista: Listado de compras -->
@@ -1393,9 +1417,11 @@
 
         var fields = blank();
         var sel = 0, editingId = null, editIdx = 0, listPage = 0, CPAGE = 4, listSel = 0;
+        var curProducts = [], curEditable = true;
+        var allProdNames = DB.storeProducts.map(function (p) { return p.n; });
         // Compras desde el DB (db.json)
         var compras = DB.compras.map(function (c) {
-          return { id: c.id, estado: c.estado, ventas: c.ventas || null, fields: seed(c.entrega, c.retiro) };
+          return { id: c.id, estado: c.estado, ventas: c.ventas || null, products: (c.productos || []).slice(), fields: seed(c.entrega, c.retiro) };
         });
 
         var reviewView = detailInner.querySelector('#cc-review-view');
@@ -1408,6 +1434,34 @@
         var ccPager = detailInner.querySelector('#cc-list-pager');
         var ccSales = detailInner.querySelector('#cc-sales');
         var ccFlash = detailInner.querySelector('#cc-flash');
+        var ccProds = detailInner.querySelector('#cc-prods');
+        var ccProdsCount = detailInner.querySelector('#cc-prods-count');
+        var ccProdSelect = detailInner.querySelector('#cc-prod-select');
+        var ccProdAdd = detailInner.querySelector('#cc-prod-add');
+        var ccProdsAdd = detailInner.querySelector('.cc-prods-add');
+        var ccProdsNote = detailInner.querySelector('.cc-prods-note');
+        var renderProducts = function () {
+          ccProdsCount.textContent = curProducts.length;
+          if (!curProducts.length) {
+            ccProds.innerHTML = '<span class="cc-prods-empty">Sin productos todavía — agregá del catálogo.</span>';
+          } else {
+            ccProds.innerHTML = curProducts.map(function (n, i) {
+              return '<span class="prod-chip">' + n +
+                (curEditable ? '<button type="button" class="prod-x" data-i="' + i + '" aria-label="Quitar ' + escAttr(n) + '">✕</button>' : '') +
+                '</span>';
+            }).join('');
+          }
+          var avail = allProdNames.filter(function (n) { return curProducts.indexOf(n) < 0; });
+          ccProdSelect.innerHTML = avail.length
+            ? avail.map(function (n) { return '<option value="' + escAttr(n) + '">' + n + '</option>'; }).join('')
+            : '<option value="">— sin más productos —</option>';
+          ccProdSelect.disabled = !curEditable || !avail.length;
+          ccProdAdd.disabled = !curEditable || !avail.length;
+          ccProdsAdd.style.display = curEditable ? '' : 'none';
+          ccProdsNote.textContent = curEditable
+            ? 'Elegí del catálogo qué ofrece esta compra. Se puede cambiar hasta antes de publicar.'
+            : 'La compra ya está publicada: la subselección de productos queda fija.';
+        };
         var flash = function (msg, warn) { ccFlash.textContent = msg; ccFlash.className = 'mock-flash show' + (warn ? ' warn' : ''); };
         var clearFlash = function () { ccFlash.className = 'mock-flash'; ccFlash.textContent = ''; ccSales.hidden = true; };
 
@@ -1538,7 +1592,7 @@
           ccH3.textContent = editingId ? 'Editar compra' : 'Revisar y crear';
           ccCrumb.textContent = editingId ? '— Compras / Editar' : '— Compras / Nueva';
           ccAddr.textContent = editingId ? 'meliquina.app/admin/compras/' + editingId + '/editar' : 'meliquina.app/admin/compras/nueva';
-          sel = 0; renderReview(); ccReview.focus();
+          sel = 0; renderReview(); renderProducts(); ccReview.focus();
         };
         var showList = function () {
           reviewView.hidden = true; listView.hidden = false;
@@ -1549,6 +1603,8 @@
         var editCompra = function (i) {
           clearFlash(); listSel = i;
           fields = cloneFields(compras[i].fields); editingId = compras[i].id;
+          curProducts = (compras[i].products || []).slice();
+          curEditable = compras[i].estado === 'No publicada';
           showReview();
         };
         var spaceAction = function (i) {
@@ -1560,16 +1616,18 @@
           compras.forEach(function (c) { c.isNew = false; });
           if (editingId) {
             for (var i = 0; i < compras.length; i++) if (compras[i].id === editingId) {
-              compras[i].fields = fields; compras[i].isNew = true;   // el estado no cambia al editar
+              compras[i].fields = fields;                          // el estado no cambia al editar
+              if (compras[i].estado === 'No publicada') compras[i].products = curProducts.slice();
+              compras[i].isNew = true;
             }
           } else {
             var e = getField(fields, 'entrega');
             var newId = e.val ? 'entrega-' + fmtDate(e.val).replace(' ', '-') : 'borrador-' + (compras.length + 1);
-            compras.unshift({ id: newId, estado: 'No publicada', fields: fields, isNew: true });
+            compras.unshift({ id: newId, estado: 'No publicada', ventas: null, products: curProducts.slice(), fields: fields, isNew: true });
             listSel = 0;
             flash('✓ Compra creada (sin publicar). Publicala cuando tenga lugar de retiro.', false);
           }
-          editingId = null; fields = blank();
+          editingId = null; fields = blank(); curProducts = []; curEditable = true;
           showList();
         };
 
@@ -1581,7 +1639,9 @@
             if (!entrega) falta.push('la fecha de entrega');
             if (!retiro) falta.push('el lugar de retiro');
             flash('Para publicar falta ' + falta.join(' y ') + '. Completala y volvé a publicar.', true);
-            fields = cloneFields(f); editingId = c.id; showReview();
+            fields = cloneFields(f); editingId = c.id;
+            curProducts = (c.products || []).slice(); curEditable = true;
+            showReview();
             return;
           }
           compras.forEach(function (x) { x.isNew = false; });
@@ -1590,16 +1650,14 @@
           flash('✓ Compra publicada — ya es visible y recibe pedidos.', false);
         };
         var ventas = function (i) {
-          var c = compras[i], f = c.fields, v = c.ventas || { unidades: 0, total: 0 }, total = v.total;
-          var gv = function (k) { var x = getField(f, k); if (x.val === null || x.val === '') return 0; return x.unit === 'pct' ? Math.round(total * (+x.val) / 100) : +x.val; };
-          var mkt = gv('mercado'), tr = gv('transporte'), prov = total - mkt - tr;
+          var c = compras[i], f = c.fields, v = c.ventas || { unidades: 0, total: 0 };
+          var np = (c.products || []).length;
           var row = function (k, val) { return '<div class="csrow"><span>' + k + '</span><b>' + val + '</b></div>'; };
           ccSales.innerHTML = '<h4>Info de ventas · ' + idOf(f) + '</h4>' +
+            row('Productos ofrecidos', np) +
             row('Unidades vendidas', v.unidades) +
-            row('Total recaudado', money1(total)) +
-            row('Ganancia del mercado', money1(mkt)) +
-            row('Transporte', money1(tr)) +
-            row('A proveedores', money1(prov));
+            row('Total recaudado', money1(v.total)) +
+            '<p class="cs-note">La ganancia se calcula al <b>liquidar</b>, con los costos reales de la orden de compra asociada (productos + flete). Ver <b>Liquidar</b> (US-15).</p>';
           ccSales.hidden = false;
           ccFlash.className = 'mock-flash'; ccFlash.textContent = '';
         };
@@ -1635,8 +1693,19 @@
           else if (e.key === 'ArrowUp') { e.preventDefault(); listSel = Math.max(0, listSel - 1); listPage = Math.floor(listSel / CPAGE); renderList(); }
           else if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spaceAction(listSel); }
         });
+        ccProdAdd.addEventListener('click', function () {
+          if (!curEditable) return;
+          var n = ccProdSelect.value;
+          if (n && curProducts.indexOf(n) < 0) { curProducts.push(n); renderProducts(); }
+        });
+        ccProds.addEventListener('click', function (e) {
+          var b = e.target.closest('.prod-x'); if (!b || !curEditable) return;
+          curProducts.splice(+b.dataset.i, 1); renderProducts();
+        });
         detailInner.querySelector('#cc-new').addEventListener('click', function () {
-          clearFlash(); fields = blank(); editingId = null; showReview();
+          clearFlash(); fields = blank(); editingId = null;
+          curProducts = []; curEditable = true;
+          showReview();
         });
 
         showReview();
