@@ -701,9 +701,6 @@
 <template id="mock-US-1">
   <div class="detail-lead">
     <h2 class="detail-title">Crear una compra</h2>
-    <p class="detail-story">Como <b>organizador</b>, quiero crear una compra —ventana, retiro y ganancias— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
-    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las ganancias (mercado y transporte, cada una % o monto fijo) y las fechas son opcionales acá; sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
-    <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
   <div class="mock mock-desktop">
@@ -745,9 +742,6 @@
 <template id="mock-US-5">
   <div class="detail-lead">
     <h2 class="detail-title">Explorar una compra abierta</h2>
-    <p class="detail-story">Como <b>comprador</b>, quiero ver los productos disponibles en una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
-    <p class="detail-accept">Cada producto muestra dos contadores — confirmadas y pendientes; retiro + fecha de entrega se muestran cuando están definidos.</p>
-    <p class="section-label">Así se vería la pantalla pública (versión desktop)</p>
   </div>
 
   <div class="mock mock-desktop store-mock">
@@ -787,9 +781,6 @@
 <template id="mock-US-15">
   <div class="detail-lead">
     <h2 class="detail-title">Liquidar una compra</h2>
-    <p class="detail-story">Como <b>organizador</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-    <p class="detail-accept">Sobre los pedidos confirmados: total vendido, ganancia del mercado, transporte y monto a proveedores (= total − mercado − transporte), con desglose por producto. Las dos ganancias (mercado y transporte, cada una % o monto fijo) se definen acá si faltan y son obligatorias para cerrar. "Marcar liquidada" deja la compra en estado liquidada.</p>
-    <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
   <div class="mock mock-desktop">
@@ -846,9 +837,6 @@
 <template id="mock-US-16">
   <div class="detail-lead">
     <h2 class="detail-title">Administrar catálogo</h2>
-    <p class="detail-story">Como <b>organizador</b>, quiero mantener el catálogo de productos y su stock actual, para que las compras muestren siempre lo disponible.</p>
-    <p class="detail-accept">Los productos son <b>independientes de las compras</b>. Recorrés el catálogo con las flechas ‹ › o ←/→; la <b>barra espaciadora</b> abre el editor para actualizar <b>stock</b>, precio y unidad de medida. Al costado, todos los productos con su stock (alfabético, paginado).</p>
-    <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
   <div class="mock mock-desktop">
@@ -1447,6 +1435,9 @@
     }
     document.body.classList.add('detail-open');
     window.scrollTo({ top: 0 });
+    // Enfocar la pantalla navegable recién ahora que el detalle es visible (si no, focus() no prende)
+    var focusable = detailInner.querySelector('#cc-review');
+    if (focusable) setTimeout(function () { focusable.focus(); }, 0);
   }
 
   function closeDetail() {
