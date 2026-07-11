@@ -46,14 +46,14 @@
   /* Modo activo (mercado/compra) → color de acento; se remapea dentro de mocks y cards */
   body[data-mode="mercado"] { --accent: var(--mercado); --accent-soft: var(--mercado-soft); }
   body[data-mode="compra"]  { --accent: var(--compra);  --accent-soft: var(--compra-soft); }
+  /* El color del modo vive en las pantallas de ejemplo (mocks), no en la lista de stories */
   .mock { --admin: var(--accent); --admin-soft: var(--accent-soft); --user: var(--accent); --user-soft: var(--accent-soft); }
-  .card { --admin: var(--accent); --admin-soft: var(--accent-soft); --user: var(--accent); --user-soft: var(--accent-soft); }
-  /* Selector de modo */
-  .mode-bar { display: flex; justify-content: center; margin: 0 0 20px; }
-  .mode-seg { display: inline-flex; gap: 4px; background: var(--chip); border-radius: 999px; padding: 4px; }
-  .mode-seg button { border: none; background: transparent; color: var(--muted); font: inherit; font-size: .95rem; font-weight: 800; padding: 8px 20px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+  /* Selector de modo (en el detalle / pantalla de ejemplo) */
+  .mode-seg { display: inline-flex; gap: 4px; background: var(--chip); border-radius: 999px; padding: 3px; }
+  .mode-seg button { border: none; background: transparent; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 800; padding: 6px 15px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
   .mode-seg button.active { background: var(--accent); color: #fff; }
-  .mode-note { font-size: .82rem; color: var(--muted); font-weight: 500; }
+  .mode-fixed { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; font-weight: 800; color: #fff; background: var(--accent); padding: 7px 16px; border-radius: 999px; }
+  .detail-mode { margin-left: auto; }
   .mode-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: middle; margin-right: 4px; }
   .dicc-legend { max-width: 1000px; margin: 0 auto 18px; padding: 12px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; color: var(--muted); line-height: 1.6; font-size: .95rem; }
   .dicc-legend b { color: var(--ink); }
@@ -723,10 +723,6 @@
   <!-- ADMIN -->
   <section class="panel active" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin">
     <p class="panel-head">Crea y gestiona el catálogo, las compras y los pedidos.</p>
-    <div class="mode-bar"><div class="mode-seg" role="tablist" aria-label="Modo">
-      <button type="button" data-mode="mercado" class="active">🏪 Mercado</button>
-      <button type="button" data-mode="compra">📅 Compra</button>
-    </div></div>
     <div class="deck">
       <article class="card" data-scope="compra">
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
@@ -737,7 +733,7 @@
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
-        <h3>Compartir links al mercado</h3>
+        <h3>Compartir links</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero copiar y compartir el link del mercado o el de una compra puntual, para difundir el mercado o limitar quién participa en una compra.</p>
         <p class="accept">Con <b>botón de copiar</b>: el <b>link del mercado</b> (fijo y público, siempre disponible) y el <b>link de cada compra publicada</b> (uno por compra; si hay varias se listan con scroll; si no hay ninguna publicada, no hay link de compra). El link de la compra se comparte solo con ciertas personas (ej. por WhatsApp) para limitar quién participa.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
@@ -782,11 +778,7 @@
 
   <!-- USER -->
   <section class="panel" id="panel-user" role="tabpanel" aria-labelledby="tab-user">
-    <p class="panel-head">Compradora sin cuenta. Se identifica al finalizar la compra. <span class="mode-note">El modo lo define el link por el que entra.</span></p>
-    <div class="mode-bar"><div class="mode-seg" role="tablist" aria-label="Modo">
-      <button type="button" data-mode="mercado" class="active">🏪 Mercado</button>
-      <button type="button" data-mode="compra">📅 Compra</button>
-    </div></div>
+    <p class="panel-head">Compradora sin cuenta. Se identifica al finalizar la compra.</p>
     <div class="deck">
       <article class="card">
         <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
@@ -823,7 +815,7 @@
   <section class="panel" id="panel-dicc" role="tabpanel" aria-labelledby="tab-dicc">
     <p class="panel-head">Las entidades del dominio, su definición y cómo cambian de estado en cada proceso.</p>
     <div class="dicc">
-      <p class="dicc-legend">Un <b>selector de modo</b> (arriba de cada rol) elige <b>Mercado</b> o <b>Compra</b> — filtra las stories y <b>tiñe las pantallas</b> con el color del modo. La organizadora lo elige; la compradora lo hereda del <b>link</b> por el que entra.</p>
+      <p class="dicc-legend">Cada <b>pantalla de ejemplo</b> tiene un <b>selector de modo</b> (arriba a la derecha) que la <b>tiñe</b> con el color del modo: <b>Mercado</b> (naranja) o <b>Compra</b> (violeta). Las pantallas de una sola cara (crear/liquidar una compra) van fijas en su color; las mixtas se pueden alternar; la compradora lo hereda del <b>link</b> por el que entra. La lista de stories NO tiene selector.</p>
       <div class="dicc-modes">
         <div class="dicc-mode" style="border-left:5px solid var(--mercado)">
           <div class="dm-title"><span class="mode-swatch" style="background:var(--mercado)"></span>🏪 Modo mercado <span class="dm-tag">continuo</span></div>
@@ -911,6 +903,7 @@
     <div class="detail-top-inner">
       <button class="back-btn" id="back-btn" aria-label="Volver">←</button>
       <span class="role-pill" id="detail-pill"><span class="dot"></span><span id="detail-pill-text"></span></span>
+      <span class="detail-mode" id="detail-mode"></span>
     </div>
   </div>
   <div class="detail-inner" id="detail-inner"></div>
@@ -1016,7 +1009,7 @@
 <!-- Mock for US-3: pantalla "Compartir links" (organizadora) -->
 <template id="mock-US-3">
   <div class="detail-lead">
-    <h2 class="detail-title">Compartir links al mercado</h2>
+    <h2 class="detail-title">Compartir links</h2>
   </div>
 
   <div class="mock mock-desktop">
@@ -1321,30 +1314,17 @@
     if (role === 'db') renderDb();
     if (location.hash.slice(1) !== role) history.replaceState(null, '', '#' + role);
     window.scrollTo({ top: 0 });
-    applyModeFilter();
     updateFabs();
   }
   tabs.forEach(function (t) {
     t.addEventListener('click', function () { select(t.dataset.role); });
   });
 
-  // Selector de modo (mercado/compra): tiñe el acento y filtra las stories por ámbito
-  function applyModeFilter() {
-    var mode = document.body.getAttribute('data-mode') || 'mercado';
-    document.querySelectorAll('.panel.active .card').forEach(function (c) {
-      var sc = c.getAttribute('data-scope') || 'mixto';
-      c.style.display = (sc === 'mixto' || sc === mode) ? '' : 'none';
-    });
-  }
+  // Modo (mercado/compra) → color de acento de la pantalla de ejemplo. El selector vive en el detalle.
   function setMode(m) {
     document.body.setAttribute('data-mode', m);
     document.querySelectorAll('.mode-seg button').forEach(function (b) { b.classList.toggle('active', b.dataset.mode === m); });
-    applyModeFilter();
-    if (typeof updateFabs === 'function') updateFabs();
   }
-  document.querySelectorAll('.mode-seg button').forEach(function (b) {
-    b.addEventListener('click', function () { setMode(b.dataset.mode); });
-  });
   document.body.setAttribute('data-mode', 'mercado');
 
   var h = location.hash.slice(1);
@@ -2145,6 +2125,25 @@
         (accept ? '<p class="detail-accept">' + accept + '</p>' : '') +
         '<div class="mock-note">🛠️ El mock de esta pantalla está en preparación.</div>';
     }
+
+    // Modo de la pantalla de ejemplo: color + selector según el ámbito del card
+    var scope = card.getAttribute('data-scope') || 'mixto';
+    var dm = document.getElementById('detail-mode');
+    var hasOwnMode = detailInner.querySelector('.slb'); // US-5 define su modo con el toggle de link
+    if (scope === 'compra') {
+      setMode('compra'); dm.innerHTML = '<span class="mode-fixed">📅 Compra</span>';
+    } else if (scope === 'mercado') {
+      setMode('mercado'); dm.innerHTML = '<span class="mode-fixed">🏪 Mercado</span>';
+    } else if (hasOwnMode) {
+      dm.innerHTML = '';
+    } else {
+      setMode('mercado');
+      dm.innerHTML = '<div class="mode-seg"><button type="button" data-mode="mercado" class="active">🏪 Mercado</button><button type="button" data-mode="compra">📅 Compra</button></div>';
+      dm.querySelectorAll('.mode-seg button').forEach(function (b) {
+        b.addEventListener('click', function () { setMode(b.dataset.mode); });
+      });
+    }
+
     document.body.classList.add('detail-open');
     window.scrollTo({ top: 0 });
     // Enfocar la pantalla navegable recién ahora que el detalle es visible (si no, focus() no prende):
