@@ -503,6 +503,17 @@
   .sbtn:hover:not(:disabled) { background: var(--chip); }
   .sbtn:disabled { opacity: .4; cursor: default; }
   .qty { min-width: 44px; text-align: center; font-weight: 800; }
+  /* US-5 mercado: toggle de rol + contadores solo-organizador */
+  .srole { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .srole-lbl { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .srole-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .srb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .9rem; padding: 7px 16px; cursor: pointer; }
+  .srb.active { background: var(--user); color: #fff; }
+  .srb.active[data-role="admin"] { background: var(--admin); }
+  .srole-hint { font-size: .82rem; color: var(--muted); }
+  .sadmin { font-size: .85rem; font-weight: 700; color: var(--admin); background: var(--admin-soft); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .sadmin b { color: var(--admin); }
+  .sadmin-tag { margin-left: auto; font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; opacity: .8; }
 
   /* Liquidación (US-15) */
   .store-status.admin-status { background: var(--admin-soft); color: var(--admin); }
@@ -629,9 +640,9 @@
     <div class="deck">
       <article class="card">
         <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
-        <h3>Explorar una compra abierta</h3>
-        <p class="story">Como <b>comprador</b>, quiero ver los productos disponibles en una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
-        <p class="accept">Muestra todos los productos del catálogo con stock (vivo). Cada uno con precio, stock y dos contadores — confirmadas y pendientes (ej. "12 confirmadas, 5 pendientes"); retiro + fecha de entrega cuando están definidos.</p>
+        <h3>Explorar el mercado (en stock)</h3>
+        <p class="story">Como <b>comprador</b>, quiero ver lo que hay en stock en el mercado con precio y cuánto queda, para decidir qué pedir.</p>
+        <p class="accept">Es la vista del <b>mercado</b> (el stock vivo del catálogo), no de una compra puntual. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos. Los contadores <b>pagados y confirmados</b> por producto (ej. "8 pagados · 7 confirmados") los ve <b>solo el organizador</b>. Retiro + fecha de entrega cuando están definidos.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -741,23 +752,32 @@
 <!-- Mock for US-5: pantalla pública "Explorar compra" -->
 <template id="mock-US-5">
   <div class="detail-lead">
-    <h2 class="detail-title">Explorar una compra abierta</h2>
+    <h2 class="detail-title">Explorar el mercado (lo que hay en stock)</h2>
   </div>
 
   <div class="mock mock-desktop store-mock">
     <div class="browser-bar">
       <span class="dots"><i></i><i></i><i></i></span>
-      <span class="addr">meliquina.app/compra/entrega-26-jul</span>
+      <span class="addr">meliquina.app/mercado</span>
     </div>
     <div class="store-topbar">Mercado Meliquina</div>
     <div class="store-body">
       <header class="store-head">
         <div>
-          <div class="store-id">Compra — entrega 26 jul</div>
-          <div class="store-sub">Hacé tu pedido antes del cierre.</div>
+          <div class="store-id">El mercado — en stock ahora</div>
+          <div class="store-sub">Pedí lo que haya disponible; se entrega en la próxima compra.</div>
         </div>
-        <span class="store-status">Abierta · cierra en 3 días</span>
+        <span class="store-status">Compra abierta · cierra en 3 días</span>
       </header>
+
+      <div class="srole">
+        <span class="srole-lbl">Ver como</span>
+        <div class="srole-seg">
+          <button type="button" class="srb active" data-role="user">Comprador</button>
+          <button type="button" class="srb" data-role="admin">Organizador</button>
+        </div>
+        <span class="srole-hint" id="srole-hint">Los compradores ven solo el stock disponible (quedan X de Y).</span>
+      </div>
 
       <div class="store-info">
         <div class="si"><span class="si-k">Entrega</span><span class="si-v">sáb 26 jul</span></div>
@@ -1290,23 +1310,27 @@
       var store = detailInner.querySelector('#store-offers');
       if (store) {
         var sfmt = function (p) { return '$' + p.toLocaleString('es-AR'); };
+        // pagados = pedidos con pago reportado (reservan stock); confirmados = subconjunto verificado por el organizador
         var prods = [
-          { n: 'Miel 500g', price: 4500, stock: 30, conf: 12, pend: 5, max: 3 },
-          { n: 'Dulce de frambuesa', price: 3800, stock: 20, conf: 8, pend: 3, max: 2 },
-          { n: 'Queso de cabra', price: 6200, stock: 15, conf: 15, pend: 0, max: 2 },
-          { n: 'Pan de campo', price: 2500, stock: 40, conf: 22, pend: 6, max: 4 },
-          { n: 'Huevos x12', price: 3200, stock: 25, conf: 9, pend: 4, max: 3 },
-          { n: 'Aceite de oliva', price: 8900, stock: 12, conf: 4, pend: 2, max: 2 },
-          { n: 'Nueces 250g', price: 4100, stock: 18, conf: 6, pend: 1, max: 3 },
-          { n: 'Café molido', price: 5600, stock: 22, conf: 11, pend: 7, max: 2 },
-          { n: 'Yerba orgánica', price: 3900, stock: 35, conf: 14, pend: 5, max: 3 }
+          { n: 'Miel 500g', price: 4500, stock: 30, pagados: 8, confirmados: 7 },
+          { n: 'Dulce de frambuesa', price: 3800, stock: 20, pagados: 6, confirmados: 5 },
+          { n: 'Queso de cabra', price: 6200, stock: 15, pagados: 15, confirmados: 12 },
+          { n: 'Pan de campo', price: 2500, stock: 40, pagados: 22, confirmados: 20 },
+          { n: 'Huevos x12', price: 3200, stock: 25, pagados: 9, confirmados: 6 },
+          { n: 'Aceite de oliva', price: 8900, stock: 12, pagados: 4, confirmados: 3 },
+          { n: 'Nueces 250g', price: 4100, stock: 18, pagados: 6, confirmados: 6 },
+          { n: 'Café molido', price: 5600, stock: 22, pagados: 11, confirmados: 8 },
+          { n: 'Yerba orgánica', price: 3900, stock: 35, pagados: 14, confirmados: 12 }
         ];
         var qtys = prods.map(function () { return 0; });
+        var role = 'user';
         var cartInfo = detailInner.querySelector('#cart-info');
         var contBtn = detailInner.querySelector('#cart-continue');
         var storeFlash = detailInner.querySelector('#store-flash');
+        var roleBtns = detailInner.querySelectorAll('.srb');
+        var roleHint = detailInner.querySelector('#srole-hint');
 
-        var capOf = function (o) { return Math.max(0, o.stock - o.conf - o.pend); };
+        var quedanOf = function (o) { return Math.max(0, o.stock - o.pagados); };
 
         var updateCart = function () {
           var units = 0, total = 0;
@@ -1318,17 +1342,22 @@
 
         var drawStore = function () {
           store.innerHTML = prods.map(function (o, i) {
-            var quedan = o.stock - o.conf - o.pend, cap = capOf(o), sold = quedan <= 0;
-            var pct = Math.min(100, Math.round((o.conf + o.pend) / o.stock * 100));
+            var quedan = quedanOf(o), sold = quedan <= 0;
+            var pct = Math.min(100, Math.round(o.pagados / o.stock * 100));
+            // Solo el organizador ve pagados y confirmados por producto
+            var adminLine = role === 'admin'
+              ? '<div class="sadmin"><span><b>' + o.pagados + '</b> pagados · <b>' + o.confirmados + '</b> confirmados</span>' +
+                '<span class="sadmin-tag">solo organizador</span></div>'
+              : '';
             var buy = sold ? '' :
               '<div class="sbuy"><div class="stepper">' +
               '<button class="sbtn" data-act="minus" data-i="' + i + '" ' + (qtys[i] <= 0 ? 'disabled' : '') + '>−</button>' +
               '<span class="qty">' + qtys[i] + '</span>' +
-              '<button class="sbtn" data-act="plus" data-i="' + i + '" ' + (qtys[i] >= cap ? 'disabled' : '') + '>+</button>' +
+              '<button class="sbtn" data-act="plus" data-i="' + i + '" ' + (qtys[i] >= quedan ? 'disabled' : '') + '>+</button>' +
               '</div></div>';
             return '<div class="soffer' + (sold ? ' sold' : '') + '">' +
               '<div class="soffer-top"><span class="sname">' + o.n + '</span><span class="sprice">' + sfmt(o.price) + '</span></div>' +
-              '<div class="scounts"><b>' + o.conf + ' confirmadas</b> · <span class="pend">' + o.pend + ' pendientes</span></div>' +
+              adminLine +
               '<div class="sbar"><i style="width:' + pct + '%"></i></div>' +
               '<div class="sstock">' + (sold ? '<span class="sinstock">Sin stock</span>'
                 : 'Quedan <b>' + quedan + '</b> de ' + o.stock) + '</div>' +
@@ -1337,10 +1366,21 @@
           updateCart();
         };
 
+        roleBtns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            role = b.dataset.role;
+            roleBtns.forEach(function (x) { x.classList.toggle('active', x === b); });
+            roleHint.textContent = role === 'admin'
+              ? 'Solo el organizador ve pagados y confirmados por producto; el resto ve solo el stock.'
+              : 'Los compradores ven solo el stock disponible (quedan X de Y).';
+            drawStore();
+          });
+        });
+
         store.addEventListener('click', function (e) {
           var btn = e.target.closest('.sbtn'); if (!btn) return;
-          var i = +btn.dataset.i, cap = capOf(prods[i]);
-          if (btn.dataset.act === 'plus' && qtys[i] < cap) qtys[i]++;
+          var i = +btn.dataset.i, quedan = quedanOf(prods[i]);
+          if (btn.dataset.act === 'plus' && qtys[i] < quedan) qtys[i]++;
           else if (btn.dataset.act === 'minus' && qtys[i] > 0) qtys[i]--;
           drawStore();
         });
