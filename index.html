@@ -53,7 +53,9 @@
   .mode-seg button { border: none; background: transparent; color: var(--muted); font: inherit; font-size: .85rem; font-weight: 800; padding: 6px 15px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
   .mode-seg button.active { background: var(--accent); color: #fff; }
   .mode-fixed { display: inline-flex; align-items: center; gap: 6px; font-size: .9rem; font-weight: 800; color: #fff; background: var(--accent); padding: 7px 16px; border-radius: 999px; }
-  .detail-mode { margin-left: auto; }
+  .detail-mode { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; }
+  .mode-compra-pick { font: inherit; font-size: .85rem; font-weight: 700; padding: 7px 12px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent-soft); color: var(--accent); cursor: pointer; }
+  .mode-compra-pick[hidden] { display: none; }
   .mode-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: middle; margin-right: 4px; }
   .dicc-legend { max-width: 1000px; margin: 0 auto 18px; padding: 12px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; color: var(--muted); line-height: 1.6; font-size: .95rem; }
   .dicc-legend b { color: var(--ink); }
@@ -624,10 +626,8 @@
   .slb:disabled { opacity: .4; cursor: default; }
   .si-wide { flex-basis: 100%; }
   /* US-10 procesar pedidos */
-  .ord-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; border-bottom: 1px solid var(--line); }
-  .otb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .9rem; padding: 8px 16px; border-radius: 10px; cursor: pointer; white-space: nowrap; flex: none; }
-  .otb.active { background: var(--admin); color: #fff; }
-  .otb .otb-n { opacity: .7; font-weight: 700; margin-left: 6px; }
+  .ord-context { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: .9rem; color: var(--muted); padding: 12px 14px; margin-bottom: 14px; background: var(--accent-soft); border-radius: 12px; }
+  .octx-badge { font-weight: 800; font-size: .8rem; padding: 4px 11px; border-radius: 999px; background: var(--accent); color: #fff; white-space: nowrap; }
   .ord-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
   .ord-filter { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
   .ofb { border: none; background: var(--bg); color: var(--muted); font: inherit; font-weight: 700; font-size: .88rem; padding: 7px 14px; cursor: pointer; }
@@ -665,6 +665,7 @@
   .share-sub-h { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 800; margin: 20px 0 10px; }
   .share-compras { max-height: 230px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 4px; }
   .share-compras .share-row { margin-bottom: 0; }
+  .share-compras .share-row.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
   .share-empty { color: var(--muted); padding: 16px; border: 1px dashed var(--line); border-radius: 12px; }
   @media (max-width: 560px) { .share-row { flex-wrap: wrap; } .share-copy { width: 100%; } }
   .sadmin { font-size: .85rem; font-weight: 700; color: var(--admin); background: var(--admin-soft); border-radius: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -692,6 +693,18 @@
   .liq-table .market { color: var(--admin); }
   .liq-table .prov { color: var(--user); }
   .liq-actions { display: flex; gap: 12px; align-items: center; margin-top: 22px; }
+  .oc-new-wrap { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .oc-back { background: none; border: none; color: var(--accent); font: inherit; font-weight: 700; cursor: pointer; padding: 0; margin-bottom: 14px; }
+  .oc-flete { margin-top: 16px; }
+  .oc-flete-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .oc-flete-note { margin: 8px 0 0; font-size: .82rem; color: var(--accent); font-weight: 600; }
+  .oc-flete .gain { max-width: 220px; }
+  .oc-totals { margin-top: 18px; max-width: 380px; margin-left: auto; }
+  .oc-totals .csrow { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .92rem; }
+  .oc-totals .csrow b { font-weight: 800; }
+  .oc-totals .csrow.tot { border-bottom: none; border-top: 2px solid var(--accent); margin-top: 4px; padding-top: 11px; font-size: 1.05rem; }
+  .oc-totals .csrow.tot b { color: var(--accent); }
+  .store-status.admin-status.ok { background: var(--accent-soft); color: var(--accent); }
 
   /* Floating up/down nav */
   .nav-fab {
@@ -749,7 +762,7 @@
         <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
         <h3>Compartir links</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero copiar y compartir el link del mercado o el de una compra puntual, para difundir el mercado o limitar quién participa en una compra.</p>
-        <p class="accept">Con <b>botón de copiar</b>: el <b>link del mercado</b> (fijo y público, siempre disponible) y el <b>link de cada compra publicada</b> (uno por compra; si hay varias se listan con scroll; si no hay ninguna publicada, no hay link de compra). El link de la compra se comparte solo con ciertas personas (ej. por WhatsApp) para limitar quién participa.</p>
+        <p class="accept">El <b>selector de modo</b> alterna qué links ves, con <b>botón de copiar</b>: en <b>mercado</b>, el <b>link del mercado</b> (fijo y público, siempre disponible); en <b>compra</b>, el <b>link de cada compra publicada</b> (uno por compra; si hay varias se listan con scroll; si no hay ninguna publicada, no hay link de compra). El link de la compra se comparte solo con ciertas personas (ej. por WhatsApp) para limitar quién participa.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -763,7 +776,7 @@
         <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
         <h3>Revisar pedidos</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos —los del <b>mercado</b> y los de cada <b>compra publicada</b> en pestañas separadas—, para procesarlos de punta a punta.</p>
-        <p class="accept">Los pedidos se agrupan en <b>pestañas por destino</b>: uno para el <b>mercado</b> y uno por cada <b>compra publicada</b>. Dentro de cada pestaña: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado (en el mercado libera stock; en una compra baja la demanda — queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
+        <p class="accept">El <b>selector de modo</b> elige el conjunto de pedidos: los del <b>mercado</b> o los de una <b>compra</b> (con selector de compra al lado). En la vista: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado (en el mercado libera stock; en una compra baja la demanda — queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -772,6 +785,13 @@
         <p class="story">Como <b>organizadora ❤️</b>, quiero cruzar los pedidos pendientes con un <b>extracto bancario</b> o de <b>Mercado Pago</b>, para <b>confirmar los pagos en lote</b> en vez de uno por uno.</p>
         <p class="accept">Subo o pego el detalle de acreditaciones (fecha, monto, quién pagó); la app sugiere el match con cada pedido pendiente por <b>monto + nombre</b> y confirmo en lote. Los dudosos quedan para revisión manual. Alimenta el paso <b>confirmar</b> de Revisar pedidos (US-10); el comprobante por WhatsApp deja de ser obligatorio.</p>
         <p class="open-hint">Ver definición, desafíos y posibilidades →</p>
+      </article>
+      <article class="card">
+        <div class="meta"><span class="id">US-18</span><span class="epic">Abastecimiento</span></div>
+        <h3>Órdenes de compra</h3>
+        <p class="story">Como <b>organizadora ❤️</b>, quiero registrar lo que le <b>compro a proveedores</b> y confirmar cuándo <b>llegó la mercadería</b> (con su flete), para controlar costos y reponer stock.</p>
+        <p class="accept">La <b>orden de compra</b> tiene dos orígenes: <b>reponer el mercado</b> 🏪 (de la nada — elijo productos y cantidades) o <b>desde una compra cerrada</b> 📅 (agrupa los pedidos confirmados). Cada orden lista productos con <b>costo unitario</b>; al <b>confirmar la recepción</b> cargo el <b>flete</b> (puro costo) y pasa a <b>Recibida</b> — recién ahí entra la mercadería. No es una <b>compra</b>: la compra recibe pedidos (demanda), la orden trae mercadería (proveedores → organizadora ❤️).</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card" data-scope="compra">
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
@@ -829,7 +849,7 @@
   <section class="panel" id="panel-dicc" role="tabpanel" aria-labelledby="tab-dicc">
     <p class="panel-head">Las entidades del dominio, su definición y cómo cambian de estado en cada proceso.</p>
     <div class="dicc">
-      <p class="dicc-legend">Cada <b>pantalla de ejemplo</b> tiene un <b>selector de modo</b> (arriba a la derecha) que la <b>tiñe</b> con el color del modo: <b>Mercado</b> (naranja) o <b>Compra</b> (violeta). Las pantallas de una sola cara (crear/liquidar una compra) van fijas en su color; las mixtas se pueden alternar; la compradora lo hereda del <b>link</b> por el que entra. La lista de stories NO tiene selector.</p>
+      <p class="dicc-legend">Cada <b>pantalla de ejemplo</b> tiene un <b>selector de modo</b> (arriba a la derecha) que <b>cambia el dataset que se muestra</b>, no sólo el color: <b>Mercado</b> (naranja) muestra el stock y los pedidos del mercado; <b>Compra</b> (violeta) muestra los de una compra —con un <b>selector de compra</b> al lado para elegir cuál—. Esto es posible porque <code>db.json</code> está partido en <b>core</b> (catálogo común), <b>mercado</b> (stock + pedidos) y <b>compras</b> (cada ronda con sus pedidos). Las pantallas de una sola cara (crear/liquidar una compra) van fijas en su color; la compradora hereda el modo del <b>link</b> por el que entra. La lista de stories NO tiene selector.</p>
       <div class="dicc-modes">
         <div class="dicc-mode" style="border-left:5px solid var(--mercado)">
           <div class="dm-title"><span class="mode-swatch" style="background:var(--mercado)"></span>🏪 Modo mercado <span class="dm-tag">continuo</span></div>
@@ -1046,17 +1066,21 @@
     <div class="mock-desktop-body">
       <div class="mock-form">
         <h3>Compartir links</h3>
-        <p class="sub">El <b>link del mercado</b> siempre está disponible. Cada <b>compra publicada</b> tiene su propio link para compartir con ciertas personas.</p>
-        <div class="share-row">
-          <div class="share-info">
-            <div class="share-k">Link del mercado</div>
-            <div class="share-url" id="sh-mercado">meliquina.app/mercado</div>
-            <div class="share-note">Fijo y público — siempre muestra el stock.</div>
+        <p class="sub">El <b>selector de modo</b> (arriba a la derecha) elige qué link ves: el del <b>🏪 mercado</b> (fijo y público) o los de las <b>📅 compras publicadas</b> (uno por compra, para compartir con ciertas personas).</p>
+        <div id="sh-mercado-block">
+          <div class="share-row">
+            <div class="share-info">
+              <div class="share-k">Link del mercado</div>
+              <div class="share-url" id="sh-mercado">meliquina.app/mercado</div>
+              <div class="share-note">Fijo y público — siempre muestra el stock.</div>
+            </div>
+            <button class="btn-primary share-copy" data-copy="mercado" type="button">Copiar</button>
           </div>
-          <button class="btn-primary share-copy" data-copy="mercado" type="button">Copiar</button>
         </div>
-        <div class="share-sub-h">Links de las compras publicadas</div>
-        <div class="share-compras" id="share-compras"></div>
+        <div id="sh-compras-block" hidden>
+          <div class="share-sub-h">Links de las compras publicadas</div>
+          <div class="share-compras" id="share-compras"></div>
+        </div>
         <div class="mock-flash" id="share-flash"></div>
       </div>
     </div>
@@ -1078,9 +1102,9 @@
     <div class="mock-desktop-body">
       <div class="mock-form">
         <h3>Revisar pedidos</h3>
-        <p class="sub">Los pedidos al <b>mercado</b> y a cada <b>compra publicada</b> van en pestañas separadas. Confirmá los pagos (comprobante por WhatsApp); cancelar un pendiente libera su stock.</p>
+        <p class="sub">El <b>selector de modo</b> (arriba a la derecha) elige qué ves: los pedidos al <b>🏪 mercado</b> o los de una <b>📅 compra</b>. Confirmá los pagos (comprobante por WhatsApp); cancelar un pendiente libera su stock (mercado) o baja la demanda (compra).</p>
 
-        <div class="ord-tabs" id="ord-tabs"></div>
+        <div class="ord-context" id="ord-context"></div>
 
         <div class="ord-toolbar">
           <div class="ord-filter">
@@ -1109,36 +1133,20 @@
   <div class="mock mock-desktop">
     <div class="browser-bar">
       <span class="dots"><i></i><i></i><i></i></span>
-      <span class="addr">meliquina.app/admin/compras/entrega-26-jul/liquidacion</span>
+      <span class="addr">meliquina.app/admin/compras/entrega-5-jul/liquidacion</span>
     </div>
     <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb">— Compras / Liquidación</span></div>
     <div class="mock-desktop-body">
       <div class="mock-form">
         <header class="store-head">
           <div>
-            <div class="store-id">Compra — entrega 26 jul</div>
-            <div class="store-sub">Cuentas sobre pedidos confirmados. Proveedores = total − mercado − transporte.</div>
+            <div class="store-id">Compra — entrega 5 jul</div>
+            <div class="store-sub">Costos reales desde la <b>orden de compra asociada</b>. Ganancia = total vendido − costo de productos − flete.</div>
           </div>
           <span class="store-status admin-status">Cerrada · lista para liquidar</span>
         </header>
 
-        <div class="field-row" style="max-width:640px">
-          <div class="field">
-            <label>Ganancia del mercado</label>
-            <div class="gain" data-gain="mercado">
-              <input type="number" class="gain-val" min="0" value="5">
-              <div class="gain-toggle"><button class="gt active" data-t="pct" type="button">%</button><button class="gt" data-t="fijo" type="button">$</button></div>
-            </div>
-          </div>
-          <div class="field">
-            <label>Ganancia del transporte</label>
-            <div class="gain" data-gain="transporte">
-              <input type="number" class="gain-val" min="0" value="6000">
-              <div class="gain-toggle"><button class="gt" data-t="pct" type="button">%</button><button class="gt active" data-t="fijo" type="button">$</button></div>
-            </div>
-          </div>
-        </div>
-        <p class="liq-note">Obligatorias para liquidar (podían venir de la compra). Cada una % o $ fijo. Los pedidos pendientes o cancelados no se incluyen.</p>
+        <p class="liq-note">Las ganancias <b>no se cargan acá</b>: el precio de venta ya las incluye (Configurar ganancias, US-19). Esta pantalla usa los <b>costos reales</b> de la orden recibida y muestra el <b>flete discriminado</b>. Solo cuentan los <b>pedidos confirmados</b>.</p>
 
         <div class="liq-stats" id="liq-stats"></div>
 
@@ -1151,6 +1159,54 @@
           <button class="btn-ghost" type="button">Exportar CSV</button>
         </div>
         <div class="mock-flash" id="liq-flash">✓ Compra liquidada — proveedores pagados (mock, no se guarda nada)</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Mock for US-18: pantalla "Órdenes de compra" -->
+<template id="mock-US-18">
+  <div class="detail-lead">
+    <h2 class="detail-title">Órdenes de compra</h2>
+  </div>
+  <div class="mock mock-desktop">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr" id="oc-addr">meliquina.app/admin/ordenes</span>
+    </div>
+    <div class="mock-topbar">Mercado Meliquina · Organizadora ❤️ <span class="crumb" id="oc-crumb">— Órdenes de compra</span></div>
+    <div class="mock-desktop-body">
+      <div class="mock-form">
+        <!-- Vista: listado de órdenes -->
+        <div id="oc-list-view">
+          <h3>Órdenes de compra</h3>
+          <p class="sub">Lo que le comprás a proveedores → entra <b>mercadería</b>. Dos orígenes: <b>🏪 reponer el mercado</b> (de la nada) o <b>📅 desde una compra cerrada</b> (agrupa los pedidos confirmados). Movés con ↑/↓, <kbd class="mini-kbd">Espacio</kbd> abre la orden.</p>
+          <div class="cc-list" id="oc-list" tabindex="0"></div>
+          <div class="cc-list-pager" id="oc-pager"></div>
+          <div class="oc-new-wrap">
+            <button class="btn-ghost" id="oc-new-merc" type="button">🏪 Reponer el mercado</button>
+            <button class="btn-ghost" id="oc-new-compra" type="button">📅 Desde una compra cerrada</button>
+          </div>
+          <div class="mock-flash" id="oc-flash"></div>
+        </div>
+        <!-- Vista: detalle de una orden -->
+        <div id="oc-detail-view" hidden>
+          <button class="oc-back" id="oc-back" type="button">‹ Volver a órdenes</button>
+          <header class="store-head">
+            <div>
+              <div class="store-id" id="oc-d-id"></div>
+              <div class="store-sub" id="oc-d-sub"></div>
+            </div>
+            <span class="store-status admin-status" id="oc-d-status"></span>
+          </header>
+          <div class="liq-table-wrap">
+            <table class="liq-table" id="oc-table"></table>
+          </div>
+          <div class="oc-flete" id="oc-flete-box"></div>
+          <div class="oc-totals" id="oc-totals"></div>
+          <div class="liq-actions" id="oc-actions"></div>
+          <div class="mock-flash" id="oc-d-flash"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1259,9 +1315,23 @@
 
 <script>
   // Data mock centralizada en db.json (servido junto al HTML)
-  var DB = { links: {}, compras: [], storeProducts: [], pedidos: [] };
+  var DB = { core: { links: {}, catalog: [] }, mercado: { stock: {}, pedidos: [] }, compras: [], ordenes: [] };
+  // Deriva accesores planos desde la estructura core/mercado/compras (retrocompatibilidad de las pantallas)
+  function deriveDB(d) {
+    d.links = d.core.links;
+    d.storeProducts = d.core.catalog.map(function (p) {
+      var s = (d.mercado.stock || {})[p.n] || {};
+      return { n: p.n, price: p.price, cost: p.cost, unit: p.unit, stock: s.stock, pagados: s.pagados, confirmados: s.confirmados };
+    });
+    var all = [];
+    (d.mercado.pedidos || []).forEach(function (p) { var o = {}; for (var k in p) o[k] = p[k]; o.destino = 'mercado'; all.push(o); });
+    (d.compras || []).forEach(function (c) { (c.pedidos || []).forEach(function (p) { var o = {}; for (var k in p) o[k] = p[k]; o.destino = c.id; all.push(o); }); });
+    d.pedidos = all;
+    return d;
+  }
+  DB = deriveDB(DB);
   fetch('db.json').then(function (r) { return r.json(); }).then(function (d) {
-    DB = d;
+    DB = deriveDB(d);
     if (document.body.className === 'role-db' && typeof renderDb === 'function') renderDb();
   }).catch(function () {});
 
@@ -1317,10 +1387,11 @@
     var pre = document.getElementById('db-json');
     var chips = document.getElementById('db-chips');
     if (!pre) return;
-    pre.innerHTML = hlJson(DB);
+    var canon = { core: DB.core, mercado: DB.mercado, compras: DB.compras, ordenes: DB.ordenes };
+    pre.innerHTML = hlJson(canon);
     var parts = [];
-    Object.keys(DB).forEach(function (k) {
-      var v = DB[k];
+    Object.keys(canon).forEach(function (k) {
+      var v = canon[k]; if (!v) return;
       var n = Array.isArray(v) ? v.length : Object.keys(v).length;
       parts.push('<span class="db-chip">' + k + ' <b>' + n + '</b></span>');
     });
@@ -1345,10 +1416,39 @@
     t.addEventListener('click', function () { select(t.dataset.role); });
   });
 
-  // Modo (mercado/compra) → color de acento de la pantalla de ejemplo. El selector vive en el detalle.
+  // Modo (mercado/compra): elige el DATASET activo de la pantalla de ejemplo, no sólo el color.
+  // El selector vive en el detalle; en modo compra aparece además un selector de compra.
+  var GMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  function fmtEntrega(iso) { if (!iso) return '—'; var p = iso.split('-'); return (+p[2]) + ' ' + GMES[(+p[1]) - 1]; }
+  var uiMode = 'mercado';
+  var uiCompra = null;            // id de la compra activa en modo compra
+  var modeListeners = [];         // se resetean en cada openDetail; los mocks se suscriben con onMode()
+  function onMode(fn) { modeListeners.push(fn); }
+  function fireMode() { modeListeners.forEach(function (fn) { try { fn(uiMode, uiCompra); } catch (e) {} }); }
+  function pickableCompras() {
+    return DB.compras.filter(function (c) { return c.estado === 'Publicada' || c.estado === 'Cerrada'; })
+      .slice().sort(function (a, b) { return a.entrega < b.entrega ? -1 : (a.entrega > b.entrega ? 1 : 0); });
+  }
+  function defaultCompra() {
+    var pub = DB.compras.filter(function (c) { return c.estado === 'Publicada'; })
+      .slice().sort(function (a, b) { return a.entrega < b.entrega ? -1 : 1; });
+    if (pub.length) return pub[0].id;
+    var ps = pickableCompras();
+    return ps.length ? ps[0].id : null;
+  }
+  function activeCompra() {
+    var id = uiCompra || defaultCompra();
+    var found = null;
+    DB.compras.forEach(function (c) { if (c.id === id) found = c; });
+    return found;
+  }
   function setMode(m) {
+    uiMode = m;
     document.body.setAttribute('data-mode', m);
     document.querySelectorAll('.mode-seg button').forEach(function (b) { b.classList.toggle('active', b.dataset.mode === m); });
+    var pick = document.getElementById('mode-compra-pick');
+    if (pick) pick.hidden = (m !== 'compra');
+    fireMode();
   }
   document.body.setAttribute('data-mode', 'mercado');
 
@@ -1371,6 +1471,7 @@
 
     var tpl = document.getElementById('mock-' + id);
     detailInner.innerHTML = '';
+    modeListeners = [];   // cada pantalla se re-suscribe al modo con onMode()
     if (tpl) {
       detailInner.appendChild(tpl.content.cloneNode(true));
       // US-1 Crear compra: pantalla "Revisar" navegable (↑/↓, espacio edita, enter crea) + listado
@@ -2000,22 +2101,21 @@
         var shortDate = function (iso) { var p = iso.split('-'); return (+p[2]) + ' ' + ordMES[(+p[1]) - 1]; };
         var pedidos = DB.pedidos.map(function (p) { var o = {}; for (var k in p) o[k] = p[k]; return o; });
         var filtro = 'todos', ordPage = 0, OPAGE = 5, destino = 'mercado';
-        // Pestañas por destino: mercado + cada compra publicada
-        var destinos = [{ key: 'mercado', label: 'Mercado' }].concat(
-          DB.compras.filter(function (c) { return c.estado === 'Publicada'; })
-            .map(function (c) { return { key: c.id, label: 'Compra ' + shortDate(c.entrega) }; }));
-        var ordTabs = detailInner.querySelector('#ord-tabs');
+        var ordContext = detailInner.querySelector('#ord-context');
         var ordCounts = detailInner.querySelector('#ord-counts');
         var ordFlash = detailInner.querySelector('#ord-flash');
         var ordPager = detailInner.querySelector('#ord-pager');
         var ofbs = detailInner.querySelectorAll('.ofb');
         var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
-        var renderTabs = function () {
-          ordTabs.innerHTML = destinos.map(function (d) {
-            var n = pedidos.filter(function (p) { return p.destino === d.key; }).length;
-            return '<button class="otb' + (d.key === destino ? ' active' : '') + '" data-d="' + d.key + '" type="button">' +
-              d.label + '<span class="otb-n">' + n + '</span></button>';
-          }).join('');
+        var compraById = function (id) { var f = null; DB.compras.forEach(function (c) { if (c.id === id) f = c; }); return f; };
+        var renderContext = function () {
+          if (destino === 'mercado') {
+            ordContext.innerHTML = '<span class="octx-badge merc">🏪 Mercado</span> Pedidos al mercado — stock vivo, entrega asincrónica.';
+          } else {
+            var c = compraById(destino);
+            ordContext.innerHTML = '<span class="octx-badge comp">📅 Compra</span> ' +
+              (c ? 'Entrega ' + shortDate(c.entrega) + ' · cierra ' + (c.fin ? shortDate(c.fin) : '—') + ' · retiro ' + (c.retiro || 'sin definir') + (c.estado === 'Cerrada' ? ' · <b>cerrada</b>' : '') : destino);
+          }
         };
         var itemsHtml = function (its) {
           return '<ul class="ord-items">' + its.map(function (it) {
@@ -2047,7 +2147,7 @@
               '</div>' +
               '<div class="ord-side"><div class="ord-total">' + ofmt(p.total) + '</div>' + acts + '</div>' +
             '</div>';
-          }).join('') : '<div class="ord-empty">No hay pedidos en esta pestaña' + (filtro !== 'todos' ? ' con ese estado' : '') + '.</div>';
+          }).join('') : '<div class="ord-empty">No hay pedidos en esta vista' + (filtro !== 'todos' ? ' con ese estado' : '') + '.</div>';
           ordPager.innerHTML = vis.length > OPAGE
             ? '<button class="pg" data-pg="-1" type="button"' + (ordPage === 0 ? ' disabled' : '') + '>‹</button>' +
               '<span>Página ' + (ordPage + 1) + ' de ' + pages + '</span>' +
@@ -2058,13 +2158,9 @@
           dp.forEach(function (p) { c[p.estado]++; });
           ordCounts.textContent = dp.length + ' pedidos · ' + c.pendiente + ' pendientes · ' +
             c.confirmado + ' confirmados · ' + c.cancelado + ' cancelados';
+          renderContext();
         };
 
-        ordTabs.addEventListener('click', function (e) {
-          var b = e.target.closest('.otb'); if (!b) return;
-          destino = b.dataset.d; ordPage = 0;
-          renderTabs(); drawOrders();
-        });
         ordPager.addEventListener('click', function (e) {
           var b = e.target.closest('.pg'); if (!b) return;
           ordPage += (+b.dataset.pg); drawOrders();
@@ -2080,15 +2176,19 @@
           var b = e.target.closest('button'); if (!b) return;
           var i = +b.dataset.i;
           if (b.dataset.act === 'confirmar') { pedidos[i].estado = 'confirmado'; ordFlash.textContent = '✓ Pedido de ' + pedidos[i].n + ' confirmado (email enviado).'; ordFlash.className = 'mock-flash show'; }
-          else if (b.dataset.act === 'cancelar') { pedidos[i].estado = 'cancelado'; ordFlash.textContent = 'Pedido de ' + pedidos[i].n + ' cancelado — stock liberado.'; ordFlash.className = 'mock-flash show warn'; }
-          renderTabs(); drawOrders();
+          else if (b.dataset.act === 'cancelar') { pedidos[i].estado = 'cancelado'; ordFlash.textContent = 'Pedido de ' + pedidos[i].n + ' cancelado — ' + (destino === 'mercado' ? 'stock liberado.' : 'baja la demanda de la compra.'); ordFlash.className = 'mock-flash show warn'; }
+          drawOrders();
         });
         detailInner.querySelector('#ord-csv').addEventListener('click', function () {
           var n = pedidos.filter(function (p) { return p.destino === destino; }).length;
-          ordFlash.textContent = '✓ CSV exportado con ' + n + ' pedidos de esta pestaña (mock, no descarga nada).';
+          ordFlash.textContent = '✓ CSV exportado con ' + n + ' pedidos de esta vista (mock, no descarga nada).';
           ordFlash.className = 'mock-flash show';
         });
-        renderTabs();
+        // El modo (arriba a la derecha) elige el dataset: mercado o la compra seleccionada.
+        onMode(function (mode, compraId) {
+          destino = (mode === 'mercado') ? 'mercado' : (compraId || 'mercado');
+          ordPage = 0; ordFlash.className = 'mock-flash'; drawOrders();
+        });
         drawOrders();
       }
 
@@ -2100,11 +2200,13 @@
         var shMercado = detailInner.querySelector('#sh-mercado');
         var shFlash = detailInner.querySelector('#share-flash');
         var shCompras = detailInner.querySelector('#share-compras');
+        var shMercBlock = detailInner.querySelector('#sh-mercado-block');
+        var shCompBlock = detailInner.querySelector('#sh-compras-block');
         if (DB.links.mercado) shMercado.textContent = DB.links.mercado;
         var pubs = DB.compras.filter(function (c) { return c.estado === 'Publicada'; });
         shCompras.innerHTML = pubs.length ? pubs.map(function (c) {
           var url = DB.links.compraBase + c.id;
-          return '<div class="share-row">' +
+          return '<div class="share-row" data-cid="' + c.id + '">' +
             '<div class="share-info">' +
               '<div class="share-k">Compra — entrega ' + shDate(c.entrega) + '</div>' +
               '<div class="share-url">' + url + '</div>' +
@@ -2119,79 +2221,236 @@
           shFlash.textContent = '✓ Link copiado: ' + url;
           shFlash.className = 'mock-flash show';
         });
-      }
-
-      // US-15: liquidación (totales + desglose por producto)
-      var liqStats = detailInner.querySelector('#liq-stats');
-      if (liqStats) {
-        var pct = 0.05;
-        var money = function (v) { return '$' + Math.round(v).toLocaleString('es-AR'); };
-        var data = [
-          { n: 'Miel 500g', price: 4500, u: 12 },
-          { n: 'Dulce de frambuesa', price: 3800, u: 8 },
-          { n: 'Pan de campo', price: 2500, u: 22 },
-          { n: 'Huevos x12', price: 3200, u: 9 },
-          { n: 'Aceite de oliva', price: 8900, u: 4 },
-          { n: 'Café molido', price: 5600, u: 11 },
-          { n: 'Yerba orgánica', price: 3900, u: 14 }
-        ];
-        var tot = 0, units = 0;
-        data.forEach(function (d) { d.rec = d.price * d.u; tot += d.rec; units += d.u; });
-        var orders = 34;
-        var liqTable = detailInner.querySelector('#liq-table');
-        var liqMark = detailInner.querySelector('#liq-mark');
-        var gainEls = detailInner.querySelectorAll('.gain');
-
-        var gainAmount = function (g) {
-          var raw = g.querySelector('.gain-val').value;
-          if (raw === '' || raw === null) return null;               // sin definir
-          var v = Math.max(0, +raw || 0);
-          return g.querySelector('.gt.active').dataset.t === 'pct' ? tot * v / 100 : v;
-        };
-        var gainOf = function (name) {
-          var found = null;
-          gainEls.forEach(function (g) { if (g.dataset.gain === name) found = g; });
-          return found ? gainAmount(found) : 0;
-        };
-
-        var recompute = function () {
-          var mkt = gainOf('mercado'), trans = gainOf('transporte');
-          var ready = mkt !== null && trans !== null;
-          var m = mkt || 0, t = trans || 0, prov = tot - m - t;
-          liqStats.innerHTML =
-            '<div class="liq-stat"><div class="lk">Total confirmado</div><div class="lv">' + money(tot) + '</div><div class="ls">' + orders + ' pedidos · ' + units + ' unidades</div></div>' +
-            '<div class="liq-stat market"><div class="lk">Ganancia mercado</div><div class="lv">' + (mkt === null ? '—' : money(m)) + '</div></div>' +
-            '<div class="liq-stat"><div class="lk">Transporte</div><div class="lv">' + (trans === null ? '—' : money(t)) + '</div></div>' +
-            '<div class="liq-stat prov"><div class="lk">A proveedores</div><div class="lv">' + (ready ? money(prov) : '—') + '</div></div>';
-          var rows = data.map(function (d) {
-            var f = tot ? d.rec / tot : 0;
-            return '<tr><td>' + d.n + '</td><td>' + d.u + '</td><td>' + money(d.rec) +
-              '</td><td class="market">' + money(m * f) + '</td><td>' + money(t * f) +
-              '</td><td class="prov">' + money(d.rec - m * f - t * f) + '</td></tr>';
-          }).join('');
-          liqTable.innerHTML =
-            '<thead><tr><th>Producto</th><th>Unid.</th><th>Recaudado</th><th>Mercado</th><th>Transporte</th><th>Proveedores</th></tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-            '<tfoot><tr><td>Total</td><td>' + units + '</td><td>' + money(tot) +
-            '</td><td class="market">' + money(m) + '</td><td>' + money(t) +
-            '</td><td class="prov">' + money(prov) + '</td></tr></tfoot>';
-          liqMark.disabled = !ready;
-          liqMark.title = ready ? '' : 'Definí ambas ganancias para poder liquidar';
-        };
-
-        gainEls.forEach(function (g) {
-          g.querySelector('.gain-val').addEventListener('input', recompute);
-          g.querySelectorAll('.gt').forEach(function (b) {
-            b.addEventListener('click', function () {
-              g.querySelectorAll('.gt').forEach(function (x) { x.classList.remove('active'); });
-              b.classList.add('active'); recompute();
-            });
+        // El modo elige qué links se muestran: mercado o compras. La compra seleccionada se resalta.
+        onMode(function (mode, compraId) {
+          var isMerc = (mode === 'mercado');
+          shMercBlock.hidden = !isMerc;
+          shCompBlock.hidden = isMerc;
+          shFlash.className = 'mock-flash';
+          shCompras.querySelectorAll('.share-row').forEach(function (r) {
+            r.classList.toggle('sel', !isMerc && r.dataset.cid === compraId);
           });
         });
-        recompute();
+      }
 
+      // US-18: órdenes de compra (listado + detalle + confirmar recepción con flete)
+      var ocList = detailInner.querySelector('#oc-list');
+      if (ocList) {
+        var ocMoney = function (n) { return '$' + Math.round(+n).toLocaleString('es-AR'); };
+        var OCMES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        var ocFd = function (iso) { if (!iso) return 'sin fecha'; var p = iso.split('-'); return (+p[2]) + ' ' + OCMES[(+p[1]) - 1]; };
+        var ocCost = {}; DB.storeProducts.forEach(function (p) { ocCost[p.n] = p.cost; });
+        var ordenes = DB.ordenes.map(function (o) {
+          return { id: o.id, origen: o.origen, compra: o.compra, estado: o.estado, fecha: o.fecha, flete: o.flete || 0,
+            items: o.items.map(function (it) { return { prod: it.prod, cant: it.cant, costoUnit: it.costoUnit }; }) };
+        });
+        var ocSel = 0, ocPage = 0, OCPG = 4, ocSeq = 146;
+        var ocFilterMode = 'mercado', ocFilterCompra = null, ocCur = null, ocVisCache = [];
+        var ocListView = detailInner.querySelector('#oc-list-view');
+        var ocDetView = detailInner.querySelector('#oc-detail-view');
+        var ocPager = detailInner.querySelector('#oc-pager');
+        var ocCrumb = detailInner.querySelector('#oc-crumb');
+        var ocAddr = detailInner.querySelector('#oc-addr');
+
+        var ocProdCost = function (o) { var s = 0; o.items.forEach(function (it) { s += it.cant * it.costoUnit; }); return s; };
+        var ocUnits = function (o) { var s = 0; o.items.forEach(function (it) { s += it.cant; }); return s; };
+        var ocOrigen = function (o) { return o.origen === 'mercado' ? '🏪 Reponer mercado' : '📅 Desde ' + (o.compra || 'compra'); };
+        // El modo (arriba a la derecha) elige el dataset: órdenes del mercado o de las compras.
+        var ocVisList = function () {
+          return ordenes.filter(function (o) {
+            if (ocFilterMode === 'mercado') return o.origen === 'mercado';
+            if (ocFilterCompra) {
+              var any = ordenes.some(function (x) { return x.origen === 'compra' && x.compra === ocFilterCompra; });
+              if (any) return o.origen === 'compra' && o.compra === ocFilterCompra;
+            }
+            return o.origen === 'compra';
+          });
+        };
+
+        var ocRenderList = function () {
+          ocListView.hidden = false; ocDetView.hidden = true;
+          ocCrumb.textContent = '— Órdenes de compra';
+          ocAddr.textContent = 'meliquina.app/admin/ordenes';
+          var vis = ocVisList(); ocVisCache = vis;
+          var pages = Math.max(1, Math.ceil(vis.length / OCPG));
+          if (ocPage >= pages) ocPage = pages - 1; if (ocPage < 0) ocPage = 0;
+          if (ocSel < 0) ocSel = 0; if (ocSel > vis.length - 1) ocSel = vis.length - 1;
+          var start = ocPage * OCPG;
+          ocList.innerHTML = vis.length ? vis.slice(start, start + OCPG).map(function (o, k) {
+            var i = start + k;
+            var sub = ocOrigen(o) + ' · ' + ocFd(o.fecha) + ' · ' + ocUnits(o) + ' u · ' + ocMoney(ocProdCost(o) + o.flete);
+            return '<div class="cc-item' + (i === ocSel ? ' current' : '') + '" data-i="' + i + '">' +
+              '<div class="ci-main"><div class="ci-id">' + o.id + '</div><div class="ci-sub">' + sub + '</div></div>' +
+              '<span class="cc-estado' + (o.estado === 'Recibida' ? ' is-open' : '') + '">' + o.estado + '</span>' +
+              '<button class="btn-ghost cc-act oc-open" data-i="' + i + '" type="button">Abrir</button></div>';
+          }).join('') : '<div class="ord-empty">' + (ocFilterMode === 'mercado'
+            ? 'No hay órdenes de reposición del mercado.'
+            : 'Esta compra todavía no tiene orden generada. La orden se genera cuando la compra está cerrada.') + '</div>';
+          ocPager.innerHTML = vis.length > OCPG
+            ? '<button class="pg" data-pg="-1" type="button"' + (ocPage === 0 ? ' disabled' : '') + '>‹</button>' +
+              '<span>Página ' + (ocPage + 1) + ' de ' + pages + '</span>' +
+              '<button class="pg" data-pg="1" type="button"' + (ocPage === pages - 1 ? ' disabled' : '') + '>›</button>'
+            : '';
+        };
+
+        var ocRenderDetail = function () {
+          var o = ocCur;
+          ocListView.hidden = true; ocDetView.hidden = false;
+          ocCrumb.textContent = '— Órdenes / ' + o.id;
+          ocAddr.textContent = 'meliquina.app/admin/ordenes/' + o.id;
+          detailInner.querySelector('#oc-d-id').textContent = o.id + ' · ' + ocOrigen(o);
+          detailInner.querySelector('#oc-d-sub').textContent = (o.origen === 'mercado'
+            ? 'Reposición del mercado (de la nada) — entra al stock'
+            : 'Generada desde la compra ' + o.compra + ' (agrupa pedidos confirmados)') + ' · ' + ocFd(o.fecha);
+          var st = detailInner.querySelector('#oc-d-status');
+          st.textContent = o.estado;
+          st.className = 'store-status admin-status' + (o.estado === 'Recibida' ? ' ok' : '');
+          var pc = ocProdCost(o);
+          detailInner.querySelector('#oc-table').innerHTML =
+            '<thead><tr><th>Producto</th><th>Cant.</th><th>Costo unit.</th><th>Subtotal</th></tr></thead><tbody>' +
+            o.items.map(function (it) {
+              return '<tr><td>' + it.prod + '</td><td>' + it.cant + '</td><td>' + ocMoney(it.costoUnit) + '</td><td>' + ocMoney(it.cant * it.costoUnit) + '</td></tr>';
+            }).join('') + '</tbody>';
+          var recibida = o.estado === 'Recibida';
+          var fb = detailInner.querySelector('#oc-flete-box');
+          if (recibida) {
+            fb.innerHTML = '<div class="oc-flete-row"><span>Flete (costo)</span><b>' + ocMoney(o.flete) + '</b></div>' +
+              '<p class="oc-flete-note">✓ Mercadería recibida — ' + (o.origen === 'mercado' ? 'repuso el stock del mercado.' : 'lista para entregar los pedidos de ' + o.compra + '.') + '</p>';
+          } else {
+            fb.innerHTML = '<div class="field oc-flete-field"><label>Flete de esta orden (puro costo)</label>' +
+              '<div class="gain"><input type="number" id="oc-flete-input" min="0" value="' + (o.flete || '') + '" placeholder="0"></div>' +
+              '<p class="hint">Se carga al confirmar la recepción. No se cobra a la compradora: entra como costo (se discrimina al liquidar la compra).</p></div>';
+          }
+          detailInner.querySelector('#oc-totals').innerHTML =
+            '<div class="csrow"><span>Costo de productos</span><b>' + ocMoney(pc) + '</b></div>' +
+            '<div class="csrow"><span>Flete</span><b>' + ocMoney(o.flete) + '</b></div>' +
+            '<div class="csrow tot"><span>Total de la orden</span><b>' + ocMoney(pc + o.flete) + '</b></div>';
+          detailInner.querySelector('#oc-actions').innerHTML = recibida
+            ? '<button class="btn-ghost" type="button">Exportar CSV</button>'
+            : '<button class="btn-primary" id="oc-confirm" type="button">Confirmar recepción</button>' +
+              '<button class="btn-ghost" type="button">Exportar CSV</button>';
+          detailInner.querySelector('#oc-d-flash').className = 'mock-flash';
+          if (!recibida) { var fi = detailInner.querySelector('#oc-flete-input'); if (fi) fi.focus(); }
+        };
+
+        var ocOpen = function (i) { ocSel = i; ocCur = ocVisCache[i]; if (ocCur) ocRenderDetail(); };
+        var ocConfirmar = function () {
+          var o = ocCur;
+          var inp = detailInner.querySelector('#oc-flete-input');
+          o.flete = inp ? Math.max(0, +inp.value || 0) : o.flete;
+          o.estado = 'Recibida';
+          ocRenderDetail();
+          var f = detailInner.querySelector('#oc-d-flash');
+          f.textContent = o.origen === 'mercado'
+            ? '✓ Recibida — la mercadería repone el stock del mercado.'
+            : '✓ Recibida — mercadería lista para entregar los pedidos de ' + o.compra + '.';
+          f.className = 'mock-flash show';
+        };
+        var ocAggregate = function (compraId) {
+          var m = {};
+          DB.pedidos.forEach(function (p) {
+            if (p.destino === compraId && p.estado === 'confirmado') {
+              p.items.forEach(function (it) { m[it.prod] = (m[it.prod] || 0) + it.cant; });
+            }
+          });
+          return Object.keys(m).map(function (n) { return { prod: n, cant: m[n], costoUnit: ocCost[n] || 0 }; });
+        };
+        var ocNew = function (origen) {
+          ocSeq++;
+          var items, compra = null;
+          if (origen === 'compra') {
+            var cerrada = null;
+            DB.compras.forEach(function (c) { if (c.estado === 'Cerrada' && !cerrada) cerrada = c; });
+            compra = cerrada ? cerrada.id : 'entrega-5-jul';
+            items = ocAggregate(compra);
+            if (!items.length && cerrada && cerrada.productos) {
+              items = cerrada.productos.map(function (n) { return { prod: n, cant: 1, costoUnit: ocCost[n] || 0 }; });
+            }
+          } else {
+            var low = DB.storeProducts.slice().sort(function (a, b) { return a.stock - b.stock; }).slice(0, 3);
+            items = low.map(function (p) { return { prod: p.n, cant: 10, costoUnit: p.cost }; });
+          }
+          var nueva = { id: 'oc-0' + ocSeq, origen: origen, compra: compra, estado: 'Borrador', fecha: '', flete: 0, items: items };
+          ordenes.unshift(nueva);
+          ocCur = nueva; ocRenderDetail();
+          var f = detailInner.querySelector('#oc-d-flash');
+          f.textContent = origen === 'compra'
+            ? '✓ Orden generada desde ' + compra + ' (agrupa los pedidos confirmados). Confirmá la recepción cuando llegue.'
+            : '✓ Orden nueva para reponer el mercado. Confirmá la recepción cuando llegue.';
+          f.className = 'mock-flash show';
+        };
+
+        ocList.addEventListener('click', function (e) {
+          var b = e.target.closest('button');
+          if (b && b.classList.contains('oc-open')) { ocOpen(+b.dataset.i); return; }
+          var it = e.target.closest('.cc-item'); if (it) { ocSel = +it.dataset.i; ocRenderList(); }
+        });
+        ocList.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); ocSel = Math.min(ocVisCache.length - 1, ocSel + 1); ocPage = Math.floor(ocSel / OCPG); ocRenderList(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); ocSel = Math.max(0, ocSel - 1); ocPage = Math.floor(ocSel / OCPG); ocRenderList(); }
+          else if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); ocOpen(ocSel); }
+        });
+        ocPager.addEventListener('click', function (e) { var b = e.target.closest('.pg'); if (!b) return; ocPage += (+b.dataset.pg); ocRenderList(); });
+        ocDetView.addEventListener('click', function (e) { if (e.target.closest('#oc-confirm')) ocConfirmar(); });
+        detailInner.querySelector('#oc-back').addEventListener('click', function () { ocRenderList(); setTimeout(function () { ocList.focus(); }, 0); });
+        detailInner.querySelector('#oc-new-merc').addEventListener('click', function () { ocNew('mercado'); });
+        detailInner.querySelector('#oc-new-compra').addEventListener('click', function () { ocNew('compra'); });
+        onMode(function (mode, compraId) {
+          ocFilterMode = mode; ocFilterCompra = compraId; ocSel = 0; ocPage = 0; ocRenderList();
+        });
+        ocRenderList();
+      }
+
+      // US-15: liquidación con costos reales de la orden de compra asociada
+      var liqStats = detailInner.querySelector('#liq-stats');
+      if (liqStats) {
+        var money = function (v) { return '$' + Math.round(v).toLocaleString('es-AR'); };
+        var LIQ_COMPRA = 'entrega-5-jul';
+        var liqPrice = {}, liqCatCost = {};
+        DB.storeProducts.forEach(function (p) { liqPrice[p.n] = p.price; liqCatCost[p.n] = p.cost; });
+        var liqOrden = null;
+        DB.ordenes.forEach(function (o) { if (o.compra === LIQ_COMPRA) liqOrden = o; });
+        // Unidades vendidas por producto (pedidos confirmados de la compra)
+        var sold = {}, nPed = 0;
+        DB.pedidos.forEach(function (p) {
+          if (p.destino === LIQ_COMPRA && p.estado === 'confirmado') {
+            nPed++;
+            p.items.forEach(function (it) { sold[it.prod] = (sold[it.prod] || 0) + it.cant; });
+          }
+        });
+        // Costo real por producto desde la orden recibida
+        var costByProd = {}, costoProductos = 0;
+        if (liqOrden) { liqOrden.items.forEach(function (it) { costByProd[it.prod] = it.cant * it.costoUnit; costoProductos += it.cant * it.costoUnit; }); }
+        var flete = liqOrden ? liqOrden.flete : 0;
+        var seen = {}, names = [];
+        Object.keys(sold).forEach(function (n) { if (!seen[n]) { seen[n] = 1; names.push(n); } });
+        Object.keys(costByProd).forEach(function (n) { if (!seen[n]) { seen[n] = 1; names.push(n); } });
+        var totalVendido = 0, totalUnid = 0;
+        names.forEach(function (n) { var u = sold[n] || 0; totalUnid += u; totalVendido += u * (liqPrice[n] || 0); });
+        var ganancia = totalVendido - costoProductos - flete;
+
+        liqStats.innerHTML =
+          '<div class="liq-stat"><div class="lk">Total vendido</div><div class="lv">' + money(totalVendido) + '</div><div class="ls">' + nPed + ' pedidos · ' + totalUnid + ' unidades</div></div>' +
+          '<div class="liq-stat"><div class="lk">Costo productos</div><div class="lv">' + money(costoProductos) + '</div><div class="ls">orden ' + (liqOrden ? liqOrden.id : '—') + '</div></div>' +
+          '<div class="liq-stat"><div class="lk">Flete</div><div class="lv">' + money(flete) + '</div><div class="ls">puro costo</div></div>' +
+          '<div class="liq-stat prov"><div class="lk">Ganancia del mercado</div><div class="lv">' + money(ganancia) + '</div></div>';
+
+        var liqTable = detailInner.querySelector('#liq-table');
+        var rows = names.map(function (n) {
+          var u = sold[n] || 0, rec = u * (liqPrice[n] || 0), c = costByProd[n] || 0;
+          return '<tr><td>' + n + '</td><td>' + u + '</td><td>' + money(rec) + '</td><td>' + money(c) + '</td><td class="prov">' + money(rec - c) + '</td></tr>';
+        }).join('');
+        liqTable.innerHTML =
+          '<thead><tr><th>Producto</th><th>Unid.</th><th>Vendido</th><th>Costo</th><th>Margen</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody>' +
+          '<tfoot>' +
+            '<tr><td>Subtotal</td><td>' + totalUnid + '</td><td>' + money(totalVendido) + '</td><td>' + money(costoProductos) + '</td><td class="prov">' + money(totalVendido - costoProductos) + '</td></tr>' +
+            '<tr><td colspan="4">Flete (orden ' + (liqOrden ? liqOrden.id : '—') + ')</td><td>−' + money(flete) + '</td></tr>' +
+            '<tr class="liq-gan"><td colspan="4">Ganancia del mercado</td><td class="prov">' + money(ganancia) + '</td></tr>' +
+          '</tfoot>';
+
+        var liqMark = detailInner.querySelector('#liq-mark');
         liqMark.addEventListener('click', function () {
-          if (liqMark.disabled) return;
           detailInner.querySelector('#liq-flash').classList.add('show');
           liqMark.textContent = 'Liquidada ✓'; liqMark.disabled = true;
         });
@@ -2249,11 +2508,19 @@
     } else if (hasOwnMode) {
       dm.innerHTML = '';
     } else {
-      setMode('mercado');
-      dm.innerHTML = '<div class="mode-seg"><button type="button" data-mode="mercado" class="active">🏪 Mercado</button><button type="button" data-mode="compra">📅 Compra</button></div>';
+      uiCompra = defaultCompra();
+      var opts = pickableCompras().map(function (c) {
+        return '<option value="' + c.id + '"' + (c.id === uiCompra ? ' selected' : '') + '>entrega ' + fmtEntrega(c.entrega) + (c.estado === 'Cerrada' ? ' · cerrada' : '') + '</option>';
+      }).join('');
+      dm.innerHTML =
+        '<div class="mode-seg"><button type="button" data-mode="mercado" class="active">🏪 Mercado</button><button type="button" data-mode="compra">📅 Compra</button></div>' +
+        '<select id="mode-compra-pick" class="mode-compra-pick" hidden>' + opts + '</select>';
       dm.querySelectorAll('.mode-seg button').forEach(function (b) {
         b.addEventListener('click', function () { setMode(b.dataset.mode); });
       });
+      var pick = dm.querySelector('#mode-compra-pick');
+      pick.addEventListener('change', function () { uiCompra = pick.value; fireMode(); });
+      setMode('mercado');
     }
 
     document.body.classList.add('detail-open');
