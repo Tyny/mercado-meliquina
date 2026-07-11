@@ -341,7 +341,7 @@
   .pub-preview .pp-counts b { color: var(--admin); }
   .pub-preview .pp-counts .pend { color: var(--muted); }
 
-  /* Mazo de catálogo (US-1 · paso Ofertas) */
+  /* Mazo de catálogo (US-16) */
   .deck-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
   @media (max-width: 680px) { .deck-layout { grid-template-columns: 1fr; } }
   #deck { width: 100%; }
@@ -398,11 +398,35 @@
   .deck-card:focus { background: var(--admin); color: #fff; border-color: var(--admin); box-shadow: 0 12px 28px rgba(0,0,0,.2); }
   .deck-card:focus .deck-progress, .deck-card:focus .dc-meta, .deck-card:focus .dc-hint { color: rgba(255,255,255,.85); }
   .deck-card:focus .badge-added { background: rgba(255,255,255,.22); color: #fff; }
-  .dc-nav { display: flex; gap: 10px; }
-  .dc-navbtn { flex: 1; padding: 9px; border: 1.5px solid currentColor; background: transparent; color: inherit; border-radius: 10px; font: inherit; font-weight: 700; cursor: pointer; opacity: .8; }
-  .dc-navbtn:hover { opacity: 1; }
-  .dc-cat { flex: 1; padding: 13px; border: 1.5px solid currentColor; background: transparent; color: inherit; border-radius: 10px; font: inherit; font-weight: 800; cursor: pointer; }
-  .deck-card:focus .dc-add { background: #fff; color: var(--admin); }
+  .deck-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .deck-nav .deck-progress { font-size: .9rem; }
+  .deck-arrow {
+    width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--line);
+    background: var(--card); color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+  }
+  .deck-arrow:hover:not(:disabled) { border-color: var(--admin); color: var(--admin); }
+  .deck-arrow:disabled { opacity: .35; cursor: default; }
+  .dc-cat { width: 100%; padding: 14px; border: 1.5px solid currentColor; background: transparent; color: inherit; border-radius: 10px; font: inherit; font-weight: 800; cursor: pointer; margin-top: 4px; }
+  .dc-name .badge-added { vertical-align: middle; margin-left: 8px; }
+  .added-pager { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: .85rem; color: var(--muted); }
+  .added-pager:empty { display: none; }
+  .pg { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+  .pg:hover:not(:disabled) { border-color: var(--admin); color: var(--admin); }
+  .pg:disabled { opacity: .35; cursor: default; }
+  /* Catálogo (US-16): stock en tarjeta + lista de productos */
+  .dc-stock { font-size: 1.05rem; }
+  .dc-stock b { font-weight: 800; }
+  .dc-stock.zero b { color: #c0564c; }
+  .deck-card:focus .dc-stock { color: #fff; }
+  .deck-card:focus .dc-stock.zero b { color: #ffd7d2; }
+  .cat-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
+  .cat-row:hover { border-color: var(--muted); }
+  .cat-row.current { border-color: var(--admin); background: var(--admin-soft); }
+  .cr-n { flex: 1; font-weight: 600; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cr-s { color: var(--admin); font-weight: 800; font-size: .9rem; white-space: nowrap; }
+  .cr-s.zero { color: #c0564c; }
+  .qinput.wide { width: 100%; border: 1px solid var(--line); text-align: left; padding: 10px 12px; border-radius: 10px; }
 
   .cat-modal { position: fixed; inset: 0; z-index: 50; background: rgba(10,14,12,.55); display: flex; align-items: center; justify-content: center; padding: 5vh 16px; }
   .cat-modal[hidden] { display: none; }
@@ -513,13 +537,13 @@
 <main>
   <!-- ADMIN -->
   <section class="panel active" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin">
-    <p class="panel-head">Crea y gestiona compras, ofertas y pedidos.</p>
+    <p class="panel-head">Crea y gestiona el catálogo, las compras y los pedidos.</p>
     <div class="deck">
       <article class="card">
         <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
         <h3>Crear una compra</h3>
-        <p class="story">Como <b>organizador</b>, quiero crear una compra empezando por las ofertas y completar las fechas cuando las tenga, para poder armarla aunque todavía no tenga el cronograma cerrado.</p>
-        <p class="accept">El wizard va: ofertas (se eligen del catálogo con un mazo: ←/→ navegan, Enter agrega, Espacio abre el catálogo para elegir unidad de medida y cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
+        <p class="story">Como <b>organizador</b>, quiero crear una compra —ventana, cupo, retiro y % del mercado— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
+        <p class="accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
@@ -535,10 +559,11 @@
         <p class="accept">El cupo es editable; se aplica un valor por defecto si no se define.</p>
       </article>
       <article class="card">
-        <div class="meta"><span class="id">US-4</span><span class="epic">Gestión de compras</span></div>
-        <h3>Agregar ofertas</h3>
-        <p class="story">Como <b>organizador</b>, quiero agregar ofertas a una compra con nombre, descripción, precio y stock, para que los compradores sepan qué hay disponible.</p>
-        <p class="accept">No requiere foto ni unidad de medida; cada oferta tiene un máximo por comprador con un valor por defecto razonable.</p>
+        <div class="meta"><span class="id">US-16</span><span class="epic">Catálogo</span></div>
+        <h3>Administrar catálogo</h3>
+        <p class="story">Como <b>organizador</b>, quiero mantener el catálogo de productos y su stock actual, para que las compras muestren siempre lo disponible.</p>
+        <p class="accept">Los productos son independientes de las compras. Se recorren con flechas ‹ › o ←/→; la barra espaciadora abre el editor para actualizar stock, precio, unidad de medida y máx por comprador. Al costado, todos los productos con su stock (alfabético, paginado).</p>
+        <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
@@ -566,7 +591,7 @@
         <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
         <h3>Liquidar una compra</h3>
         <p class="story">Como <b>organizador</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-        <p class="accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por oferta. "Marcar liquidada" deja la compra en estado liquidada.</p>
+        <p class="accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por producto. "Marcar liquidada" deja la compra en estado liquidada.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
     </div>
@@ -579,21 +604,21 @@
       <article class="card">
         <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
         <h3>Explorar una compra abierta</h3>
-        <p class="story">Como <b>comprador</b>, quiero ver las ofertas de una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
-        <p class="accept">Cada oferta muestra dos contadores — confirmadas y pendientes (ej. "12 confirmadas, 5 pendientes"); retiro + fecha de entrega se muestran cuando están definidos.</p>
+        <p class="story">Como <b>comprador</b>, quiero ver los productos disponibles en una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
+        <p class="accept">Muestra todos los productos del catálogo con stock (vivo). Cada uno con precio, stock y dos contadores — confirmadas y pendientes (ej. "12 confirmadas, 5 pendientes"); retiro + fecha de entrega cuando están definidos.</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-6</span><span class="epic">Comprar</span></div>
         <h3>Hacer un pedido con carrito</h3>
-        <p class="story">Como <b>comprador</b>, quiero agregar varias ofertas a un carrito y finalizar la compra una sola vez con mi nombre, apellido, email y teléfono, para pedir todo en un solo paso.</p>
+        <p class="story">Como <b>comprador</b>, quiero agregar varios productos a un carrito y finalizar la compra una sola vez con mi nombre, apellido, email y teléfono, para pedir todo en un solo paso.</p>
         <p class="accept">Solo mientras la ventana está abierta; el pedido se crea como pendiente; respeta los máximos por comprador.</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-7</span><span class="epic">Comprar</span></div>
         <h3>Ver mensajes de "sin stock" / "cupo completo"</h3>
         <p class="story">Como <b>comprador</b>, quiero un mensaje claro cuando algo no se puede pedir, para entender por qué.</p>
-        <p class="accept">"Sin stock" cuando se agotan las unidades de una oferta; "cupo completo" cuando se alcanza el cupo de participantes; ambos cuentan todos los pedidos realizados (pendientes + confirmados).</p>
+        <p class="accept">"Sin stock" cuando se agota el stock de un producto; "cupo completo" cuando se alcanza el cupo de participantes; ambos cuentan todos los pedidos realizados (pendientes + confirmados).</p>
       </article>
       <article class="card">
         <div class="meta"><span class="id">US-8</span><span class="epic">Comprar</span></div>
@@ -611,7 +636,7 @@
         <div class="meta"><span class="id">US-14</span><span class="epic">Ciclo de la ventana</span></div>
         <h3>Los pedidos abren y cierran por tiempo</h3>
         <p class="story">Como <b>comprador</b>, quiero que solo se pueda pedir durante la ventana, para que el proceso sea justo y predecible.</p>
-        <p class="accept">Borrador (sin fechas, no visible al público) → próximo (antes del inicio) → abierto (entre inicio y fin, se puede pedir) → cerrado (después del fin: pedidos deshabilitados, se destacan retiro + entrega) → liquidada (cuentas cerradas y proveedores pagados).</p>
+        <p class="accept">Borrador (sin fechas, no visible al público) → próximo (antes del inicio) → abierto (entre inicio y fin, se puede pedir) → cerrado (después del fin: pedidos deshabilitados, se destacan retiro + entrega) → liquidada (cuentas cerradas y proveedores pagados). Solo una compra abierta a la vez.</p>
       </article>
     </div>
   </section>
@@ -649,8 +674,8 @@
 <template id="mock-US-1">
   <div class="detail-lead">
     <h2 class="detail-title">Crear una compra</h2>
-    <p class="detail-story">Como <b>organizador</b>, quiero crear una compra empezando por las ofertas y completar las fechas cuando las tenga, para poder armarla aunque todavía no tenga el cronograma cerrado.</p>
-    <p class="detail-accept">El wizard va: ofertas (se eligen del catálogo con un mazo: ←/→ navegan, Enter agrega, Espacio abre el catálogo para elegir unidad de medida y cantidad) → cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega la compra queda como borrador (no visible al público) hasta definirla.</p>
+    <p class="detail-story">Como <b>organizador</b>, quiero crear una compra —ventana, cupo, retiro y % del mercado— para agrupar los pedidos; los productos salen del catálogo, no se cargan acá.</p>
+    <p class="detail-accept">La compra solo agrupa pedidos: no se eligen productos (al presentarla muestra todos los del catálogo con stock). El wizard va: cupo, retiro y reparto (% para el mercado, el resto a proveedores) → fechas. Las fechas son opcionales: sin fecha de entrega queda como borrador (no visible al público). Solo puede haber una compra abierta a la vez.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
@@ -664,29 +689,15 @@
       <!-- Columna: formulario -->
       <div class="mock-form">
         <div class="wiz-steps">
-          <div class="wiz-step active" data-step="1"><span class="n">1</span>Ofertas</div>
-          <div class="wiz-step" data-step="2"><span class="n">2</span>Cupo y retiro</div>
-          <div class="wiz-step" data-step="3"><span class="n">3</span>Fechas</div>
-          <div class="wiz-step" data-step="4"><span class="n">4</span>Revisar</div>
+          <div class="wiz-step active" data-step="1"><span class="n">1</span>Cupo y reparto</div>
+          <div class="wiz-step" data-step="2"><span class="n">2</span>Fechas</div>
+          <div class="wiz-step" data-step="3"><span class="n">3</span>Revisar</div>
         </div>
 
-        <!-- Paso 1: Ofertas -->
+        <!-- Paso 1: Cupo, retiro y reparto -->
         <div class="wiz-panel" data-panel="1">
-          <h3>¿Qué vas a vender?</h3>
-          <p class="sub">Enfocá la tarjeta (se marca con paleta invertida) y recorré el catálogo. <b>←/→</b> navegar · <b>Enter</b> agregar · <b>Espacio</b> abre el catálogo (elegís unidad y cantidad) · <b>Esc</b> cierra.</p>
-          <div class="deck-layout">
-            <div class="deck-col"><div id="deck"></div></div>
-            <aside class="added-panel">
-              <h4>En esta compra (<span id="added-count">0</span>)</h4>
-              <div class="added-list" id="added-list"></div>
-            </aside>
-          </div>
-        </div>
-
-        <!-- Paso 2: Cupo y retiro -->
-        <div class="wiz-panel" data-panel="2" hidden>
           <h3>Cupo, retiro y reparto</h3>
-          <p class="sub">Cuántas personas pueden participar, dónde se retira (opcional) y qué parte queda para el mercado.</p>
+          <p class="sub">La compra <b>agrupa pedidos</b>: no se eligen productos acá. Al presentarla muestra todos los del <b>catálogo con stock</b>. Definí cupo, lugar de retiro y el % del mercado.</p>
           <div class="field-row">
             <div class="field">
               <label>Cupo de participantes</label>
@@ -706,8 +717,8 @@
           </div>
         </div>
 
-        <!-- Paso 3: Fechas (opcionales) -->
-        <div class="wiz-panel" data-panel="3" hidden>
+        <!-- Paso 2: Fechas (opcionales) -->
+        <div class="wiz-panel" data-panel="2" hidden>
           <h3>Fechas <span class="opt">— opcionales</span></h3>
           <p class="sub">Si todavía no las tenés, dejalas vacías: la compra queda como <b>borrador</b> hasta que definas la entrega.</p>
           <div class="field-row">
@@ -721,14 +732,14 @@
           </div>
         </div>
 
-        <!-- Paso 4: Revisar -->
-        <div class="wiz-panel" data-panel="4" hidden>
+        <!-- Paso 3: Revisar -->
+        <div class="wiz-panel" data-panel="3" hidden>
           <h3>Revisar y crear</h3>
           <p class="sub">Repasá todo antes de crear. Podés crearla ahora aunque falten las fechas.</p>
           <div class="sum-id draft">Borrador — entrega a definir</div>
           <div class="review-grid">
             <div class="review-box">
-              <div class="sum-row"><span class="k">Ofertas</span><span class="v" id="rev-offers">52</span></div>
+              <div class="sum-row"><span class="k">Productos</span><span class="v">catálogo con stock</span></div>
               <div class="sum-row"><span class="k">Cupo</span><span class="v">50 personas</span></div>
               <div class="sum-row"><span class="k">Reparto</span><span class="v" id="rev-split">Mercado 5% · Proveedores 95%</span></div>
               <div class="sum-row"><span class="k">Retiro</span><span class="v">Sin definir</span></div>
@@ -740,11 +751,11 @@
               <div class="pp-head">Vista pública (preview)</div>
               <div class="pp-body">
                 <div class="pp-name">Miel 500g — $4.500</div>
-                <div class="pp-counts">stock 30 · <b>0 confirmadas</b>, <span class="pend">0 pendientes</span></div>
+                <div class="pp-counts">stock 30 (del catálogo) · <b>0 confirmadas</b>, <span class="pend">0 pendientes</span></div>
               </div>
             </div>
           </div>
-          <p class="side-note">Como borrador <b>no es visible al público</b>. Al cargar la fecha de entrega pasa a <b>próximo</b>.</p>
+          <p class="side-note">Como borrador <b>no es visible al público</b>. Al cargar la fecha de entrega pasa a <b>próximo</b>. Solo puede haber <b>una compra abierta a la vez</b>.</p>
         </div>
 
         <div class="wiz-nav">
@@ -763,8 +774,8 @@
 <template id="mock-US-5">
   <div class="detail-lead">
     <h2 class="detail-title">Explorar una compra abierta</h2>
-    <p class="detail-story">Como <b>comprador</b>, quiero ver las ofertas de una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
-    <p class="detail-accept">Cada oferta muestra dos contadores — confirmadas y pendientes; retiro + fecha de entrega se muestran cuando están definidos.</p>
+    <p class="detail-story">Como <b>comprador</b>, quiero ver los productos disponibles en una compra con precio, stock y cuántas ya se compraron, para decidir qué pedir.</p>
+    <p class="detail-accept">Cada producto muestra dos contadores — confirmadas y pendientes; retiro + fecha de entrega se muestran cuando están definidos.</p>
     <p class="section-label">Así se vería la pantalla pública (versión desktop)</p>
   </div>
 
@@ -807,7 +818,7 @@
   <div class="detail-lead">
     <h2 class="detail-title">Liquidar una compra</h2>
     <p class="detail-story">Como <b>organizador</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-    <p class="detail-accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por oferta. "Marcar liquidada" deja la compra en estado liquidada.</p>
+    <p class="detail-accept">Sobre los pedidos confirmados: total vendido, monto a proveedores y ganancia del mercado (% de la compra, menos el transporte que se carga acá), con desglose por producto. "Marcar liquidada" deja la compra en estado liquidada.</p>
     <p class="section-label">Así se vería la pantalla (versión desktop)</p>
   </div>
 
@@ -845,6 +856,36 @@
           <button class="btn-ghost" type="button">Exportar CSV</button>
         </div>
         <div class="mock-flash" id="liq-flash">✓ Compra liquidada — proveedores pagados (mock, no se guarda nada)</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- Mock for US-16: pantalla "Administrar catálogo" -->
+<template id="mock-US-16">
+  <div class="detail-lead">
+    <h2 class="detail-title">Administrar catálogo</h2>
+    <p class="detail-story">Como <b>organizador</b>, quiero mantener el catálogo de productos y su stock actual, para que las compras muestren siempre lo disponible.</p>
+    <p class="detail-accept">Los productos son <b>independientes de las compras</b>. Recorrés el catálogo con las flechas ‹ › o ←/→; la <b>barra espaciadora</b> abre el editor para actualizar <b>stock</b>, precio, unidad de medida y máx por comprador. Al costado, todos los productos con su stock (alfabético, paginado).</p>
+    <p class="section-label">Así se vería la pantalla (versión desktop)</p>
+  </div>
+
+  <div class="mock mock-desktop">
+    <div class="browser-bar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="addr">meliquina.app/admin/catalogo</span>
+    </div>
+    <div class="mock-topbar">Mercado Meliquina · Admin <span class="crumb">— Catálogo</span></div>
+    <div class="mock-desktop-body">
+      <div class="mock-form">
+        <div class="deck-layout">
+          <div class="deck-col"><div id="deck"></div></div>
+          <aside class="added-panel">
+            <h4>Catálogo (<span id="cat-count">0</span>)</h4>
+            <div class="added-list" id="cat-list"></div>
+            <div class="added-pager" id="cat-list-pager"></div>
+          </aside>
+        </div>
       </div>
     </div>
   </div>
@@ -973,7 +1014,7 @@
         syncPct();
       }
 
-      // Ofertas: mazo del catálogo (swipe / teclado) + lista de agregadas
+      // US-16 Catálogo: mazo para navegar + editor de stock (barra) + lista de productos
       var deck = detailInner.querySelector('#deck');
       if (deck) {
         var names = ['Miel 500g', 'Dulce de frambuesa', 'Queso de cabra', 'Pan de campo',
@@ -990,121 +1031,133 @@
         for (var i = 0; i < 52; i++) {
           var base = names[i % names.length];
           var nm = i >= names.length ? base + ' (' + (Math.floor(i / names.length) + 1) + ')' : base;
-          catalog.push({ n: nm, price: 2000 + ((i * 337) % 6000), stock: 8 + ((i * 7) % 40), max: 1 + (i % 4), unit: UNITS[i % UNITS.length].v });
+          catalog.push({ n: nm, price: 2000 + ((i * 337) % 6000), stock: (i % 6 === 0 ? 0 : 8 + ((i * 7) % 40)), max: 1 + (i % 4), unit: UNITS[i % UNITS.length].v });
         }
+        catalog.sort(function (a, b) { return a.n.localeCompare(b.n, 'es'); });
         var fmt = function (p) { return '$' + (p || 0).toLocaleString('es-AR'); };
         var unitLabel = function (v) { for (var k = 0; k < UNITS.length; k++) { if (UNITS[k].v === v) return UNITS[k].label; } return v; };
-        var pos = 0, added = [];
-        var addedList = detailInner.querySelector('#added-list');
-        var addedCount = detailInner.querySelector('#added-count');
-        var revOffers = detailInner.querySelector('#rev-offers');
-        var isAdded = function (ci) { return added.some(function (a) { return a.ci === ci; }); };
+        var pos = 0, listPage = 0, PAGE = 8;
+        var catList = detailInner.querySelector('#cat-list');
+        var catCount = detailInner.querySelector('#cat-count');
+        var catPager = detailInner.querySelector('#cat-list-pager');
 
-        var renderAdded = function () {
-          addedList.innerHTML = added.length ? added.map(function (a) {
-            return '<div class="added-row"><span class="ar-n">' + a.n + '</span>' +
-              '<span class="ar-q">' + a.qty + ' ' + a.unit + '</span>' +
-              '<button class="ar-x" data-ci="' + a.ci + '" title="Quitar">✕</button></div>';
-          }).join('') : '<div class="added-empty">Todavía no agregaste nada.</div>';
-          addedCount.textContent = added.length;
-          if (revOffers) revOffers.textContent = added.length;
+        var renderList = function () {
+          var pages = Math.max(1, Math.ceil(catalog.length / PAGE));
+          if (listPage >= pages) listPage = pages - 1;
+          if (listPage < 0) listPage = 0;
+          var start = listPage * PAGE;
+          catList.innerHTML = catalog.slice(start, start + PAGE).map(function (p, k) {
+            var gi = start + k;
+            return '<div class="cat-row' + (gi === pos ? ' current' : '') + '" data-i="' + gi + '">' +
+              '<span class="cr-n">' + p.n + '</span>' +
+              '<span class="cr-s' + (p.stock <= 0 ? ' zero' : '') + '">' + p.stock + ' ' + p.unit + '</span></div>';
+          }).join('');
+          catCount.textContent = catalog.length;
+          catPager.innerHTML = catalog.length > PAGE
+            ? '<button class="pg" data-pg="-1" type="button"' + (listPage === 0 ? ' disabled' : '') + '>‹</button>' +
+              '<span>Página ' + (listPage + 1) + ' de ' + pages + '</span>' +
+              '<button class="pg" data-pg="1" type="button"' + (listPage === pages - 1 ? ' disabled' : '') + '>›</button>'
+            : '';
         };
+        catList.addEventListener('click', function (e) {
+          var r = e.target.closest('.cat-row'); if (!r) return;
+          pos = +r.dataset.i; renderList(); renderCard();
+        });
+        catPager.addEventListener('click', function (e) {
+          var b = e.target.closest('.pg'); if (!b) return;
+          listPage += (+b.dataset.pg); renderList();
+        });
 
-        var prev = function () { if (pos > 0) { pos--; renderCard(); } };
-        var next = function () { if (pos < catalog.length - 1) { pos++; renderCard(); } };
-        var add = function (qty, unit) {
-          var p = catalog[pos];
-          qty = Math.max(1, qty || 1);
-          if (unit) p.unit = unit;
-          var ex = added.filter(function (a) { return a.ci === pos; })[0];
-          if (ex) { ex.qty = qty; ex.unit = p.unit; }
-          else added.push({ ci: pos, n: p.n, price: p.price, max: p.max, qty: qty, unit: p.unit });
-          renderAdded();
-          if (pos < catalog.length - 1) pos++;
-          renderCard();
-        };
+        var syncList = function () { listPage = Math.floor(pos / PAGE); renderList(); };
+        var prev = function () { if (pos > 0) { pos--; syncList(); renderCard(); } };
+        var next = function () { if (pos < catalog.length - 1) { pos++; syncList(); renderCard(); } };
 
-        // Modal "vista del catálogo" (se crea una vez)
+        // Editor de catálogo (modal, se crea una vez)
         var modal = document.createElement('div');
         modal.className = 'cat-modal';
         modal.hidden = true;
         modal.innerHTML =
           '<div class="cat-box" role="dialog" aria-modal="true">' +
-            '<div class="cat-head"><h3 id="cat-title"></h3><button class="cat-x" type="button" aria-label="Cerrar">✕</button></div>' +
-            '<p class="cat-meta" id="cat-meta"></p>' +
-            '<div class="field"><label>¿En qué se mide el producto?</label>' +
-              '<select id="cat-unit">' + UNITS.map(function (u) { return '<option value="' + u.v + '">' + u.label + '</option>'; }).join('') + '</select></div>' +
-            '<div class="field"><label>Cantidad (stock) para esta compra</label>' +
-              '<div class="stepper"><button class="qbtn" data-q="-1" type="button">−</button>' +
-              '<input id="cat-qty" class="qinput" type="number" min="1">' +
-              '<button class="qbtn" data-q="1" type="button">+</button></div></div>' +
+            '<div class="cat-head"><h3 id="ed-title"></h3><button class="cat-x" type="button" aria-label="Cerrar">✕</button></div>' +
+            '<div class="field-row">' +
+              '<div class="field"><label>Stock actual</label>' +
+                '<div class="stepper"><button class="qbtn" data-q="-1" type="button">−</button>' +
+                '<input id="ed-stock" class="qinput" type="number" min="0">' +
+                '<button class="qbtn" data-q="1" type="button">+</button></div></div>' +
+              '<div class="field"><label>Precio</label><input id="ed-price" class="qinput wide" type="number" min="0"></div>' +
+            '</div>' +
+            '<div class="field-row">' +
+              '<div class="field"><label>¿En qué se mide?</label>' +
+                '<select id="ed-unit">' + UNITS.map(function (u) { return '<option value="' + u.v + '">' + u.label + '</option>'; }).join('') + '</select></div>' +
+              '<div class="field"><label>Máx por comprador</label><input id="ed-max" class="qinput wide" type="number" min="1"></div>' +
+            '</div>' +
             '<div class="cat-actions"><button class="cat-cancel" type="button">Cerrar</button>' +
-              '<button class="cat-ok" type="button">Agregar a la compra</button></div>' +
+              '<button class="cat-ok" type="button">Guardar</button></div>' +
             '<div class="cat-hint">Esc para cerrar</div>' +
           '</div>';
         detailInner.appendChild(modal);
-        var catTitle = modal.querySelector('#cat-title');
-        var catMeta = modal.querySelector('#cat-meta');
-        var catUnit = modal.querySelector('#cat-unit');
-        var catQty = modal.querySelector('#cat-qty');
+        var edTitle = modal.querySelector('#ed-title');
+        var edStock = modal.querySelector('#ed-stock');
+        var edPrice = modal.querySelector('#ed-price');
+        var edUnit = modal.querySelector('#ed-unit');
+        var edMax = modal.querySelector('#ed-max');
 
-        var openCatalog = function () {
+        var openEditor = function () {
           var p = catalog[pos];
-          catTitle.textContent = 'Catálogo · ' + p.n;
-          catMeta.textContent = fmt(p.price) + ' · máx ' + p.max + ' por comprador';
-          catUnit.value = p.unit; catQty.value = p.stock;
-          modal.hidden = false; catQty.focus(); catQty.select();
+          edTitle.textContent = 'Catálogo · ' + p.n;
+          edStock.value = p.stock; edPrice.value = p.price; edUnit.value = p.unit; edMax.value = p.max;
+          modal.hidden = false; edStock.focus(); edStock.select();
         };
-        var closeCatalog = function () { modal.hidden = true; var c = deck.querySelector('.deck-card'); if (c) c.focus(); };
+        var closeEditor = function () { modal.hidden = true; var c = deck.querySelector('.deck-card'); if (c) c.focus(); };
+        var saveEditor = function () {
+          var p = catalog[pos];
+          p.stock = Math.max(0, +edStock.value || 0);
+          p.price = Math.max(0, +edPrice.value || 0);
+          p.unit = edUnit.value;
+          p.max = Math.max(1, +edMax.value || 1);
+          renderList(); renderCard(); closeEditor();
+        };
         modal.querySelectorAll('.qbtn').forEach(function (b) {
-          b.addEventListener('click', function () { catQty.value = Math.max(1, (+catQty.value || 1) + (+b.dataset.q)); });
+          b.addEventListener('click', function () { edStock.value = Math.max(0, (+edStock.value || 0) + (+b.dataset.q)); });
         });
-        modal.querySelector('.cat-x').addEventListener('click', closeCatalog);
-        modal.querySelector('.cat-cancel').addEventListener('click', closeCatalog);
-        modal.querySelector('.cat-ok').addEventListener('click', function () { add(+catQty.value || 1, catUnit.value); closeCatalog(); });
+        modal.querySelector('.cat-x').addEventListener('click', closeEditor);
+        modal.querySelector('.cat-cancel').addEventListener('click', closeEditor);
+        modal.querySelector('.cat-ok').addEventListener('click', saveEditor);
         modal.addEventListener('keydown', function (e) {
-          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); closeCatalog(); }
-          else if (e.key === 'Enter') { e.preventDefault(); add(+catQty.value || 1, catUnit.value); closeCatalog(); }
+          if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); closeEditor(); }
+          else if (e.key === 'Enter') { e.preventDefault(); saveEditor(); }
         });
-        modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeCatalog(); });
+        modal.addEventListener('pointerdown', function (e) { if (e.target === modal) closeEditor(); });
 
         function renderCard() {
           if (pos >= catalog.length) pos = catalog.length - 1;
           var p = catalog[pos];
           deck.innerHTML =
+            '<div class="deck-nav">' +
+              '<button class="deck-arrow" data-nav="-1" type="button" aria-label="Anterior"' + (pos === 0 ? ' disabled' : '') + '>‹</button>' +
+              '<div class="deck-progress">Producto <b>' + (pos + 1) + '</b> de ' + catalog.length + '</div>' +
+              '<button class="deck-arrow" data-nav="1" type="button" aria-label="Siguiente"' + (pos === catalog.length - 1 ? ' disabled' : '') + '>›</button>' +
+            '</div>' +
             '<div class="deck-card" tabindex="0">' +
-              '<div class="deck-progress">Producto <b>' + (pos + 1) + '</b> de ' + catalog.length +
-                (isAdded(pos) ? ' · <span class="badge-added">ya agregada</span>' : '') + '</div>' +
               '<div class="dc-name">' + p.n + '</div>' +
               '<div class="dc-meta">' + fmt(p.price) + ' · máx ' + p.max + ' · se mide en ' + unitLabel(p.unit).toLowerCase() + '</div>' +
-              '<div class="dc-nav"><button class="dc-navbtn" data-nav="-1" type="button">‹ Anterior</button>' +
-                '<button class="dc-navbtn" data-nav="1" type="button">Siguiente ›</button></div>' +
-              '<div class="dc-actions"><button class="dc-cat" type="button">Ver catálogo (espacio)</button>' +
-                '<button class="dc-add" type="button">' + (isAdded(pos) ? 'Actualizar' : 'Agregar') + ' (Enter)</button></div>' +
-              '<div class="dc-hint">← → navegar · Enter agregar · Espacio: catálogo · Esc cierra</div>' +
+              '<div class="dc-stock' + (p.stock <= 0 ? ' zero' : '') + '">Stock actual: <b>' + p.stock + ' ' + p.unit + '</b>' + (p.stock <= 0 ? ' — sin stock' : '') + '</div>' +
+              '<button class="dc-cat" type="button">Editar stock (espacio)</button>' +
+              '<div class="dc-hint">←/→ navegar · Espacio edita stock/precio/unidad · Esc cierra</div>' +
             '</div>';
-          var cardEl = deck.querySelector('.deck-card');
-          cardEl.focus();
           deck.querySelector('[data-nav="-1"]').addEventListener('click', prev);
           deck.querySelector('[data-nav="1"]').addEventListener('click', next);
-          deck.querySelector('.dc-cat').addEventListener('click', openCatalog);
-          deck.querySelector('.dc-add').addEventListener('click', function () { add(p.stock, p.unit); });
+          var cardEl = deck.querySelector('.deck-card');
+          cardEl.focus();
+          deck.querySelector('.dc-cat').addEventListener('click', openEditor);
           cardEl.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
             else if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-            else if (e.key === 'Enter') { e.preventDefault(); add(p.stock, p.unit); }
-            else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openCatalog(); }
+            else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); openEditor(); }
           });
         }
 
-        addedList.addEventListener('click', function (e) {
-          var x = e.target.closest('.ar-x'); if (!x) return;
-          var ci = +x.dataset.ci;
-          added = added.filter(function (a) { return a.ci !== ci; });
-          renderAdded(); renderCard();
-        });
-
-        renderAdded();
+        renderList();
         renderCard();
       }
 
@@ -1170,7 +1223,7 @@
         drawStore();
       }
 
-      // US-15: liquidación (totales + desglose por oferta)
+      // US-15: liquidación (totales + desglose por producto)
       var liqStats = detailInner.querySelector('#liq-stats');
       if (liqStats) {
         var pct = 0.05;
@@ -1206,7 +1259,7 @@
             '</td><td class="market">' + money(d.mkt) + '</td><td class="prov">' + money(d.prov) + '</td></tr>';
         }).join('');
         detailInner.querySelector('#liq-table').innerHTML =
-          '<thead><tr><th>Oferta</th><th>Unid.</th><th>Recaudado</th><th>Mercado</th><th>Proveedores</th></tr></thead>' +
+          '<thead><tr><th>Producto</th><th>Unid.</th><th>Recaudado</th><th>Mercado</th><th>Proveedores</th></tr></thead>' +
           '<tbody>' + rows + '</tbody>' +
           '<tfoot><tr><td>Total</td><td>' + units + '</td><td>' + money(tot) +
           '</td><td class="market">' + money(totMkt) + '</td><td class="prov">' + money(totProv) + '</td></tr></tfoot>';
