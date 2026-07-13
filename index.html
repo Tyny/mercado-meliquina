@@ -70,6 +70,22 @@
     color: var(--ink);
     -webkit-text-size-adjust: 100%;
   }
+  /* Selector de etapa (arriba de todo) */
+  .etapa-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 11px 18px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .etapa-lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 800; color: var(--muted); }
+  .etapa-btn { border: 1px solid var(--line); background: var(--bg); color: var(--muted); font: inherit; font-weight: 800; font-size: .88rem; padding: 6px 15px; border-radius: 999px; cursor: pointer; }
+  .etapa-btn.active[data-etapa="1"] { background: var(--mercado); border-color: var(--mercado); color: #fff; }
+  .etapa-btn.active[data-etapa="2"] { background: var(--compra); border-color: var(--compra); color: #fff; }
+  .etapa-hint { color: var(--muted); font-size: .84rem; margin-left: 4px; }
+  @media (max-width: 560px) { .etapa-hint { flex-basis: 100%; margin-left: 0; } }
+  .card.etapa-locked { opacity: .48; }
+  .card.etapa-locked .open-hint { visibility: hidden; }
+  .etapa-chip { display: inline-block; font-size: .66rem; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--compra-soft); color: var(--compra); margin-left: 8px; vertical-align: middle; }
+  .etapa-gate { max-width: 560px; margin: 40px auto; text-align: center; border: 1px solid var(--compra); background: var(--compra-soft); border-radius: 18px; padding: 34px 28px; }
+  .etapa-gate-badge { display: inline-block; font-weight: 800; font-size: .8rem; padding: 6px 14px; border-radius: 999px; background: var(--compra); color: #fff; margin-bottom: 16px; }
+  .etapa-gate p { color: var(--ink); line-height: 1.6; margin: 0 0 16px; }
+  .etapa-gate .btn-primary { background: var(--compra); border-color: var(--compra); }
+
   header.page { padding: 40px 20px 6px; text-align: center; }
   header.page h1 { margin: 0 0 6px; font-size: 2.1rem; letter-spacing: -0.02em; }
   header.page p { margin: 0; color: var(--muted); font-size: 1.02rem; }
@@ -201,6 +217,7 @@
   #panel-user  .card .open-hint { color: var(--user); }
 
   /* Detail view (full screen swap) */
+  body.detail-open .etapa-bar,
   body.detail-open header.page,
   body.detail-open .tabs,
   body.detail-open main,
@@ -745,7 +762,13 @@
   @media (max-width: 620px) { .nav-fab { width: 50px; height: 50px; right: 16px; } }
 </style>
 </head>
-<body class="role-admin">
+<body class="role-admin" data-etapa="1">
+<div class="etapa-bar" id="etapa-bar" role="tablist" aria-label="Etapa de construcción">
+  <span class="etapa-lbl">Etapa</span>
+  <button class="etapa-btn active" data-etapa="1" type="button" role="tab" aria-selected="true">1 · 🏪 Mercado</button>
+  <button class="etapa-btn" data-etapa="2" type="button" role="tab" aria-selected="false">2 · 📅 Compra</button>
+  <span class="etapa-hint" id="etapa-hint"></span>
+</div>
 <header class="page">
   <h1>Mercado Meliquina</h1>
   <p>Historias de usuario · borrador de especificación</p>
@@ -771,8 +794,8 @@
   <section class="panel active" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin">
     <p class="panel-head">Crea y gestiona el catálogo, las compras y los pedidos.</p>
     <div class="deck">
-      <article class="card" data-scope="compra">
-        <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span></div>
+      <article class="card" data-scope="compra" data-etapa="2">
+        <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span><span class="etapa-chip">Etapa 2</span></div>
         <h3>Crear una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —fechas y lugar de retiro— para agrupar los pedidos; los productos salen del catálogo (subselección que se arma hasta publicar).</p>
         <p class="accept">La compra agrupa pedidos sobre una <b>subselección de productos del catálogo</b> (se agrega/quita hasta antes de publicar). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las <b>ganancias no se cargan acá</b> (van en Configurar ganancias, US-19). Las fechas son opcionales; sin fecha de entrega queda sin publicar. Puede haber varias compras publicadas a la vez (cada una con su link).</p>
@@ -813,8 +836,8 @@
         <p class="accept">La <b>orden de compra</b> tiene dos orígenes: <b>reponer el mercado</b> 🏪 (de la nada — elijo productos y cantidades) o <b>desde una compra cerrada</b> 📅 (agrupa los pedidos confirmados). Cada orden lista productos con <b>costo unitario</b>; al <b>confirmar la recepción</b> cargo el <b>flete</b> (puro costo) y pasa a <b>Recibida</b> — recién ahí entra la mercadería. No es una <b>compra</b>: la compra recibe pedidos (demanda), la orden trae mercadería (proveedores → organizadora ❤️).</p>
         <p class="open-hint">Ver mock de la pantalla →</p>
       </article>
-      <article class="card" data-scope="compra">
-        <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span></div>
+      <article class="card" data-scope="compra" data-etapa="2">
+        <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span><span class="etapa-chip">Etapa 2</span></div>
         <h3>Liquidar una compra</h3>
         <p class="story">Como <b>organizadora ❤️</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
         <p class="accept">Trae la <b>orden de compra asociada</b> y usa costos reales: sobre los pedidos confirmados calcula <b>total vendido − costo de productos − flete = ganancia</b>, con el flete discriminado y desglose por producto. Las ganancias ya no se cargan acá (vienen de Configurar ganancias, US-19; el precio de venta ya las incluye). "Marcar liquidada" deja la compra en estado liquidada.</p>
@@ -1483,6 +1506,38 @@
     chips.innerHTML = parts.join('');
   }
 
+  // Etapa de construcción: 1 = Mercado (MVP), 2 = + Compra. Filtra el deck y fija el modo de los mocks.
+  var uiEtapa = 1;
+  function currentRole() { var m = document.body.className.match(/role-(\w+)/); return m ? m[1] : 'admin'; }
+  function syncHash() {
+    var target = '#e' + uiEtapa + '-' + currentRole();
+    if (location.hash !== target) history.replaceState(null, '', target);
+  }
+  function lockCardsForEtapa() {
+    document.querySelectorAll('.card').forEach(function (c) {
+      var ce = c.getAttribute('data-etapa') || '1';
+      c.classList.toggle('etapa-locked', uiEtapa === 1 && ce === '2');
+    });
+  }
+  function applyEtapa(e) {
+    uiEtapa = e;
+    document.body.setAttribute('data-etapa', String(e));
+    document.querySelectorAll('.etapa-btn').forEach(function (b) {
+      var on = (+b.dataset.etapa === e);
+      b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    var hint = document.getElementById('etapa-hint');
+    if (hint) hint.textContent = e === 1
+      ? 'Se construye primero: el mercado continuo (catálogo, stock, pedidos, pagos). Los mocks quedan fijos en modo mercado.'
+      : 'Alcance completo: se agrega la compra por ronda (crear/cerrar/liquidar) y la faceta de compra de cada pantalla.';
+    lockCardsForEtapa();
+    syncHash();
+    updateFabs();
+  }
+  document.querySelectorAll('.etapa-btn').forEach(function (b) {
+    b.addEventListener('click', function () { applyEtapa(+b.dataset.etapa); });
+  });
+
   function select(role) {
     tabs.forEach(function (t) {
       t.setAttribute('aria-selected', t.dataset.role === role ? 'true' : 'false');
@@ -1493,7 +1548,7 @@
     document.getElementById('panel-dicc').classList.toggle('active', role === 'dicc');
     document.body.className = 'role-' + role;
     if (role === 'db') renderDb();
-    if (location.hash.slice(1) !== role) history.replaceState(null, '', '#' + role);
+    syncHash();
     window.scrollTo({ top: 0 });
     updateFabs();
   }
@@ -1538,7 +1593,11 @@
   document.body.setAttribute('data-mode', 'mercado');
 
   var h = location.hash.slice(1);
-  select(h === 'user' || h === 'db' || h === 'dicc' ? h : 'admin');
+  var em = h.match(/^e([12])-(.+)$/);
+  var initEtapa = 1, initRole = h;
+  if (em) { initEtapa = +em[1]; initRole = em[2]; }
+  applyEtapa(initEtapa);
+  select(initRole === 'user' || initRole === 'db' || initRole === 'dicc' ? initRole : 'admin');
 
   /* ---- Detail view ---- */
   var detailInner = document.getElementById('detail-inner');
@@ -1554,9 +1613,28 @@
     pill.className = 'role-pill ' + role;
     pillText.textContent = roleName + ' · ' + id;
 
-    var tpl = document.getElementById('mock-' + id);
     detailInner.innerHTML = '';
     modeListeners = [];   // cada pantalla se re-suscribe al modo con onMode()
+
+    // En Etapa 1 (Mercado), las historias de Etapa 2 (Compra) muestran un cartel en vez del mock.
+    var cardEtapa = card.getAttribute('data-etapa') || '1';
+    if (uiEtapa === 1 && cardEtapa === '2') {
+      document.getElementById('detail-mode').innerHTML = '';
+      detailInner.innerHTML =
+        '<div class="detail-lead"><h2 class="detail-title">' + card.querySelector('h3').textContent + '</h2></div>' +
+        '<div class="etapa-gate">' +
+          '<div class="etapa-gate-badge">📅 Etapa 2 · Compra</div>' +
+          '<p>Esta historia es parte de la <b>Etapa 2</b> (la compra por ronda). La <b>Etapa 1</b> construye primero el <b>mercado continuo</b>.</p>' +
+          '<button class="btn-primary" id="etapa-gate-go" type="button">Ir a Etapa 2 · 📅 Compra →</button>' +
+        '</div>';
+      var goBtn = detailInner.querySelector('#etapa-gate-go');
+      if (goBtn) goBtn.addEventListener('click', function () { applyEtapa(2); openDetail(card); });
+      document.body.classList.add('detail-open');
+      window.scrollTo({ top: 0 });
+      return;
+    }
+
+    var tpl = document.getElementById('mock-' + id);
     if (tpl) {
       detailInner.appendChild(tpl.content.cloneNode(true));
       // US-1 Crear compra: pantalla "Revisar" navegable (↑/↓, espacio edita, enter crea) + listado
@@ -2736,11 +2814,19 @@
         '<div class="mock-note">🛠️ El mock de esta pantalla está en preparación.</div>';
     }
 
-    // Modo de la pantalla de ejemplo: color + selector según el ámbito del card
+    // Modo de la pantalla de ejemplo: en Etapa 1 todo va fijo en mercado; en Etapa 2 según el ámbito del card.
     var scope = card.getAttribute('data-scope') || 'mixto';
     var dm = document.getElementById('detail-mode');
     var hasOwnMode = detailInner.querySelector('.slb'); // US-5 define su modo con el toggle de link
-    if (scope === 'compra') {
+    if (uiEtapa === 1) {
+      // Etapa 1 = solo mercado: apagar los accesos a "compra" de las pantallas compartidas
+      detailInner.querySelectorAll('.slink').forEach(function (s) { s.style.display = 'none'; });         // US-5/US-6: sin toggle de link
+      var ocCompraBtn = detailInner.querySelector('#oc-new-compra'); if (ocCompraBtn) ocCompraBtn.style.display = 'none'; // US-18
+      var gCompBox = detailInner.querySelector('[data-gain="g-comp"]');                                    // US-19: solo ganancia del mercado
+      if (gCompBox && gCompBox.closest('.field')) gCompBox.closest('.field').style.display = 'none';
+      setMode('mercado');
+      dm.innerHTML = '<span class="mode-fixed">🏪 Mercado</span>';
+    } else if (scope === 'compra') {
       setMode('compra'); dm.innerHTML = '<span class="mode-fixed">📅 Compra</span>';
     } else if (scope === 'mercado') {
       setMode('mercado'); dm.innerHTML = '<span class="mode-fixed">🏪 Mercado</span>';
