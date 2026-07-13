@@ -21,6 +21,8 @@
     --mercado-soft: #f4e8d9;
     --compra: #7a4fb8;
     --compra-soft: #ece3f7;
+    --core: #2f9384;
+    --core-soft: #dcefec;
     --accent: var(--admin);
     --accent-soft: var(--admin-soft);
   }
@@ -41,6 +43,8 @@
       --mercado-soft: #33271a;
       --compra: #b28ee0;
       --compra-soft: #251f33;
+      --core: #4fc2b0;
+      --core-soft: #16302c;
     }
   }
   /* Modo activo (mercado/compra) → color de acento; se remapea dentro de mocks y cards */
@@ -74,17 +78,47 @@
   .etapa-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 11px 18px; background: var(--card); border-bottom: 1px solid var(--line); }
   .etapa-lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .09em; font-weight: 800; color: var(--muted); }
   .etapa-btn { border: 1px solid var(--line); background: var(--bg); color: var(--muted); font: inherit; font-weight: 800; font-size: .88rem; padding: 6px 15px; border-radius: 999px; cursor: pointer; }
-  .etapa-btn.active[data-etapa="1"] { background: var(--mercado); border-color: var(--mercado); color: #fff; }
-  .etapa-btn.active[data-etapa="2"] { background: var(--compra); border-color: var(--compra); color: #fff; }
+  .etapa-btn.active[data-etapa="1"] { background: var(--core); border-color: var(--core); color: #fff; }
+  .etapa-btn.active[data-etapa="2"] { background: var(--mercado); border-color: var(--mercado); color: #fff; }
+  .etapa-btn.active[data-etapa="3"] { background: var(--compra); border-color: var(--compra); color: #fff; }
   .etapa-hint { color: var(--muted); font-size: .84rem; margin-left: 4px; }
   @media (max-width: 560px) { .etapa-hint { flex-basis: 100%; margin-left: 0; } }
-  .card.etapa-locked { opacity: .48; }
-  .card.etapa-locked .open-hint { visibility: hidden; }
-  .etapa-chip { display: inline-block; font-size: .66rem; font-weight: 800; padding: 3px 9px; border-radius: 999px; background: var(--compra-soft); color: var(--compra); margin-left: 8px; vertical-align: middle; }
-  .etapa-gate { max-width: 560px; margin: 40px auto; text-align: center; border: 1px solid var(--compra); background: var(--compra-soft); border-radius: 18px; padding: 34px 28px; }
-  .etapa-gate-badge { display: inline-block; font-weight: 800; font-size: .8rem; padding: 6px 14px; border-radius: 999px; background: var(--compra); color: #fff; margin-bottom: 16px; }
-  .etapa-gate p { color: var(--ink); line-height: 1.6; margin: 0 0 16px; }
-  .etapa-gate .btn-primary { background: var(--compra); border-color: var(--compra); }
+
+  /* Secciones por etapa */
+  .etapa-section { margin: 0 auto 30px; max-width: 1100px; }
+  .etapa-h { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; margin: 6px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  .etapa-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .etapa-dot.core { background: var(--core); } .etapa-dot.merc { background: var(--mercado); } .etapa-dot.comp { background: var(--compra); }
+  .etapa-sub { font-size: .82rem; font-weight: 500; color: var(--muted); }
+
+  /* Story cards (el qué) */
+  .story-deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .story-deck { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .story-deck { grid-template-columns: 1fr; } }
+  .story-card { border: 1px solid var(--line); border-radius: 14px; padding: 16px 16px 14px; background: var(--card); display: flex; flex-direction: column; gap: 8px; }
+  .st-id { font-size: .72rem; font-weight: 800; letter-spacing: .03em; padding: 3px 9px; border-radius: 999px; }
+  .st-id.core { background: var(--core-soft); color: var(--core); } .st-id.merc { background: var(--mercado-soft); color: var(--mercado); } .st-id.comp { background: var(--compra-soft); color: var(--compra); }
+  .st-title { margin: 2px 0 0; font-size: 1.06rem; }
+  .st-desc { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.5; flex: 1; }
+  .st-screens { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; font-size: .82rem; color: var(--muted); }
+  .st-screen-link { font: inherit; font-size: .82rem; font-weight: 700; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--ink); cursor: pointer; }
+  .st-screen-link:hover { border-color: var(--admin); color: var(--admin); }
+
+  /* Screen cards (el cómo) */
+  .screens-deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .screens-deck { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .screens-deck { grid-template-columns: 1fr; } }
+  .screen-card { border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--card); display: flex; flex-direction: column; gap: 9px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .screen-card:hover { border-color: var(--admin); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+  .screen-card:focus-visible { outline: 3px solid var(--admin); outline-offset: 2px; }
+  .sc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .sc-name { font-weight: 800; font-size: 1.05rem; }
+  .sc-actor { font-size: .68rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .sc-actor.admin { background: var(--admin-soft); color: var(--admin); } .sc-actor.user { background: var(--user-soft); color: var(--user); }
+  .sc-desc { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.5; flex: 1; }
+  .sc-stories { font-size: .78rem; color: var(--muted); }
+  .sc-stories-lbl { font-weight: 700; margin-right: 6px; }
+  .sc-open { align-self: flex-start; font: inherit; font-weight: 700; font-size: .85rem; padding: 7px 14px; border-radius: 10px; border: 1px solid var(--admin); background: var(--admin); color: #fff; cursor: pointer; }
 
   header.page { padding: 40px 20px 6px; text-align: center; }
   header.page h1 { margin: 0 0 6px; font-size: 2.1rem; letter-spacing: -0.02em; }
@@ -108,6 +142,7 @@
   .tab-btn:hover { color: var(--ink); }
   .tab-btn[aria-selected="true"][data-role="admin"] { color: #fff; background: var(--admin); border-color: var(--admin); }
   .tab-btn[aria-selected="true"][data-role="user"]  { color: #fff; background: var(--user);  border-color: var(--user); }
+  .tab-btn[aria-selected="true"][data-role="screens"] { color: #fff; background: #4a5a66; border-color: #4a5a66; }
   .tab-btn[aria-selected="true"][data-role="db"]    { color: #fff; background: #5b6570; border-color: #5b6570; }
   .tab-btn[aria-selected="true"][data-role="dicc"]  { color: #fff; background: #6a7f5b; border-color: #6a7f5b; }
   .db-view { max-width: 1000px; margin: 0 auto; }
@@ -765,8 +800,9 @@
 <body class="role-admin" data-etapa="1">
 <div class="etapa-bar" id="etapa-bar" role="tablist" aria-label="Etapa de construcción">
   <span class="etapa-lbl">Etapa</span>
-  <button class="etapa-btn active" data-etapa="1" type="button" role="tab" aria-selected="true">1 · 🏪 Mercado</button>
-  <button class="etapa-btn" data-etapa="2" type="button" role="tab" aria-selected="false">2 · 📅 Compra</button>
+  <button class="etapa-btn active" data-etapa="1" type="button" role="tab" aria-selected="true">1 · 🔷 Core</button>
+  <button class="etapa-btn" data-etapa="2" type="button" role="tab" aria-selected="false">2 · 🏪 Mercado</button>
+  <button class="etapa-btn" data-etapa="3" type="button" role="tab" aria-selected="false">3 · 📅 Compra</button>
   <span class="etapa-hint" id="etapa-hint"></span>
 </div>
 <header class="page">
@@ -781,6 +817,9 @@
   <button class="tab-btn" data-role="user" role="tab" aria-selected="false" aria-controls="panel-user" id="tab-user">
     <span class="dot"></span>Compradora
   </button>
+  <button class="tab-btn" data-role="screens" role="tab" aria-selected="false" aria-controls="panel-screens" id="tab-screens">
+    <span class="dot"></span>🖥️ Pantallas
+  </button>
   <button class="tab-btn" data-role="db" role="tab" aria-selected="false" aria-controls="panel-db" id="tab-db">
     <span class="dot"></span>DB
   </button>
@@ -790,94 +829,99 @@
 </nav>
 
 <main>
-  <!-- ADMIN -->
+  <!-- ADMIN (stories de la organizadora) -->
   <section class="panel active" id="panel-admin" role="tabpanel" aria-labelledby="tab-admin">
-    <p class="panel-head">Crea y gestiona el catálogo, las compras y los pedidos.</p>
-    <div class="deck">
-      <article class="card" data-scope="compra" data-etapa="2">
-        <div class="meta"><span class="id">US-1</span><span class="epic">Gestión de compras</span><span class="etapa-chip">Etapa 2</span></div>
-        <h3>Crear una compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero crear una compra —fechas y lugar de retiro— para agrupar los pedidos; los productos salen del catálogo (subselección que se arma hasta publicar).</p>
-        <p class="accept">La compra agrupa pedidos sobre una <b>subselección de productos del catálogo</b> (se agrega/quita hasta antes de publicar). Crear una compra es una sola pantalla de revisión: te movés con ↑/↓, la barra espaciadora abre un editor de cada valor (Enter guarda, Esc lo deja como estaba) y Enter crea la compra. Al crearla aparece en el listado de compras; "Editar" vuelve a esta pantalla. Las <b>ganancias no se cargan acá</b> (van en Configurar ganancias, US-19). Las fechas son opcionales; sin fecha de entrega queda sin publicar. Puede haber varias compras publicadas a la vez (cada una con su link).</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-3</span><span class="epic">Gestión de compras</span></div>
-        <h3>Compartir links</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero copiar y compartir el link del mercado o el de una compra puntual, para difundir el mercado o limitar quién participa en una compra.</p>
-        <p class="accept">El <b>selector de modo</b> alterna qué links ves, con <b>botón de copiar</b>: en <b>mercado</b>, el <b>link del mercado</b> (fijo y público, siempre disponible); en <b>compra</b>, el <b>link de cada compra publicada</b> (uno por compra; si hay varias se listan con scroll; si no hay ninguna publicada, no hay link de compra). El link de la compra se comparte solo con ciertas personas (ej. por WhatsApp) para limitar quién participa.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-16</span><span class="epic">Catálogo</span></div>
-        <h3>Administrar catálogo</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero mantener el catálogo de productos y su stock actual, para que las compras muestren siempre lo disponible.</p>
-        <p class="accept">Los productos son independientes de las compras. Se recorren con flechas ‹ › o ←/→; la barra espaciadora abre el editor para actualizar stock, precio y unidad de medida. Al costado, todos los productos con su stock (alfabético, paginado).</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-10</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Revisar pedidos</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero ver, confirmar, cancelar y exportar los pedidos —los del <b>mercado</b> y los de cada <b>compra publicada</b> en pestañas separadas—, para procesarlos de punta a punta.</p>
-        <p class="accept">El <b>selector de modo</b> elige el conjunto de pedidos: los del <b>mercado</b> o los de una <b>compra</b> (con selector de compra al lado). En la vista: <b>ver</b> los pedidos con contacto de la compradora y estado (con filtro por estado y paginado), <b>confirmar</b> (tras ver el comprobante por WhatsApp): pendiente → confirmado + email; <b>cancelar</b> un pendiente no pagado (en el mercado libera stock; en una compra baja la demanda — queda "cancelado", sin expiración automática); y <b>exportar CSV</b>.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-17</span><span class="epic">Procesar pedidos</span></div>
-        <h3>Conciliar pagos</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero cruzar los pedidos pendientes con un <b>extracto bancario</b> o de <b>Mercado Pago</b>, para <b>confirmar los pagos en lote</b> en vez de uno por uno.</p>
-        <p class="accept">Subo o pego el detalle de acreditaciones (fecha, monto, quién pagó); la app sugiere el match con cada pedido pendiente por <b>monto + nombre</b> y confirmo en lote. Los dudosos quedan para revisión manual. Alimenta el paso <b>confirmar</b> de Revisar pedidos (US-10); el comprobante por WhatsApp deja de ser obligatorio.</p>
-        <p class="open-hint">Ver definición, desafíos y posibilidades →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-18</span><span class="epic">Abastecimiento</span></div>
-        <h3>Órdenes de compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero registrar lo que le <b>compro a proveedores</b> y confirmar cuándo <b>llegó la mercadería</b> (con su flete), para controlar costos y reponer stock.</p>
-        <p class="accept">La <b>orden de compra</b> tiene dos orígenes: <b>reponer el mercado</b> 🏪 (de la nada — elijo productos y cantidades) o <b>desde una compra cerrada</b> 📅 (agrupa los pedidos confirmados). Cada orden lista productos con <b>costo unitario</b>; al <b>confirmar la recepción</b> cargo el <b>flete</b> (puro costo) y pasa a <b>Recibida</b> — recién ahí entra la mercadería. No es una <b>compra</b>: la compra recibe pedidos (demanda), la orden trae mercadería (proveedores → organizadora ❤️).</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card" data-scope="compra" data-etapa="2">
-        <div class="meta"><span class="id">US-15</span><span class="epic">Cierre</span><span class="etapa-chip">Etapa 2</span></div>
-        <h3>Liquidar una compra</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero cerrar las cuentas de una compra entregada, para pagar a proveedores y saber la ganancia del mercado.</p>
-        <p class="accept">Trae la <b>orden de compra asociada</b> y usa costos reales: sobre los pedidos confirmados calcula <b>total vendido − costo de productos − flete = ganancia</b>, con el flete discriminado y desglose por producto. Las ganancias ya no se cargan acá (vienen de Configurar ganancias, US-19; el precio de venta ya las incluye). "Marcar liquidada" deja la compra en estado liquidada.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-19</span><span class="epic">Configuración</span></div>
-        <h3>Configurar ganancias</h3>
-        <p class="story">Como <b>organizadora ❤️</b>, quiero definir la ganancia del <b>mercado</b> y la de las <b>compras</b> en una pantalla propia, para que el precio de venta salga solo (<b>precio = costo + ganancia</b>).</p>
-        <p class="accept">Dos valores, cada uno <b>% o monto fijo</b>: la ganancia que se aplica a lo que se vende por el <b>mercado</b> y la que se aplica a los productos de una <b>compra</b>. La ganancia <b>define el precio de venta</b> sobre el costo; ya no se cargan ganancias al crear una compra ni al liquidar. El <b>flete no es ganancia</b>: es costo de la orden de compra.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-    </div>
+    <p class="panel-head">Lo que necesita la <b>organizadora ❤️</b>, por capacidad (el <b>qué</b>). El <b>cómo</b> vive en 🖥️ Pantallas.</p>
+
+    <section class="etapa-section" data-etapa="1">
+      <h2 class="etapa-h"><span class="etapa-dot core"></span>Core <span class="etapa-sub">base compartida por los dos modos</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O1</span></div><h3 class="st-title">Mantener el catálogo</h3><p class="st-desc">Agregar y editar los productos: nombre, unidad, costo y precio de venta.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-16">Catálogo</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O2</span></div><h3 class="st-title">Configurar ganancias</h3><p class="st-desc">Definir la ganancia (precio = costo + ganancia) para que el precio de venta salga solo.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-19">Configurar ganancias</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O3</span></div><h3 class="st-title">Compartir el link</h3><p class="st-desc">Copiar y compartir el link para que la gente entre a pedir.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-3">Compartir links</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O4</span></div><h3 class="st-title">Ver los pedidos</h3><p class="st-desc">Ver los pedidos que entran, con el contacto de la compradora y el detalle.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-10">Revisar pedidos</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O5</span></div><h3 class="st-title">Confirmar / cancelar un pedido</h3><p class="st-desc">Confirmar el pago (pendiente → confirmado) o cancelar un pendiente.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-10">Revisar pedidos</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O6</span></div><h3 class="st-title">Conciliar pagos</h3><p class="st-desc">Cruzar los pedidos pendientes con un extracto/Mercado Pago y confirmar en lote.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-17">Conciliar pagos</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O7</span></div><h3 class="st-title">Registrar una orden de compra</h3><p class="st-desc">Anotar lo que se le compra a proveedores y confirmar la recepción con su flete.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-18">Órdenes de compra</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-O8</span></div><h3 class="st-title">Exportar pedidos</h3><p class="st-desc">Bajar los pedidos a un CSV.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-10">Revisar pedidos</button></div></article>
+      </div>
+    </section>
+
+    <section class="etapa-section" data-etapa="2">
+      <h2 class="etapa-h"><span class="etapa-dot merc"></span>Mercado <span class="etapa-sub">modo continuo, pre-stock</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="2"><div class="st-meta"><span class="st-id merc">MERC-O1</span></div><h3 class="st-title">Llevar el stock</h3><p class="st-desc">Mantener cuánto hay disponible de cada producto.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-16">Catálogo</button></div></article>
+        <article class="story-card" data-etapa="2"><div class="st-meta"><span class="st-id merc">MERC-O2</span></div><h3 class="st-title">Reponer stock</h3><p class="st-desc">Crear una orden de compra "de la nada" que, al recibirse, suma stock.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-18">Órdenes de compra</button></div></article>
+        <article class="story-card" data-etapa="2"><div class="st-meta"><span class="st-id merc">MERC-O3</span></div><h3 class="st-title">Ver demanda vs stock</h3><p class="st-desc">Ver por producto cuántos pagaron y cuántos confirmaron.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-5">Storefront</button></div></article>
+      </div>
+    </section>
+
+    <section class="etapa-section" data-etapa="3">
+      <h2 class="etapa-h"><span class="etapa-dot comp"></span>Compra <span class="etapa-sub">modo por ronda, demand-driven</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-O1</span></div><h3 class="st-title">Crear una compra</h3><p class="st-desc">Abrir una ronda: ventana (inicio/cierre), entrega, retiro y subselección de productos.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-1">Gestionar compra</button></div></article>
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-O2</span></div><h3 class="st-title">Publicar / cerrar la compra</h3><p class="st-desc">Hacerla visible para recibir pedidos y cerrarla al terminar la ventana.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-1">Gestionar compra</button></div></article>
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-O3</span></div><h3 class="st-title">Generar la orden desde la compra</h3><p class="st-desc">Al cerrar, agrupar los pedidos confirmados en una orden de compra.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-18">Órdenes de compra</button></div></article>
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-O4</span></div><h3 class="st-title">Liquidar la compra</h3><p class="st-desc">Cerrar cuentas con costos reales (orden + flete) para saber la ganancia.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-15">Liquidar compra</button></div></article>
+      </div>
+    </section>
   </section>
 
-  <!-- USER -->
+  <!-- USER (stories de la compradora) -->
   <section class="panel" id="panel-user" role="tabpanel" aria-labelledby="tab-user">
-    <p class="panel-head">Compradora sin cuenta. Se identifica al finalizar la compra.</p>
-    <div class="deck">
-      <article class="card">
-        <div class="meta"><span class="id">US-5</span><span class="epic">Comprar</span></div>
-        <h3>Explorar el mercado (en stock)</h3>
-        <p class="story">Como <b>compradora</b>, quiero ver lo que hay en stock en el mercado con precio y cuánto queda, para decidir qué pedir.</p>
-        <p class="accept">Se llega por <b>dos links</b> (se togglean en el mock): el <b>link del mercado</b> (fijo y público, siempre muestra el stock) o el <b>link de la compra publicada</b> (se comparte con ciertas personas — US-3). Los dos muestran el mismo <b>stock vivo del catálogo</b>; el de la compra además muestra sus <b>fechas (comienza / cierra), lugar de retiro y fecha de entrega</b>. Cada producto muestra precio y <b>"quedan X de Y"</b> — eso lo ven todos; los contadores <b>pagados y confirmados</b> por producto los ve <b>solo la organizadora ❤️</b>.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-6</span><span class="epic">Comprar</span></div>
-        <h3>Hacer un pedido con carrito</h3>
-        <p class="story">Como <b>compradora</b>, quiero agregar varios productos a un carrito y finalizar el pedido con mi nombre, apellido, email y teléfono, tanto en el mercado como en una compra publicada, para pedir todo en un solo paso.</p>
-        <p class="accept">El carrito y el checkout son <b>iguales</b> para el mercado y para una compra — <b>depende del link</b> por el que entró la compradora. La versión de la <b>compra</b> muestra además <b>cuándo comienza, cuándo cierra y el lugar de entrega/retiro</b>; la del mercado no fija fecha. Solo se puede pedir mientras la compra está publicada; el pedido se crea como pendiente.</p>
-        <p class="open-hint">Ver mock de la pantalla →</p>
-      </article>
-      <article class="card">
-        <div class="meta"><span class="id">US-8</span><span class="epic">Comprar</span></div>
-        <h3>Seguir mi pedido</h3>
-        <p class="story">Como <b>compradora</b>, quiero un enlace único (también por email) para ver el estado de mi pedido, para seguirlo sin necesidad de una cuenta.</p>
-        <p class="accept">El enlace muestra el estado actual; después de finalizar la compra muestra el lugar de retiro + la fecha de entrega.</p>
-      </article>
-    </div>
+    <p class="panel-head">Lo que necesita la <b>compradora</b> (sin cuenta), por capacidad. El <b>cómo</b> vive en 🖥️ Pantallas.</p>
+
+    <section class="etapa-section" data-etapa="1">
+      <h2 class="etapa-h"><span class="etapa-dot core"></span>Core <span class="etapa-sub">base compartida</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-C1</span></div><h3 class="st-title">Ver los productos</h3><p class="st-desc">Ver lo que se ofrece con su precio.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-5">Storefront</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-C2</span></div><h3 class="st-title">Hacer un pedido</h3><p class="st-desc">Armar un carrito y finalizar el pedido con mis datos (nombre, apellido, email, teléfono).</p><div class="st-screens"><span class="st-screens-lbl">Pantallas:</span><button class="st-screen-link" data-mock="US-5">Storefront</button><button class="st-screen-link" data-mock="US-6">Checkout</button></div></article>
+        <article class="story-card" data-etapa="1"><div class="st-meta"><span class="st-id core">CORE-C3</span></div><h3 class="st-title">Seguir mi pedido</h3><p class="st-desc">Recibir un email + link único para ver el estado de mi pedido, sin cuenta.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-8">Seguir pedido</button></div></article>
+      </div>
+    </section>
+
+    <section class="etapa-section" data-etapa="2">
+      <h2 class="etapa-h"><span class="etapa-dot merc"></span>Mercado <span class="etapa-sub">modo continuo, pre-stock</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="2"><div class="st-meta"><span class="st-id merc">MERC-C1</span></div><h3 class="st-title">Comprar lo disponible</h3><p class="st-desc">Ver "quedan X de Y" y que mi pedido no supere el stock. La entrega del mercado es asincrónica.</p><div class="st-screens"><span class="st-screens-lbl">Pantalla:</span><button class="st-screen-link" data-mock="US-5">Storefront</button></div></article>
+      </div>
+    </section>
+
+    <section class="etapa-section" data-etapa="3">
+      <h2 class="etapa-h"><span class="etapa-dot comp"></span>Compra <span class="etapa-sub">modo por ronda, demand-driven</span></h2>
+      <div class="story-deck">
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-C1</span></div><h3 class="st-title">Ver los datos de la compra</h3><p class="st-desc">Ver cuándo comienza y cierra, el lugar de retiro y la fecha de entrega.</p><div class="st-screens"><span class="st-screens-lbl">Pantallas:</span><button class="st-screen-link" data-mock="US-5">Storefront</button><button class="st-screen-link" data-mock="US-6">Checkout</button></div></article>
+        <article class="story-card" data-etapa="3"><div class="st-meta"><span class="st-id comp">COMP-C2</span></div><h3 class="st-title">Pedir a demanda</h3><p class="st-desc">Pedir sin tope de stock; se agrupa al cerrar la compra.</p><div class="st-screens"><span class="st-screens-lbl">Pantallas:</span><button class="st-screen-link" data-mock="US-5">Storefront</button><button class="st-screen-link" data-mock="US-6">Checkout</button></div></article>
+      </div>
+    </section>
+  </section>
+
+  <!-- PANTALLAS (los mocks; el cómo) -->
+  <section class="panel" id="panel-screens" role="tabpanel" aria-labelledby="tab-screens">
+    <p class="panel-head">Las <b>pantallas</b> reales (el <b>cómo</b>). Una pantalla puede cubrir varias stories. Abrí el mock interactivo con «Ver mock».</p>
+
+    <section class="etapa-section" data-etapa="1">
+      <h2 class="etapa-h"><span class="etapa-dot core"></span>Core</h2>
+      <div class="screens-deck">
+        <article class="screen-card" data-etapa="1" data-mock="US-16" data-actor="admin" data-name="Catálogo"><div class="sc-head"><span class="sc-name">Catálogo</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Mantener los productos y su stock; recorrer con teclado y editar en modal.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O1 · MERC-O1</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-19" data-actor="admin" data-name="Configurar ganancias"><div class="sc-head"><span class="sc-name">Configurar ganancias</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Ganancia del mercado y de las compras (% o fijo); preview del precio.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O2</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-3" data-actor="admin" data-name="Compartir links"><div class="sc-head"><span class="sc-name">Compartir links</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Copiar el link del mercado o el de cada compra publicada.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O3</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-10" data-actor="admin" data-name="Revisar pedidos"><div class="sc-head"><span class="sc-name">Revisar pedidos</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Ver, filtrar, confirmar/cancelar y exportar los pedidos según el modo.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O4 · CORE-O5 · CORE-O8</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-17" data-actor="admin" data-name="Conciliar pagos"><div class="sc-head"><span class="sc-name">Conciliar pagos</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Cruzar pendientes con un extracto/MP para confirmar en lote (definición + desafíos).</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O6</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-18" data-actor="admin" data-name="Órdenes de compra"><div class="sc-head"><span class="sc-name">Órdenes de compra</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Registrar órdenes a proveedores (reponer mercado o desde compra) y confirmar recepción + flete.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-O7 · MERC-O2 · COMP-O3</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-5" data-actor="user" data-name="Storefront"><div class="sc-head"><span class="sc-name">Storefront</span><span class="sc-actor user">Compradora</span></div><p class="sc-desc">Vitrina: productos con precio; en mercado "quedan X de Y", en compra a demanda.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-C1 · MERC-C1 · MERC-O3 · COMP-C1 · COMP-C2</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-6" data-actor="user" data-name="Checkout / carrito"><div class="sc-head"><span class="sc-name">Checkout / carrito</span><span class="sc-actor user">Compradora</span></div><p class="sc-desc">Carrito + datos de la compradora + confirmación del pedido.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-C2 · COMP-C1 · COMP-C2</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="1" data-mock="US-8" data-actor="user" data-name="Seguir pedido"><div class="sc-head"><span class="sc-name">Seguir pedido</span><span class="sc-actor user">Compradora</span></div><p class="sc-desc">Link único con el estado del pedido (mock en preparación).</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>CORE-C3</div><button class="sc-open" type="button">Ver mock →</button></article>
+      </div>
+    </section>
+
+    <section class="etapa-section" data-etapa="3">
+      <h2 class="etapa-h"><span class="etapa-dot comp"></span>Compra</h2>
+      <div class="screens-deck">
+        <article class="screen-card" data-etapa="3" data-mock="US-1" data-actor="admin" data-scope="compra" data-name="Gestionar compra"><div class="sc-head"><span class="sc-name">Gestionar compra</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Crear/editar/publicar/cerrar una compra + su subselección de productos.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>COMP-O1 · COMP-O2</div><button class="sc-open" type="button">Ver mock →</button></article>
+        <article class="screen-card" data-etapa="3" data-mock="US-15" data-actor="admin" data-scope="compra" data-name="Liquidar compra"><div class="sc-head"><span class="sc-name">Liquidar compra</span><span class="sc-actor admin">Organizadora ❤️</span></div><p class="sc-desc">Costos reales de la orden asociada + flete → ganancia, con desglose por producto.</p><div class="sc-stories"><span class="sc-stories-lbl">Cubre:</span>COMP-O4</div><button class="sc-open" type="button">Ver mock →</button></article>
+      </div>
+    </section>
   </section>
 
   <!-- DB -->
@@ -1513,12 +1557,12 @@
     var target = '#e' + uiEtapa + '-' + currentRole();
     if (location.hash !== target) history.replaceState(null, '', target);
   }
-  function lockCardsForEtapa() {
-    document.querySelectorAll('.card').forEach(function (c) {
-      var ce = c.getAttribute('data-etapa') || '1';
-      c.classList.toggle('etapa-locked', uiEtapa === 1 && ce === '2');
-    });
-  }
+  // 1 = Core, 2 = Mercado, 3 = Compra. Acumulativo: se muestra lo de etapa <= seleccionada.
+  var ETAPA_HINT = {
+    1: 'Core: la base compartida por los dos modos (catálogo, ganancias, pedido, orden de compra). Los mocks van en modo mercado.',
+    2: 'Mercado: se enciende el modo continuo (stock vivo, "quedan X de Y", reponer stock). Los mocks siguen en modo mercado.',
+    3: 'Compra: se agrega la ronda (crear/cerrar/liquidar) y la faceta de compra. Aparece el toggle de modo en los mocks.'
+  };
   function applyEtapa(e) {
     uiEtapa = e;
     document.body.setAttribute('data-etapa', String(e));
@@ -1527,10 +1571,11 @@
       b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     var hint = document.getElementById('etapa-hint');
-    if (hint) hint.textContent = e === 1
-      ? 'Se construye primero: el mercado continuo (catálogo, stock, pedidos, pagos). Los mocks quedan fijos en modo mercado.'
-      : 'Alcance completo: se agrega la compra por ronda (crear/cerrar/liquidar) y la faceta de compra de cada pantalla.';
-    lockCardsForEtapa();
+    if (hint) hint.textContent = ETAPA_HINT[e] || '';
+    // Filtrado acumulativo de secciones de story y de pantalla
+    document.querySelectorAll('.etapa-section').forEach(function (s) {
+      s.style.display = (+(s.getAttribute('data-etapa') || 1) <= e) ? '' : 'none';
+    });
     syncHash();
     updateFabs();
   }
@@ -1544,6 +1589,7 @@
     });
     document.getElementById('panel-admin').classList.toggle('active', role === 'admin');
     document.getElementById('panel-user').classList.toggle('active', role === 'user');
+    document.getElementById('panel-screens').classList.toggle('active', role === 'screens');
     document.getElementById('panel-db').classList.toggle('active', role === 'db');
     document.getElementById('panel-dicc').classList.toggle('active', role === 'dicc');
     document.body.className = 'role-' + role;
@@ -1596,8 +1642,9 @@
   var em = h.match(/^e([12])-(.+)$/);
   var initEtapa = 1, initRole = h;
   if (em) { initEtapa = +em[1]; initRole = em[2]; }
-  applyEtapa(initEtapa);
-  select(initRole === 'user' || initRole === 'db' || initRole === 'dicc' ? initRole : 'admin');
+  applyEtapa(initEtapa >= 1 && initEtapa <= 3 ? initEtapa : 1);
+  var ROLES = { user: 1, screens: 1, db: 1, dicc: 1 };
+  select(ROLES[initRole] ? initRole : 'admin');
 
   /* ---- Detail view ---- */
   var detailInner = document.getElementById('detail-inner');
@@ -1605,34 +1652,18 @@
   var pillText = document.getElementById('detail-pill-text');
   var backBtn = document.getElementById('back-btn');
 
+  // `card` es una screen-card (tab Pantallas) o cualquier elemento con data-mock/data-actor.
   function openDetail(card) {
-    var role = card.closest('#panel-user') ? 'user' : 'admin';
+    var role = (card.getAttribute('data-actor') === 'user') ? 'user' : 'admin';
     var roleName = role === 'user' ? 'Compradora' : 'Organizadora ❤️';
-    var id = card.querySelector('.id').textContent.trim();
+    var id = card.getAttribute('data-mock');
+    var screenName = card.getAttribute('data-name') || id;
 
     pill.className = 'role-pill ' + role;
-    pillText.textContent = roleName + ' · ' + id;
+    pillText.textContent = roleName + ' · ' + screenName;
 
     detailInner.innerHTML = '';
     modeListeners = [];   // cada pantalla se re-suscribe al modo con onMode()
-
-    // En Etapa 1 (Mercado), las historias de Etapa 2 (Compra) muestran un cartel en vez del mock.
-    var cardEtapa = card.getAttribute('data-etapa') || '1';
-    if (uiEtapa === 1 && cardEtapa === '2') {
-      document.getElementById('detail-mode').innerHTML = '';
-      detailInner.innerHTML =
-        '<div class="detail-lead"><h2 class="detail-title">' + card.querySelector('h3').textContent + '</h2></div>' +
-        '<div class="etapa-gate">' +
-          '<div class="etapa-gate-badge">📅 Etapa 2 · Compra</div>' +
-          '<p>Esta historia es parte de la <b>Etapa 2</b> (la compra por ronda). La <b>Etapa 1</b> construye primero el <b>mercado continuo</b>.</p>' +
-          '<button class="btn-primary" id="etapa-gate-go" type="button">Ir a Etapa 2 · 📅 Compra →</button>' +
-        '</div>';
-      var goBtn = detailInner.querySelector('#etapa-gate-go');
-      if (goBtn) goBtn.addEventListener('click', function () { applyEtapa(2); openDetail(card); });
-      document.body.classList.add('detail-open');
-      window.scrollTo({ top: 0 });
-      return;
-    }
 
     var tpl = document.getElementById('mock-' + id);
     if (tpl) {
@@ -2804,22 +2835,19 @@
         renderPrev();
       }
     } else {
-      var title = card.querySelector('h3').textContent;
-      var story = card.querySelector('.story') ? card.querySelector('.story').innerHTML : '';
-      var accept = card.querySelector('.accept') ? card.querySelector('.accept').textContent : '';
+      var desc = card.querySelector('.sc-desc') ? card.querySelector('.sc-desc').textContent : '';
       detailInner.innerHTML =
-        '<h2 class="detail-title">' + title + '</h2>' +
-        '<p class="detail-story">' + story + '</p>' +
-        (accept ? '<p class="detail-accept">' + accept + '</p>' : '') +
+        '<h2 class="detail-title">' + screenName + '</h2>' +
+        (desc ? '<p class="detail-story">' + desc + '</p>' : '') +
         '<div class="mock-note">🛠️ El mock de esta pantalla está en preparación.</div>';
     }
 
-    // Modo de la pantalla de ejemplo: en Etapa 1 todo va fijo en mercado; en Etapa 2 según el ámbito del card.
+    // Modo de la pantalla: en Core/Mercado (etapa < 3) va fijo en mercado; en Compra según el ámbito.
     var scope = card.getAttribute('data-scope') || 'mixto';
     var dm = document.getElementById('detail-mode');
     var hasOwnMode = detailInner.querySelector('.slb'); // US-5 define su modo con el toggle de link
-    if (uiEtapa === 1) {
-      // Etapa 1 = solo mercado: apagar los accesos a "compra" de las pantallas compartidas
+    if (uiEtapa < 3) {
+      // Core/Mercado = solo mercado: apagar los accesos a "compra" de las pantallas compartidas
       detailInner.querySelectorAll('.slink').forEach(function (s) { s.style.display = 'none'; });         // US-5/US-6: sin toggle de link
       var ocCompraBtn = detailInner.querySelector('#oc-new-compra'); if (ocCompraBtn) ocCompraBtn.style.display = 'none'; // US-18
       var gCompBox = detailInner.querySelector('[data-gain="g-comp"]');                                    // US-19: solo ganancia del mercado
@@ -2860,12 +2888,24 @@
     document.body.classList.remove('detail-open');
   }
 
-  document.querySelectorAll('.card').forEach(function (card) {
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'button');
-    card.addEventListener('click', function () { openDetail(card); });
-    card.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(card); }
+  // Abrir el mock desde una screen-card (tab Pantallas)
+  document.querySelectorAll('.screen-card').forEach(function (sc) {
+    sc.setAttribute('tabindex', '0');
+    sc.setAttribute('role', 'button');
+    var open = function () { openDetail(sc); };
+    sc.addEventListener('click', open);
+    sc.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+    });
+  });
+  // Desde una story: el link a su pantalla salta al tab Pantallas y abre el mock
+  document.querySelectorAll('.st-screen-link').forEach(function (lnk) {
+    lnk.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var mock = lnk.getAttribute('data-mock');
+      select('screens');
+      var sc = document.querySelector('.screen-card[data-mock="' + mock + '"]');
+      if (sc) openDetail(sc);
     });
   });
   backBtn.addEventListener('click', closeDetail);
